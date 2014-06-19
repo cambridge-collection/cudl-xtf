@@ -7,6 +7,3 @@ access technology for the CDL's digital collections and other digital projects w
 
 Much more information is available here: http://xtf.cdlib.org
 
-[![Build Status](https://travis-ci.org/cdlib/xtf.svg?branch=master)](https://travis-ci.org/cdlib/xtf)
-
-We love pull requests!
