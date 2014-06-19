@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- URLs used to validate an index, whether newly created or incrementally -->
+<!-- updated.                                                               -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<index-validation>
+  
+  <!--local setting-->
+  <!--<crossQuery minHits="500">http://localhost:8080/xtf/search?keyword=newton</crossQuery>-->
+  
+  <!--live setting-->
+  <crossQuery minHits="0">http://cudl.lib.cam.ac.uk/xtf/search?keyword=newton</crossQuery>
+  
+</index-validation>
