@@ -116,6 +116,7 @@
                   
                   <xsl:attribute name="xtf:subDocument" select="'ITEM-1'"/>
                   
+                  
                   <xsl:call-template name="get-doc-abstract"/>
                   
                   <xsl:call-template name="get-doc-and-item-names"/>
@@ -176,6 +177,8 @@
                <part>
                   <xsl:attribute name="xtf:subDocument" select="'DOCUMENT'"/>
                   
+                  
+                  
                   <xsl:call-template name="get-doc-dmdID"/>
                   <xsl:call-template name="get-doc-title"/>
                   <xsl:call-template name="get-doc-alt-titles"/>
@@ -230,6 +233,7 @@
          
          <xsl:attribute name="xtf:subDocument" select="concat('ITEM-', normalize-space($n-tree))"/>
          
+         
          <xsl:call-template name="get-item-dmdID"/>
 
          <xsl:call-template name="get-item-title">
@@ -278,7 +282,8 @@
       <startPage>1</startPage>
       
       <startPageLabel>
-         <xsl:value-of select="//*:text/*:body/*:div[not(@type)]/*:pb[1]/@n" />
+         <xsl:value-of select="//*:text/*:body/*:div[not(@type)]//*:pb[1]/@n" />
+        
       </startPageLabel>
       
    </xsl:template>
@@ -303,20 +308,24 @@
          <xsl:choose>
             <xsl:when test="*:locus/@from">
                <xsl:value-of select="normalize-space(*:locus/@from)" />
+               
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="//*:text/*:body/*:div[not(@type)]/*:pb[1]/@n" />
+               
+              
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
       
       <startPageLabel>
          <xsl:value-of select="$startPageLabel" />
+         
       </startPageLabel>
       
       <xsl:variable name="startPage">
          <!-- Ugh must be a neater way -->
-         <xsl:for-each select="//*:text/*:body/*:div[not(@type)]/*:pb" >
+         <xsl:for-each select="//*:text/*:body/*:div[not(@type)]//*:pb" >
             <xsl:if test="@n = $startPageLabel">
                <xsl:value-of select="position()" />                                
             </xsl:if>
@@ -3298,6 +3307,7 @@
             </xsl:element>
             
          </xsl:for-each-group>
+      </xsl:if>
          
          <xsl:if test="//*:sourceDesc/*:msDesc/*:msContents/*:summary//*:name[*:persName][not(contains(lower-case(*:persName[@type='standard']), 'unknown'))][not(@subtype=$rolemap/role/@code)]|//*:sourceDesc/*:msDesc/*:physDesc//*:name[*:persName][not(contains(lower-case(*:persName[@type='standard']), 'unknown'))][not(@subtype=$rolemap/role/@code)]|//*:sourceDesc/*:msDesc/*:history//*:name[*:persName][not(contains(lower-case(*:persName[@type='standard']), 'unknown'))][not(@subtype=$rolemap/role/@code)]
             |//*:sourceDesc/*:msDesc/*:msContents/*:msItem[1]/*:respStmt/*:name[*:persName][not(contains(lower-case(*:persName[@type='standard']), 'unknown'))][not(@subtype=$rolemap/role/@code)]">
@@ -3331,7 +3341,7 @@
             
          </xsl:if>
          
-      </xsl:if>
+
       
    </xsl:template>
    
@@ -3586,7 +3596,7 @@
    <!--*********************************** number of pages -->
    <xsl:template name="get-numberOfPages">
       <numberOfPages>
-         <xsl:value-of select="count(//*:text/*:body/*:div[not(@type)]/*:pb)"/>
+         <xsl:value-of select="count(//*:text/*:body/*:div[not(@type)]//*:pb)"/>
       </numberOfPages>
    </xsl:template>
    
@@ -3595,7 +3605,7 @@
       
       <pages>
          <!--differentiates from translation pages-->
-         <xsl:for-each select="//*:text/*:body/*:div[not(@type)]/*:pb">
+         <xsl:for-each select="//*:text/*:body/*:div[not(@type)]//*:pb">
             
             <page>
                <label>
@@ -3646,6 +3656,8 @@
                <xsl:choose>
                   <!--when this pb has no following siblings i.e. it is the last element pb element and is not followed by transcription content, do nothing-->
                   <xsl:when test="count(following-sibling::*)=0" />
+                  <!--<xsl:when test="position() = last()"/>-->
+                  
                   <!--when there's no content between here and the next pb element do nothing-->
                   <xsl:when test="local-name(following-sibling::*[1])='pb'" />
                   <xsl:otherwise>
@@ -3730,6 +3742,9 @@
                                                
                      <startPageLabel>
                         <xsl:value-of select="//*:text/*:body/*:div[not(@type)]/*:pb[1]/@n" />
+                        
+                        
+                        
                      </startPageLabel>
                      
                      <startPagePosition>
@@ -3741,10 +3756,10 @@
                      </startPageID>
                      
                      <endPageLabel>
-                        <xsl:value-of select="//*:text/*:body/*:div[not(@type)]/*:pb[last()]/@n" />
+                        <xsl:value-of select="//*:text/*:body/*:div[not(@type)]//*:pb[last()]/@n" />
                      </endPageLabel>
                      
-                     <xsl:variable name="endPagePosition" select="count(//*:text/*:body/*:div[not(@type)]/*:pb)" />
+                     <xsl:variable name="endPagePosition" select="count(//*:text/*:body/*:div[not(@type)]//*:pb)" />
                      <endPagePosition>
                         <xsl:value-of select="$endPagePosition" />
                      </endPagePosition>
@@ -3800,11 +3815,14 @@
          
          <startPageLabel>
             <xsl:value-of select="$startPageLabel" />
+            
+            
+            
          </startPageLabel>
          
          <xsl:variable name="startPagePosition">
             <!-- Ugh must be a neater way -->
-            <xsl:for-each select="//*:text/*:body/*:div[not(@type)]/*:pb" >
+            <xsl:for-each select="//*:text/*:body/*:div[not(@type)]//*:pb" >
                <xsl:if test="@n = $startPageLabel">
                   <xsl:value-of select="position()" />                                
                </xsl:if>
@@ -3836,7 +3854,7 @@
          
          <endPagePosition>
             <!-- Ugh must be a neater way -->
-            <xsl:for-each select="//*:text/*:body/*:div[not(@type)]/*:pb" >
+            <xsl:for-each select="//*:text/*:body/*:div[not(@type)]//*:pb" >
                <xsl:if test="@n = $endPageLabel">
                   <xsl:value-of select="position()" />                                
                </xsl:if>
@@ -3876,78 +3894,14 @@
 
       <xsl:for-each select="//*:text/*:body/*:div">
          
-         
-         <xsl:for-each select=".//*:pb">
-         
-         <xsl:choose>
-            <xsl:when test="count(following-sibling::*)=0" />
-            <xsl:when test="local-name(following-sibling::*[1])='pb'" />
-            <xsl:otherwise>
-               <transcriptionPage>
-                  <xsl:attribute name="xtf:subDocument" select="concat('sub-', normalize-space(@xml:id))" />
-                  
-                  
-                  <fileID>
-                     <xsl:value-of select="$fileID"/>          
-                  </fileID>
-                  
-                  <!-- Below is a bit of a fudge. It uses the "top-level" dmdID in all cases. What it should really do is work out where this page is in the logical structure. But as collection facet already propagated throughout, and subjects and dates(?) only at top level, can probably get away with it without losing out on fact inheritance -->
-                                    
-                  <xsl:if test="//*:sourceDesc/*:msDesc/*:msContents/*:msItem">
-                     <xsl:choose>
-                        <xsl:when test="count(//*:sourceDesc/*:msDesc/*:msContents/*:msItem) = 1">
-                           <dmdID>ITEM-1</dmdID>
-                        </xsl:when>
-                        <xsl:otherwise>
-                           <dmdID>DOCUMENT</dmdID>                           
-                        </xsl:otherwise>
-                     </xsl:choose>
-                  </xsl:if>                  
-                  
-                  <startPageLabel>
-                     <xsl:value-of select="normalize-space(@n)"/>
-                     
-                     
-                  </startPageLabel>
-                  
-                  <startPage>
-                     
-                     <xsl:value-of select="position()"></xsl:value-of>
-                     
-                  </startPage>
-                  
-                  <title>
-                     <xsl:value-of select="normalize-space(@n)"/>
-                  </title>
-                  
-                  <transcriptionText>
-                     
-                     <xsl:choose>
-                        <xsl:when test="following::*:pb">
-                           <xsl:variable name="nextpb" select="following::*:pb[1]/@xml:id" />
-                           <xsl:for-each select="following-sibling::node()[following::*:pb[@xml:id = $nextpb]]">
-                              <xsl:apply-templates mode="index"/>
-                           </xsl:for-each>
-                        </xsl:when>
-                        <xsl:otherwise>
-                           <xsl:for-each select="following-sibling::node()">
-                              <xsl:apply-templates mode="index"/>
-                           </xsl:for-each>
-                        </xsl:otherwise>
-                     </xsl:choose>
-                     
-                  </transcriptionText>
-                  
-               </transcriptionPage>
-            </xsl:otherwise>
-         </xsl:choose>
+         <xsl:if test="./*[not(local-name()='pb')]">
             
-            
-         </xsl:for-each>   
+               <xsl:apply-templates select=".//*:pb"/>
          
-      </xsl:for-each>
-      
-      
+         </xsl:if>
+         
+      </xsl:for-each>    
+           
       
       <!--this indexes any list items containing at least one locus element under the from attribute of the first locus-->
       <xsl:for-each select="//*:list/*:item[*:locus]">
@@ -3955,7 +3909,6 @@
         
             <listItemPage>
                <xsl:attribute name="xtf:subDocument" select="concat('listItem-', position())" />
-               
                
                
                <fileID>
@@ -3979,7 +3932,7 @@
                
                <xsl:variable name="startPagePosition">
                   <!-- Ugh must be a neater way -->
-                  <xsl:for-each select="//*:text/*:body/*:div[not(@type)]/*:pb" >
+                  <xsl:for-each select="//*:text/*:body/*:div[not(@type)]//*:pb" >
                      <xsl:if test="@n = $startPageLabel">
                         <xsl:value-of select="position()" />                                
                      </xsl:if>
@@ -3989,6 +3942,9 @@
                
                <startPageLabel>
                   <xsl:value-of select="$startPageLabel"/>
+                  
+                  
+                  
                </startPageLabel>
                
                <startPage>
@@ -4013,15 +3969,91 @@
       
    </xsl:template>
    
+   <xsl:template match="*:pb">
+      
+            <transcriptionPage>
+               <xsl:attribute name="xtf:subDocument" select="concat('sub-', normalize-space(@xml:id))" />
+               
+               
+               <fileID>
+                  <xsl:value-of select="$fileID"/>          
+               </fileID>
+               
+               <!-- Below is a bit of a fudge. It uses the "top-level" dmdID in all cases. What it should really do is work out where this page is in the logical structure. But as collection facet already propagated throughout, and subjects and dates(?) only at top level, can probably get away with it without losing out on fact inheritance -->
+               
+               <xsl:if test="//*:sourceDesc/*:msDesc/*:msContents/*:msItem">
+                  <xsl:choose>
+                     <xsl:when test="count(//*:sourceDesc/*:msDesc/*:msContents/*:msItem) = 1">
+                        <dmdID>ITEM-1</dmdID>
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <dmdID>DOCUMENT</dmdID>                           
+                     </xsl:otherwise>
+                  </xsl:choose>
+               </xsl:if>                  
+               
+               <startPageLabel>
+                  <xsl:value-of select="normalize-space(@n)"/>
+                  
+                  
+                  
+               </startPageLabel>
+               
+               <startPage>
+                  <xsl:value-of select="position()"/>
+               </startPage>
+               
+               <title>
+                  <xsl:value-of select="normalize-space(@n)"/>
+               </title>
+               
+               <transcriptionText>
+                  
+                 <xsl:variable name="xmlid">
+                    <xsl:value-of select="@xml:id"/>
+                 </xsl:variable>
+                  
+                 
+                 
+                 <xsl:variable name="pageText">
+                 <xsl:choose>
+                     <xsl:when test="following::*:pb">
+                        <xsl:variable name="nextpb" select="following::*:pb[1]/@xml:id" />
+                        
+                           
+                              <xsl:apply-templates select="following::text()[following::*:pb[@xml:id = $nextpb]]" mode="index"/>
+                           
+                           
+                     </xsl:when>
+                     <xsl:otherwise>
+                        
+                           <xsl:apply-templates select="following::text()" mode="index"/>
+                           
+                     </xsl:otherwise>
+                  </xsl:choose>
+                 </xsl:variable>
+              
+              <xsl:value-of select="normalize-space($pageText)"/>
+
+         
+               </transcriptionText>
+               
+            </transcriptionPage>
+      
+   </xsl:template>
+   
+   
    <xsl:template match="*" mode="index">
       
-      <xsl:apply-templates mode="index"/>
+         <xsl:apply-templates mode="index"/>
       
    </xsl:template>
    
    <xsl:template match="text()" mode="index">
       
-      <xsl:value-of select="."/>
+      
+      <xsl:copy-of select="."/>
+      
       
    </xsl:template>
    
@@ -4351,7 +4383,7 @@
       
       <xsl:variable name="page">
          <!-- Ugh must be a neater way -->
-         <xsl:for-each select="//*:text/*:body/*:div[not(@type)]/*:pb" >
+         <xsl:for-each select="//*:text/*:body/*:div[not(@type)]//*:pb" >
             <xsl:if test="@n = $from">
                <xsl:value-of select="position()" />                                
             </xsl:if>

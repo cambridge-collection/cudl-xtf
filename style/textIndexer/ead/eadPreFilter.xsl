@@ -1830,44 +1830,96 @@
                <!--if it is a link to another document-->
                <xsl:otherwise>
                   
-                  <xsl:variable name="targetURI" select="concat('../', $idFileName, '/', $idFileName, '.xml')"/>
-                  
+                 
                   <xsl:variable name="targetPageNo">
-                     <xsl:choose>
-                        <xsl:when test="normalize-space($idTargetFoliation)">
+                 
+                  <xsl:choose>
+                     
+                     <xsl:when test="normalize-space($idTargetFoliation)">
+                  
+                        <xsl:variable name="targetURI" select="replace(base-uri(), concat($fileID, '/', $fileID, '.xml'), concat($idFileName, '/', $idFileName, '.xml'))"/>
+                     
+                        <xsl:choose>
+                              
                            
-                           <xsl:choose>
-                              <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=$idTargetFoliation]">
-                                 <!-- match for target label -->
-                                 <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=$idTargetFoliation]/@id, '-')"/>                                 
-                              </xsl:when>
-                              <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, 'r')]">
-                                 <!-- match for target label + 'r' -->
-                                 <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, 'r')]/@id, '-')"/>                                 
-                              </xsl:when>
-                              <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, 'v')]">
-                                 <!-- match for target label + 'v' -->
-                                 <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, 'v')]/@id, '-')"/>                                 
-                              </xsl:when>                                    
-                              <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, '(r)')]">
-                                 <!-- match for target label + '(r)' -->
-                                 <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, '(r)')]/@id, '-')"/>                                 
-                              </xsl:when>
-                              <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, '(v)')]">
-                                 <!-- match for target label + '(v)' -->
-                                 <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, '(v)')]/@id, '-')"/>                                 
-                              </xsl:when>                                                                       
-                              <xsl:otherwise>
-                                 <!-- meh - can't match target label -->
-                              </xsl:otherwise>                                                         
-                           </xsl:choose>
+                           <xsl:when test="unparsed-text-available($targetURI)">
                            
-                        </xsl:when>
-                        <xsl:otherwise>
-                           <!-- no label so set target = first page -->
-                           <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[1]/@id, '-')"/>                                 
-                        </xsl:otherwise>
-                     </xsl:choose>
+                                 <xsl:choose>
+                                    <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=$idTargetFoliation]">
+                                       <!-- match for target label -->
+                                       <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=$idTargetFoliation]/@id, '-')"/>                                 
+                                    </xsl:when>
+                                    <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, 'r')]">
+                                       <!-- match for target label + 'r' -->
+                                       <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, 'r')]/@id, '-')"/>                                 
+                                    </xsl:when>
+                                    <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, 'v')]">
+                                       <!-- match for target label + 'v' -->
+                                       <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, 'v')]/@id, '-')"/>                                 
+                                    </xsl:when>                                    
+                                    <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, '(r)')]">
+                                       <!-- match for target label + '(r)' -->
+                                       <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, '(r)')]/@id, '-')"/>                                 
+                                    </xsl:when>
+                                    <xsl:when test="document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, '(v)')]">
+                                       <!-- match for target label + '(v)' -->
+                                       <xsl:value-of select="substring-after(document($targetURI, /)/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($idTargetFoliation, '(v)')]/@id, '-')"/>                                 
+                                    </xsl:when>                                                                       
+                                    <xsl:otherwise>
+                                       <!-- meh - can't match target label -->
+                                       <xsl:value-of select="1"/>
+                                    </xsl:otherwise>                                                         
+                                 </xsl:choose>
+                                 
+                           </xsl:when>
+                           
+                           <xsl:otherwise>
+                                 
+                              <!--tei bit here-->
+                              
+                              
+                              <xsl:variable name="teiTargetURI" select="replace($targetURI, '/ead/', '/tei/')"/>
+                              
+                              <xsl:choose>
+                                 <xsl:when test="document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=$idTargetFoliation]">
+                                    <!-- match for target label -->
+                                    <xsl:value-of select="substring-after(document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=$idTargetFoliation]/@facs, '#i')"/>                                 
+                                 </xsl:when>
+                                 <xsl:when test="document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=concat($idTargetFoliation, 'r')]">
+                                    <!-- match for target label + 'r' -->
+                                    <xsl:value-of select="substring-after(document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=concat($idTargetFoliation, 'r')]/@ifacs, '#i')"/>                                 
+                                 </xsl:when>
+                                 <xsl:when test="document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=concat($idTargetFoliation, 'v')]">
+                                    <!-- match for target label + 'v' -->
+                                    <xsl:value-of select="substring-after(document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=concat($idTargetFoliation, 'v')]/@ifacs, '#i')"/>                                 
+                                 </xsl:when>                                  
+                                 <xsl:when test="document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=concat($idTargetFoliation, '(r)')]">
+                                    <!-- match for target label + '(r)' -->
+                                    <xsl:value-of select="substring-after(document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=concat($idTargetFoliation, '(r)')]/@ifacs, '#i')"/>                                 
+                                 </xsl:when> 
+                                 <xsl:when test="document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=concat($idTargetFoliation, '(v)')]">
+                                    <!-- match for target label + '(v)' -->
+                                    <xsl:value-of select="substring-after(document($teiTargetURI, /)//*:text/*:body/*:div[not(@type)]//*:pb[@n=concat($idTargetFoliation, '(v)')]/@ifacs, '#i')"/>                                 
+                                 </xsl:when>                                                                     
+                                 <xsl:otherwise>
+                                    <!-- meh - can't match target label -->
+                                    <xsl:value-of select="1"/>
+                                 </xsl:otherwise>                                                         
+                              </xsl:choose>
+                                 
+                           </xsl:otherwise>
+                             
+                       </xsl:choose>
+                     
+                     </xsl:when>
+                     
+                     <xsl:otherwise>
+                        <!-- no label so set target = first page -->
+                        <xsl:value-of select="1"/>                                 
+                     </xsl:otherwise>
+                     
+                  </xsl:choose>
+                     
                   </xsl:variable>
                   
                   <!--build link-->
