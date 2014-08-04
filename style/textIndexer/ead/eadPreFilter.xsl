@@ -1464,6 +1464,8 @@
 
    <!--sets flags and pulls transcription text for indexing-->
    <!--we'll have to put translation processing in here too-->
+   
+   
    <xsl:template name="make-transcription-pages">
       
       <xsl:choose>
@@ -1486,6 +1488,98 @@
       </xsl:choose>
       
       <!-- for indexing by XTF -->
+      
+      <!--this indexes any list items containing at least one archref element-->
+      <xsl:for-each select="//*:list/*:item[*:archref]">
+         
+            
+         <xsl:variable name="identifier">
+            <xsl:value-of select=".//*:archref[1]/@identifier"/>
+         </xsl:variable>
+         
+         <xsl:variable name="linkFileID">
+            
+            <xsl:value-of select="substring-before($identifier, ':')"/>
+            
+         </xsl:variable>
+         
+         <xsl:if test="$fileID=$linkFileID">
+            
+            <xsl:variable name="label" select="substring-after($identifier, ':')"/>
+            
+            <xsl:variable name="startPageLabel">
+               <xsl:choose>
+                  <xsl:when test="contains($label, '-')">
+                     <xsl:value-of select="substring-before($label, '-')"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                     <xsl:value-of select="$label"/>
+                  </xsl:otherwise>
+               </xsl:choose>
+               
+               
+            </xsl:variable>
+            
+            <xsl:variable name="startPagePosition">
+               
+               <xsl:for-each select="//*:archdesc/*:daogrp[@role='download']/*:daoloc" >
+                  <xsl:if test="@label = $startPageLabel">
+                     <xsl:value-of select="position()" />                                
+                  </xsl:if>
+               </xsl:for-each>
+               
+            </xsl:variable>
+            
+            <xsl:if test="normalize-space($startPagePosition)">
+               
+               <listItemPage>
+                  <xsl:attribute name="xtf:subDocument" select="concat('listItem-', position())" />
+                  
+                  
+                  <fileID>
+                     <xsl:value-of select="$fileID"/>          
+                  </fileID>
+               
+                  <xsl:variable name="normunitid" select="translate(normalize-space(//*:archdesc/*:did/*:unitid[not(@type='former reference')]), ' .:/', '----')" />
+                  
+                  <xsl:element name="dmdID">
+                     <xsl:attribute name="xtf:noindex">true</xsl:attribute>
+                     <xsl:value-of select="$normunitid"/>
+                  </xsl:element>
+               
+               
+               
+                  <startPageLabel>
+                     <xsl:value-of select="$startPageLabel"/>
+                     
+                  </startPageLabel>
+                  
+                  <startPage>
+                     <xsl:value-of select="$startPagePosition"/>
+                  </startPage>
+                  
+                  <title>
+                     <xsl:value-of select="$startPageLabel"/>
+                  </title>
+                  
+                  <listItemText>
+                     
+                     
+                     <xsl:apply-templates mode="index"/>
+                     
+                     
+                  </listItemText>
+               
+               
+               </listItemPage>
+                  
+            </xsl:if>
+            
+         </xsl:if>
+            
+      </xsl:for-each>
+      
+      
       
       <xsl:for-each select="/*:ead/*:archdesc/*:daogrp[@role='transcription-normal' or @role='transcription-diplomatic']/*:daoloc">
          
@@ -1554,6 +1648,22 @@
       
    </xsl:template>
    
+   <!--index processing templates-->
+   
+   <xsl:template match="*" mode="index">
+      
+      <xsl:apply-templates mode="index"/>
+      
+   </xsl:template>
+   
+   <xsl:template match="text()" mode="index">
+      
+      
+      <xsl:copy-of select="."/>
+      
+      
+   </xsl:template>
+   
    <!--html processing templates-->
    
    <xsl:template match="*:p" mode="html">
@@ -1561,6 +1671,23 @@
       <xsl:text>&lt;p&gt;</xsl:text>
       <xsl:apply-templates mode="html" />
       <xsl:text>&lt;/p&gt;</xsl:text> 
+      
+   </xsl:template>
+   
+   <xsl:template match="*:list" mode="html">
+      
+      <xsl:text>&lt;ul&gt;</xsl:text>
+         <xsl:apply-templates mode="html"/>
+      <xsl:text>&lt;/ul&gt;</xsl:text>
+      
+      
+   </xsl:template>
+   
+   
+   <xsl:template match="*:item" mode="html">
+      <xsl:text>&lt;li&gt;</xsl:text>
+         <xsl:apply-templates mode="html"/>
+      <xsl:text>&lt;/li&gt;</xsl:text>
       
    </xsl:template>
    
@@ -1719,6 +1846,9 @@
          
       </xsl:variable>
       
+      
+      
+      
       <!--foliation target for link - first value if a range-->
       <xsl:variable name="idTargetFoliation">
          
@@ -1739,6 +1869,7 @@
          
       </xsl:variable>
       
+      
       <!--label for link href-->
       <xsl:variable name="label">
          
@@ -1747,7 +1878,18 @@
             <!--is it an internal link-->
             <xsl:when test="$idFileName=$fileID">
                
-               <xsl:value-of select="normalize-space(substring-after(*:unitid,':'))"/>
+               <xsl:choose>
+                  <xsl:when test="contains(*:unitid, ':')">
+                     
+                     <xsl:value-of select="normalize-space(substring-after(*:unitid,':'))"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                     <xsl:value-of select="normalize-space(*:unitid)"/>      
+                     
+                  </xsl:otherwise>
+               </xsl:choose>
+               
+               
                
             </xsl:when>
             
@@ -1760,6 +1902,8 @@
          </xsl:choose>
          
       </xsl:variable>
+      
+      
       
       <!--and build the link itself-->
       <xsl:choose>
@@ -1777,6 +1921,7 @@
                
                <!--is it an internal link-->
                <xsl:when test="$idFileName=$fileID">
+                  
                   
                   <xsl:variable name="targetPageNo">
                      <xsl:choose>
@@ -1821,7 +1966,21 @@
                   <xsl:text>&lt;a href=&apos;&apos; onclick=&apos;store.loadPage(</xsl:text>
                   <xsl:value-of select="$targetPageNo" />
                   <xsl:text>);return false;&apos;&gt;</xsl:text>
-                  <xsl:value-of select="normalize-space(normalize-space(substring-after(*:unitid, ':')))"/>                  
+                  
+                  <xsl:choose>
+                     <xsl:when test="contains(*:unitid, ':')">
+                        
+                        <xsl:value-of select="normalize-space(normalize-space(substring-after(*:unitid, ':')))"/>
+                        
+                     </xsl:when>
+                     <xsl:otherwise>
+                        
+                        <xsl:value-of select="normalize-space(normalize-space(*:unitid))"/>
+                        
+                     </xsl:otherwise>
+                     
+                  </xsl:choose>
+                               
                   <xsl:text>&lt;/a&gt;</xsl:text>    
                   
                </xsl:when>

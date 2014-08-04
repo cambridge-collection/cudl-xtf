@@ -3655,11 +3655,17 @@
                <!-- Page transcription -->
                <xsl:choose>
                   <!--when this pb has no following siblings i.e. it is the last element pb element and is not followed by transcription content, do nothing-->
-                  <xsl:when test="count(following-sibling::*)=0" />
-                  <!--<xsl:when test="position() = last()"/>-->
-                  
+                  <!--<xsl:when test="count(following-sibling::*)=0" />-->
+                  <xsl:when test="position() = last() and count(following-sibling::*)=0"/>
+                    
                   <!--when there's no content between here and the next pb element do nothing-->
-                  <xsl:when test="local-name(following-sibling::*[1])='pb'" />
+                  <xsl:when test="local-name(following-sibling::*[1])='pb'" >
+                     
+                     <!--<xsl:message>
+                        <xsl:value-of select="normalize-space(@n)"/>
+                     </xsl:message>
+                     -->
+                  </xsl:when>
                   <xsl:otherwise>
                      <!-- transcription content present so set up page extract URI  -->
                      <transcriptionDiplomaticURL>
