@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+
+    echo "No url prefix parameter passed - please enter url as an argument - i.e. ./textIndexPlusJson http://localhost:8080"
+    exit 1
+
+fi
+
+# Path to JSON output * change as required *
+
+jsonpath="/usr/htdocs/cudl/cudl-data/json/"
+
+# Call textIndexer and write console output to output.txt
+
+./textIndexer -index default | tee output.txt
+
+# From output.txt file, extract names of indexed XML docs
+
+if [ -f xmlnames.txt ]
+then rm xmlnames.txt
+fi
+
+grep -o -e '\[.*\.xml' output.txt | cut -c 2- > xmlnames.txt
+
+perl newGenerateJson $1 xmlnames.txt $jsonpath

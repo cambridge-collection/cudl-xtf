@@ -46,6 +46,15 @@
 
    <xsl:variable name="pathToConf" select="'../../../conf/local.conf'"/>
    
+   
+   <!-- ====================================================================== -->
+   <!-- Services URI and api key                                    -->
+   <!-- ====================================================================== -->   
+   
+   <xsl:variable name="servicesURI" select="document($pathToConf)//services/@path"/>
+   
+   <xsl:variable name="apiKey" select="document($pathToConf)//services/@key"/>
+   
    <!-- ====================================================================== -->
    <!-- Server URI                                       -->
    <!-- ====================================================================== -->   
@@ -1179,35 +1188,19 @@
    <!--processes transcription uri for indexing-->
    <xsl:function name="cudl:transcription-uri">
    
-   <xsl:param name="uri"/>
+      <xsl:param name="uri"/>
       
-      <xsl:choose>
-         <!--if internal, just knock off prefix-->
-         <xsl:when test="starts-with($uri, 'http://cudl.lib.cam.ac.uk/')">
-      
-            <xsl:value-of select="replace($uri, 'http://cudl.lib.cam.ac.uk/', concat($serverURI, '/'))"/>
-      
-         </xsl:when>
-         <!--if external, needs to go through tidying-->
-         <xsl:otherwise>
-                        
-            <xsl:variable name="encURI1" select="encode-for-uri($uri)"/>
-            
-            <xsl:variable name="encURI2" select="concat($serverURI,'/transcription?url=',$encURI1)"/>
-            
-            <xsl:value-of select="concat($encURI2, '&amp;doc=', $fileID)"/>
-            
-         </xsl:otherwise>
-      </xsl:choose>
-      
+      <xsl:variable name="uriReplaced" select="replace($uri, 'http://services.cudl.lib.cam.ac.uk/', $servicesURI)"/>
+      <xsl:value-of select="concat($uriReplaced, '?apikey=', $apiKey)"></xsl:value-of>
+     
    </xsl:function>
    
    <!-- Lookup collections of which this item is a member (from SQL database) -->
    <xsl:function name="cudl:get-memberships">
       <xsl:param name="itemid"/>
       
-      <!-- Returns sequence of collection elements w @id, @label, @order attributes -->
-      <xsl:for-each select="document(concat($xtfServerURI, 'memberships?itemid=', $itemid))/item/memberships/collection">
+      <!-- Returns sequence of collection elements -->
+      <xsl:for-each select="document(concat($servicesURI, 'v1/rdb/membership/collections/', $itemid))/collections/collection">
          <xsl:copy-of select="."/>
       </xsl:for-each>       
       

@@ -115,7 +115,6 @@
 
    </xsl:variable>
    
-   
 
    <!-- ====================================================================== -->
    <!-- Root Template                                                          -->
@@ -1015,7 +1014,7 @@
       <xsl:element name="collections">
          <xsl:for-each select="cudl:get-memberships($fileID)">
             <xsl:element name="collection">
-               <xsl:value-of select="@label"/>
+               <xsl:value-of select="title"/>
             </xsl:element>
          </xsl:for-each>
       </xsl:element>
@@ -1075,12 +1074,7 @@
                      <xsl:value-of select="$startPageLabel"/>
                   </startPageLabel>
                   
-                  <!-- Is this redundant?
                   
-                  <xsl:variable name="transcriptionURI"
-                     select="cudl:transcription-uri(./mets:FLocat/@xlink:href)"/>
-                     
-                     -->
                   
                   <!-- Map whitespace to single space - non-breaking-spaces need special handling as not mapped by normalize-space -->
                   <transcriptionText>
@@ -1121,8 +1115,6 @@
          <xsl:value-of select="count(//addmat[type='download'])"/>
       </numberOfPages>
    </xsl:template>
-
-
 
    <!--pages-->
    <!--Transcription for whole doc rather than for individual pages at present-->
@@ -1176,15 +1168,7 @@
                </thumbnailImageOrientation>
                
                <!--At the moment, transcription for whole thing rather than for individual pages-->
-                  <!--<transcriptionDiplomaticURL>
-                     
-                  </transcriptionDiplomaticURL>-->
-               
-               <!--TODO pageType not used at present?-->
-               <!--<pageType>
                   
-                  </pageType>-->
-               
             </page>
          </xsl:for-each>
       </pages>
@@ -1220,11 +1204,12 @@
       <!--does the transcription contain page breaks?-->
       <xsl:if test="not(//transcription//pb) and //transcription/p and not($hideTranscription='true')">
          <allTranscriptionDiplomaticURL>
-            <xsl:value-of select="concat('/xtf/transcription?source=dcp/', $fileID, '/', $fileID, '.xml&amp;displayXSL=dcpTrans.xsl')"/>   
+            
+            <xsl:value-of select="concat('http://services.cudl.lib.cam.ac.uk/v1/transcription/dcp/diplomatic/internal/',$fileID,'/')"/>
+            
          </allTranscriptionDiplomaticURL>
          
       </xsl:if>
-
 
    </xsl:template>
 
@@ -1279,7 +1264,6 @@
    </xsl:template>
 
    <!--**************HTML PROCESSING******************-->
-
 
    <xsl:template match="*" mode="html">
       

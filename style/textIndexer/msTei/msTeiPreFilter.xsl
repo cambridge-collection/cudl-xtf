@@ -3585,7 +3585,7 @@
       <xsl:element name="collections">
          <xsl:for-each select="cudl:get-memberships($fileID)">
             <xsl:element name="collection">
-               <xsl:value-of select="@label"/>
+               <xsl:value-of select="title"/>
             </xsl:element>
          </xsl:for-each>         
       </xsl:element>
@@ -3661,30 +3661,13 @@
                   <!--when there's no content between here and the next pb element do nothing-->
                   <xsl:when test="local-name(following-sibling::*[1])='pb'" >
                      
-                     <!--<xsl:message>
-                        <xsl:value-of select="normalize-space(@n)"/>
-                     </xsl:message>
-                     -->
                   </xsl:when>
                   <xsl:otherwise>
                      <!-- transcription content present so set up page extract URI  -->
                      <transcriptionDiplomaticURL>
-                        <!-- 
-                           Short term fix to select different transcription render XSLT.
-                           Needs to be reviewed as part of overhaul of transcription processing.
-                           Have to select here because transcription renderer XSLT doesn't have access to TEI header, just page extract :-( 
-                        -->
                         
-                        <xsl:value-of select="concat('/xtf/transcription?source=tei/', $fileID, '/', $fileID, '.xml&amp;displayXSL=msTeiTrans.xsl&amp;start=', @n, '&amp;end=', @n)"/>
+                        <xsl:value-of select="concat('http://services.cudl.lib.cam.ac.uk/v1/transcription/tei/diplomatic/internal/',$fileID,'/',@n,'/',@n)"/>
                         
-                        <!--<xsl:choose>
-                           <xsl:when test="/*:TEI/*:teiHeader/*:fileDesc/*:titleStmt/*:respStmt[*:resp/@ref='http://id.loc.gov/vocabulary/relators/trc']/*:orgName='Corpus Coranicum'">
-                              <xsl:value-of select="concat('/xtf/transcription?source=tei/', $fileID, '/', $fileID, '.xml&amp;displayXSL=corpcorTeiTrans.xsl&amp;start=', @n, '&amp;end=', @n)"/>
-                           </xsl:when>
-                           <xsl:otherwise>
-                              <xsl:value-of select="concat('/xtf/transcription?source=tei/', $fileID, '/', $fileID, '.xml&amp;displayXSL=msTeiTrans.xsl&amp;start=', @n, '&amp;end=', @n)"/>
-                           </xsl:otherwise>
-                        </xsl:choose>-->
                      </transcriptionDiplomaticURL>
                   </xsl:otherwise>
                </xsl:choose>
@@ -3896,7 +3879,7 @@
          
       </xsl:if>
       
-      <!--indexes each page of transcription-->
+      <!--indexes each page of transcription or translation-->
 
       <xsl:for-each select="//*:text/*:body/*:div">
          

@@ -884,7 +884,7 @@
       <xsl:element name="collections">
          <xsl:for-each select="cudl:get-memberships($fileID)">
             <xsl:element name="collection">
-               <xsl:value-of select="@label"/>
+               <xsl:value-of select="title"/>
             </xsl:element>
          </xsl:for-each>         
       </xsl:element>

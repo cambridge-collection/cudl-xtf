@@ -191,11 +191,7 @@ to a fixed value-->
          parsed and fed into the display stylesheet.
       -->
 
-      <source path="{concat('/home/jennie/public_html/data/',$docId)}"/>
-
       
-<!--      <source path="{concat('/usr/htdocs/cudl/cudl-data/data/',$docId)}"/>
--->
       <source path="{concat($dataPath,'/',$docId)}"/>
 
       <!-- ==================================================================

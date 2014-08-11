@@ -1,0 +1,63 @@
+#!/usr/bin/env perl
+
+#modules
+use strict;
+use LWP::Simple;
+
+
+my $url_prefix=$ARGV[0];
+
+
+if (!$url_prefix){
+    
+    die "No url prefix passed\n";
+}
+
+
+print STDOUT "Creating json\n";
+
+#path info
+my $jsonpath="/usr/htdocs/cudl/cudl-data/json/";
+
+my @filenames=`grep -o -e '\\[.*\.xml' output.txt`;
+
+foreach my $filename(@filenames){
+
+    
+    $filename=~s/^\[//g;
+    
+    chomp($filename);
+        
+    my $json_filename=$filename;
+    
+    $json_filename=~s/^.*\///;
+    $json_filename=~s/\.xml/\.json/;
+    
+    $json_filename=$jsonpath.$json_filename;
+        
+    my $url=$url_prefix."/xtf/view?docId=".$filename;
+    
+    
+    my $page=get($url);
+    
+    if ($page){
+        
+        
+        open (JSON, ">:utf8","$json_filename") or die "Couldn't open json file: $!";
+        
+        print JSON "$page";
+        
+        print STDOUT "Fetched $filename ok\n";
+        
+    }else{
+        
+        print STDOUT "Failed to fetch $url - please check\n";
+        
+    }
+    
+    
+    
+}
+
+print STDOUT "\nFinished creating json\n";
+

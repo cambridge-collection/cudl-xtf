@@ -1294,7 +1294,7 @@
       <xsl:element name="collections">
          <xsl:for-each select="cudl:get-memberships($fileID)">
             <xsl:element name="collection">
-               <xsl:value-of select="@label"/>
+               <xsl:value-of select="title"/>
             </xsl:element>
          </xsl:for-each>         
       </xsl:element>
@@ -1354,14 +1354,13 @@
                <!--for the json, just knock off the cudl bit for internal files-->               
                <xsl:for-each select="/*:ead/*:archdesc/*:daogrp[@role='transcription-normal']/*:daoloc[@label=$imageLabel]">
                   <xsl:element name="transcriptionNormalisedURL">
-                  
-                     <xsl:value-of select="replace(@href, 'http://cudl.lib.cam.ac.uk/', '/')"/>
+                     <xsl:value-of select="@href"/>
                   </xsl:element>                  
                </xsl:for-each>
                                  
                <xsl:for-each select="/*:ead/*:archdesc/*:daogrp[@role='transcription-diplomatic']/*:daoloc[@label=$imageLabel]">
                   <xsl:element name="transcriptionDiplomaticURL">
-                     <xsl:value-of select="replace(@href, 'http://cudl.lib.cam.ac.uk/', '/')"/>
+                     <xsl:value-of select="@href"/>
                   </xsl:element>                  
                </xsl:for-each>
             </xsl:element>
@@ -1579,8 +1578,7 @@
             
       </xsl:for-each>
       
-      
-      
+      <!--transcription indexing-->
       <xsl:for-each select="/*:ead/*:archdesc/*:daogrp[@role='transcription-normal' or @role='transcription-diplomatic']/*:daoloc">
          
                <transcriptionPage>
@@ -1634,11 +1632,12 @@
                               
                               <xsl:variable name="transcriptionAllText" select="document($transcriptionURI)"/>
                               <xsl:value-of select="$transcriptionAllText//*:body"/>
-                              
+                        
                      </xsl:variable>
                      
                      <xsl:value-of select="normalize-space(translate($transcriptionText, '&#xa0;', ' '))"/> 
                     
+                     <!--<xsl:message select="normalize-space(translate($transcriptionText, '&#xa0;', ' '))"/>-->
                 
                   </transcriptionText>
                   
