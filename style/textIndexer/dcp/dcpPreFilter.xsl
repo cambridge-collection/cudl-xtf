@@ -63,21 +63,6 @@
 
    <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
-
-   <!-- ====================================================================== -->
-   <!-- Server URI                                       -->
-   <!-- ====================================================================== -->
-
-   <xsl:variable name="serverURI">
-
-      <xsl:variable name="pathToConf" select="'../../../conf/local.conf'"/>
-
-      <xsl:value-of select="document($pathToConf)//uri/@path"/>
-
-
-
-   </xsl:variable>
-   
    
    <!-- ====================================================================== -->
    <!-- Title - constructed on the fly and used in more than one place   -->
@@ -1205,7 +1190,7 @@
       <xsl:if test="not(//transcription//pb) and //transcription/p and not($hideTranscription='true')">
          <allTranscriptionDiplomaticURL>
             
-            <xsl:value-of select="concat('http://services.cudl.lib.cam.ac.uk/v1/transcription/dcp/diplomatic/internal/',$fileID,'/')"/>
+            <xsl:value-of select="concat('/v1/transcription/dcp/diplomatic/internal/',$fileID,'/')"/>
             
          </allTranscriptionDiplomaticURL>
          

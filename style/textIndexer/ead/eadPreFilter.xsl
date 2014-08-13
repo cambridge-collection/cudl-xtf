@@ -1351,16 +1351,17 @@
                
                
                <!-- Now check for transcription for this page by matching on @label - may not be transcription for every page -->
-               <!--for the json, just knock off the cudl bit for internal files-->               
+               <!--for the json, just knock off the cudl bit-->
+               
                <xsl:for-each select="/*:ead/*:archdesc/*:daogrp[@role='transcription-normal']/*:daoloc[@label=$imageLabel]">
                   <xsl:element name="transcriptionNormalisedURL">
-                     <xsl:value-of select="@href"/>
+                     <xsl:value-of select="replace(@href, 'http://services.cudl.lib.cam.ac.uk', '')"/>
                   </xsl:element>                  
                </xsl:for-each>
                                  
                <xsl:for-each select="/*:ead/*:archdesc/*:daogrp[@role='transcription-diplomatic']/*:daoloc[@label=$imageLabel]">
                   <xsl:element name="transcriptionDiplomaticURL">
-                     <xsl:value-of select="@href"/>
+                     <xsl:value-of select="replace(@href, 'http://services.cudl.lib.cam.ac.uk', '')"/>
                   </xsl:element>                  
                </xsl:for-each>
             </xsl:element>

@@ -788,6 +788,7 @@
       <cudl:element name="useNormalisedTranscriptions" jsontype="boolean"/>
       <cudl:element name="useDiplomaticTranscriptions" jsontype="boolean"/>
       <cudl:element name="allTranscriptionDiplomaticURL" jsontype="string"/>
+      <cudl:element name="useTranslations" jsontype="boolean"/>
       
       <cudl:element name="pages" jsontype="array">
          <cudl:element name="page" jsontype="object">
@@ -800,6 +801,7 @@
             <cudl:element name="thumbnailImageOrientation" jsontype="string" />
             <cudl:element name="transcriptionNormalisedURL" jsontype="string" />
             <cudl:element name="transcriptionDiplomaticURL" jsontype="string" />
+            <cudl:element name="translationURL" jsontype="string" />
             <cudl:element name="content" jsontype="string" />
             <cudl:element name="pageType" jsontype="string" />
          </cudl:element>            

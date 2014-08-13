@@ -3666,11 +3666,42 @@
                      <!-- transcription content present so set up page extract URI  -->
                      <transcriptionDiplomaticURL>
                         
-                        <xsl:value-of select="concat('http://services.cudl.lib.cam.ac.uk/v1/transcription/tei/diplomatic/internal/',$fileID,'/',@n,'/',@n)"/>
+                        <xsl:value-of select="concat('/v1/transcription/tei/diplomatic/internal/',$fileID,'/',@n,'/',@n)"/>
                         
                      </transcriptionDiplomaticURL>
                   </xsl:otherwise>
                </xsl:choose>
+               
+               <xsl:variable name="transcriptionLabel"><xsl:value-of select="@n"/></xsl:variable>
+               
+               <xsl:for-each select="//*:text/*:body/*:div[@type='translation']//*:pb[@n=$transcriptionLabel]">
+                  
+                  
+                  
+                  <!-- Page translation -->
+                  <xsl:choose>
+                     <!--when this pb has no following siblings i.e. it is the last element pb element and is not followed by content, do nothing-->
+                     <!--<xsl:when test="count(following-sibling::*)=0" />-->
+                     <xsl:when test="position() = last() and count(following-sibling::*)=0"/>
+                     
+                     <!--when there's no content between here and the next pb element do nothing-->
+                     <xsl:when test="local-name(following-sibling::*[1])='pb'" >
+                        
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <!-- translation content present so set up page extract URI  -->
+                        <translationURL>
+                           
+                           <xsl:value-of select="concat('/v1/translation/tei/EN/',$fileID,'/',@n,'/',@n)"/>
+                           
+                          
+                        </translationURL>
+                        
+                     </xsl:otherwise>
+                  </xsl:choose>
+                  
+                  
+               </xsl:for-each>
                
                <!-- 
                   Note: possible to have:
@@ -3876,6 +3907,12 @@
          
          <useTranscriptions>true</useTranscriptions>
          <useDiplomaticTranscriptions>true</useDiplomaticTranscriptions>
+         
+      </xsl:if>
+      
+      <xsl:if test="//*:text/*:body/*:div[@type='translation']/*[not(local-name()='pb')]">
+         
+         <useTranslations>true</useTranslations>
          
       </xsl:if>
       

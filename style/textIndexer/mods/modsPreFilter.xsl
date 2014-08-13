@@ -77,21 +77,7 @@
    <xsl:variable name="modsMeta" select="//*:mods"/>
    <xsl:variable name="metsMeta" select="//*:mets"/>
    
-   <!-- ====================================================================== -->
-   <!-- Server URI                                       -->
-   <!-- ====================================================================== -->
    
-   <!--not needed?-->
-   
-   <xsl:variable name="serverURI">
-      
-      <xsl:variable name="pathToConf" select="'../../../conf/local.conf'"/>
-      
-      <xsl:value-of select="document($pathToConf)//uri/@path"/>
-      
-      
-      
-   </xsl:variable>
 
    
    <!-- ====================================================================== -->
@@ -1465,16 +1451,19 @@
                   <xsl:value-of select="normalize-space($thumbnailOrientation)"/>
                </thumbnailImageOrientation>
 
-               <!-- Keep external transcription URIs as full URIs; make cudl.lib.cam.ac.uk transcription URIs into relative URIs -->
+               <!-- take the stem off transcription links -->
                
                <xsl:variable name="transNormFileID"
                   select="./mets:fptr[starts-with(@FILEID, 'NORM')]/@FILEID"/>
                <xsl:variable name="transNormUrl"
                   select="normalize-space(//mets:file[@ID=$transNormFileID]/mets:FLocat/@xlink:href)"/>
+               <xsl:variable name="transNormUrlShort" select="replace($transNormUrl, 'http://services.cudl.lib.cam.ac.uk','')"/>
                
-               <xsl:if test="normalize-space($transNormUrl)">
+               
+               <xsl:if test="normalize-space($transNormUrlShort)">
                   <transcriptionNormalisedURL>
-                     <xsl:value-of select="normalize-space($transNormUrl)"/>                     
+                     <xsl:value-of select="normalize-space($transNormUrlShort)"/>
+
                   </transcriptionNormalisedURL>
                </xsl:if>   
                
@@ -1482,11 +1471,13 @@
                   select="./mets:fptr[starts-with(@FILEID, 'DIPL')]/@FILEID"/>
                <xsl:variable name="transDiplUrl"
                   select="normalize-space(//mets:file[@ID=$transDiplFileID]/mets:FLocat/@xlink:href)"/>
+               <xsl:variable name="transDiplUrlShort" select="replace($transDiplUrl, 'http://services.cudl.lib.cam.ac.uk','')"/>
                
-               <xsl:if test="normalize-space($transDiplUrl)">
+               <xsl:if test="normalize-space($transDiplUrlShort)">
                   <transcriptionDiplomaticURL>
                      <xsl:value-of
-                        select="normalize-space($transDiplUrl)"/>
+                        select="normalize-space($transDiplUrlShort)"/>
+                     
                   </transcriptionDiplomaticURL>
                </xsl:if>
                

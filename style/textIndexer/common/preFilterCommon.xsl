@@ -55,18 +55,7 @@
    
    <xsl:variable name="apiKey" select="document($pathToConf)//services/@key"/>
    
-   <!-- ====================================================================== -->
-   <!-- Server URI                                       -->
-   <!-- ====================================================================== -->   
    
-   <xsl:variable name="serverURI" select="document($pathToConf)//uri/@path"/>
-      
-   <!-- ====================================================================== -->
-   <!-- XTF Server URI                                       -->
-   <!-- ====================================================================== -->
-   
-   <xsl:variable name="xtfServerURI" select="document($pathToConf)//xtf/@path"/>           
-         
    <!-- ====================================================================== -->
    <!-- File ID                                       -->
    <!-- ====================================================================== -->
@@ -539,6 +528,7 @@
       |*:numberOfPages
       |*:pages
       |*:useTranscriptions
+      |*:useTranslations
       |*:logicalStructures
       |*:ID
       |*:event/*:type
