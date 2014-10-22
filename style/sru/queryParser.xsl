@@ -264,11 +264,13 @@
   <xsl:template name="searchRetrieve">
   
     <xsl:variable name="stylesheet" select="'style/sru/resultFormatter/resultFormatter.xsl'"/>
+    <xsl:variable name="pathToConf" select="'../../conf/local.conf'"/>     
+    <xsl:variable name="indexPath" select="document($pathToConf)//index/@path" />
     
     <!-- The top-level query element tells what stylesheet will be used to
        format the results, which document to start on, and how many documents
        to display on this page. -->
-    <query indexPath="index" termLimit="1000" workLimit="1000000" style="{$stylesheet}" startDoc="{$startRecord}" maxDocs="{$maximumRecords}">
+    <query indexPath="{$indexPath}" termLimit="1000" workLimit="1000000" style="{$stylesheet}" startDoc="{$startRecord}" maxDocs="{$maximumRecords}">
 
       <!-- process query -->
       <and>

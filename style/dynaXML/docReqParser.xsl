@@ -238,8 +238,10 @@ to a fixed value-->
 
          <xsl:variable name="query" select="/parameters/param[@name='query']"/>
          <xsl:variable name="sectionType" select="/parameters/param[@name='sectionType']"/>
+         <xsl:variable name="pathToConf" select="'../../conf/local.conf'"/>     
+         <xsl:variable name="indexPath" select="document($pathToConf)//index/@path" />
 
-         <query indexPath="index" termLimit="1000" workLimit="500000">
+         <query indexPath="{$indexPath}" termLimit="1000" workLimit="500000">
             <xsl:apply-templates select="$query"/>
          </query>
       </xsl:if>

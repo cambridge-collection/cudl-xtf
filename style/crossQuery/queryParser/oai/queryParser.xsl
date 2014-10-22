@@ -289,7 +289,11 @@
    
    <!-- construct query -->
    <xsl:template name="query">
-      <query indexPath="index" maxDocs="{$maxDocs}" startDoc="{$startDoc}" sortMetaFields="dateStamp" style="style/crossQuery/resultFormatter/oai/resultFormatter.xsl" termLimit="1000" workLimit="1000000">
+   
+      <xsl:variable name="pathToConf" select="'../../../../conf/local.conf'"/>     
+      <xsl:variable name="indexPath" select="document($pathToConf)//index/@path" />
+   
+      <query indexPath="{$indexPath}" maxDocs="{$maxDocs}" startDoc="{$startDoc}" sortMetaFields="dateStamp" style="style/crossQuery/resultFormatter/oai/resultFormatter.xsl" termLimit="1000" workLimit="1000000">
          <xsl:choose>
             <xsl:when test="$verb='GetRecord'">
                <and field="identifier">
