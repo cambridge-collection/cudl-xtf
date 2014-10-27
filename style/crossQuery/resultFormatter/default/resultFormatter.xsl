@@ -561,27 +561,27 @@
       <xsl:choose>
          <xsl:when test="$browse-all">
             <xsl:text>Facet | </xsl:text>
-            <a href="{$xtfURL}{$crossqueryPath}?browse-title=first;sort=title">Title</a>
+            <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};browse-title=first;sort=title">Title</a>
             <xsl:text> | </xsl:text>
-            <a href="{$xtfURL}{$crossqueryPath}?browse-name=first;sort=name">Author</a>
+            <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};browse-name=first;sort=name">Author</a>
          </xsl:when>
          <xsl:when test="$browse-title">
-            <a href="{$xtfURL}{$crossqueryPath}?browse-all=yes">Facet</a>
+            <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};browse-all=yes">Facet</a>
             <xsl:text> | Title | </xsl:text>
-            <a href="{$xtfURL}{$crossqueryPath}?browse-name=first;sort=name">Author</a>
+            <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};browse-name=first;sort=name">Author</a>
          </xsl:when>
          <xsl:when test="$browse-name">
-            <a href="{$xtfURL}{$crossqueryPath}?browse-all=yes">Facet</a>
+            <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};browse-all=yes">Facet</a>
             <xsl:text> | </xsl:text>
-            <a href="{$xtfURL}{$crossqueryPath}?browse-title=first;sort=title">Title</a>
+            <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};browse-title=first;sort=title">Title</a>
             <xsl:text>  | Author</xsl:text>
          </xsl:when>
          <xsl:otherwise>
-            <a href="{$xtfURL}{$crossqueryPath}?browse-all=yes">Facet</a>
+            <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};browse-all=yes">Facet</a>
             <xsl:text> | </xsl:text>
-            <a href="{$xtfURL}{$crossqueryPath}?browse-title=first;sort=title">Title</a>
+            <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};browse-title=first;sort=title">Title</a>
             <xsl:text> | </xsl:text>
-            <a href="{$xtfURL}{$crossqueryPath}?browse-name=first;sort=name">Author</a>
+            <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};browse-name=first;sort=name">Author</a>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>

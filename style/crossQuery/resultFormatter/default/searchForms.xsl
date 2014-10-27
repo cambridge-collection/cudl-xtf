@@ -63,10 +63,10 @@
                <div class="forms">
                   <table>
                      <tr>
-                        <td class="{if(matches($smode,'simple')) then 'tab-select' else 'tab'}"><a href="search?smode=simple">Keyword</a></td>
-                        <td class="{if(matches($smode,'advanced')) then 'tab-select' else 'tab'}"><a href="search?smode=advanced">Advanced</a></td>
-                        <td class="{if(matches($smode,'freeform')) then 'tab-select' else 'tab'}"><a href="search?smode=freeform">Freeform</a></td>
-                        <td class="{if(matches($smode,'browse')) then 'tab-select' else 'tab'}"><a href="search?smode=browse">Browse</a></td>
+                        <td class="{if(matches($smode,'simple')) then 'tab-select' else 'tab'}"><a href="search?indexPath={$indexPath};smode=simple">Keyword</a></td>
+                        <td class="{if(matches($smode,'advanced')) then 'tab-select' else 'tab'}"><a href="search?indexPath={$indexPath};smode=advanced">Advanced</a></td>
+                        <td class="{if(matches($smode,'freeform')) then 'tab-select' else 'tab'}"><a href="search?indexPath={$indexPath};smode=freeform">Freeform</a></td>
+                        <td class="{if(matches($smode,'browse')) then 'tab-select' else 'tab'}"><a href="search?indexPath={$indexPath};smode=browse">Browse</a></td>
                      </tr>
                      <tr>
                         <td colspan="4">
@@ -114,9 +114,10 @@
             <tr>
                <td>
                   <input type="text" name="keyword" size="40" value="{$keyword}"/>
+                  <input type="hidden" name="indexPath" value="{$indexPath}"/>
                   <xsl:text>&#160;</xsl:text>
                   <input type="submit" value="Search"/>
-                  <input type="reset" onclick="location.href='{$xtfURL}{$crossqueryPath}'" value="Clear"/>
+                  <input type="reset" onclick="location.href='{$xtfURL}{$crossqueryPath}?indexPath={$indexPath}'" value="Clear"/>
                </td>
             </tr>
             <tr>
@@ -373,8 +374,9 @@
                         <td>&#160;</td>
                         <td>
                            <input type="hidden" name="smode" value="advanced"/>
+                           <input type="hidden" name="indexPath" value="{$indexPath}"/>
                            <input type="submit" value="Search"/>
-                           <input type="reset" onclick="location.href='{$xtfURL}{$crossqueryPath}?smode=advanced'" value="Clear"/>
+                           <input type="reset" onclick="location.href='{$xtfURL}{$crossqueryPath}?indexPath={$indexPath};smode=advanced'" value="Clear"/>
                         </td>
                      </tr>
                   </table>
@@ -431,9 +433,10 @@
                <td>
                   <p><i>Experimental feature:</i> "Freeform" complex query supporting -/NOT, |/OR, &amp;/AND, field names, and parentheses.</p>
                   <input type="text" name="freeformQuery" size="40" value="{$freeformQuery}"/>
+                  <input type="hidden" name="indexPath" value="{$indexPath}"/>                  
                   <xsl:text>&#160;</xsl:text>
                   <input type="submit" value="Search"/>
-                  <input type="reset" onclick="location.href='{$xtfURL}{$crossqueryPath}'" value="Clear"/>
+                  <input type="reset" onclick="location.href='{$xtfURL}{$crossqueryPath}?indexPath={$indexPath}'" value="Clear"/>
                </td>
             </tr>
             <tr>
