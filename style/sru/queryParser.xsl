@@ -264,8 +264,6 @@
   <xsl:template name="searchRetrieve">
   
     <xsl:variable name="stylesheet" select="'style/sru/resultFormatter/resultFormatter.xsl'"/>
-    <xsl:variable name="pathToConf" select="'../../conf/local.conf'"/>     
-    <xsl:variable name="indexPath" select="document($pathToConf)//index/@path" />
     
     <!-- The top-level query element tells what stylesheet will be used to
        format the results, which document to start on, and how many documents

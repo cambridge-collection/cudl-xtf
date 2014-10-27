@@ -8,9 +8,9 @@
 <index-validation>
   
   <!--local setting-->
-  <!--<crossQuery minHits="500">http://localhost:8080/xtf/search?keyword=newton</crossQuery>-->
+  <!-- <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=newton;indexPath=/home/jlf44/temp/indices/index-cudl</crossQuery> -->
   
   <!--live setting-->
-  <crossQuery minHits="0">http://cudl.lib.cam.ac.uk/xtf/search?keyword=newton</crossQuery>
+  <crossQuery minHits="0">http://cudl.lib.cam.ac.uk/xtf/search?keyword=newton;indexPath=/usr/local/indices/index-cudl</crossQuery>
   
 </index-validation>

@@ -68,7 +68,7 @@
    <xsl:param name="raw"/>
    
    <!-- indexPath param -->
-   <xsl:param name="indexPath" select="index-all"/>
+   <xsl:param name="indexPath" select="index-cudl"/>
    
    <!-- score normalization and explanation (for debugging) -->
    <xsl:param name="normalizeScores"/>
