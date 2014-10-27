@@ -67,6 +67,9 @@
    <!-- raw XML dump flag -->
    <xsl:param name="raw"/>
    
+   <!-- indexPath param -->
+   <xsl:param name="indexPath" select="index-all"/>
+   
    <!-- score normalization and explanation (for debugging) -->
    <xsl:param name="normalizeScores"/>
    <xsl:param name="explainScores"/>

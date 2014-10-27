@@ -65,7 +65,7 @@
         be the same fields shown in the search result listing, so the user
         can see all the matching words. -->
    <!--TODO - add to/change these-->
-         
+   
    <xsl:param name="fieldList" select="'text title uniformTitle alternativeTitle descriptiveTitle 
       eventCreationDateStart eventCreationDateEnd eventCreationDateDisplay 
       eventPublicationDateStart eventPublicationDateEnd eventPublicationDateDisplay 
@@ -80,10 +80,8 @@
       <!--path to result formatter - change depending on format parameter?-->
       <!--we don't use the resultFormatter-->
       <xsl:variable name="stylesheet" select="'style/crossQuery/resultFormatter/default/resultFormatter.xsl'"/>
-      <xsl:variable name="pathToConf" select="'../../../../conf/local.conf'"/>     
-      <xsl:variable name="indexPath" select="document($pathToConf)//index/@path" />
-
-            <!-- The top-level query element tells what stylesheet will be used to
+      
+      <!-- The top-level query element tells what stylesheet will be used to
          format the results, which document to start on, and how many documents
          to display on this page. -->
       <query indexPath="{$indexPath}" termLimit="1000" workLimit="1000000" style="{$stylesheet}" startDoc="{$startDoc}" maxDocs="{$docsPerPage}">
@@ -194,7 +192,7 @@
       
       <!-- Find the meta-data and full-text queries, if any -->
       <xsl:variable name="queryParams"
-         select="param[not(matches(@name,'style|smode|rmode|expand|brand|sort|startDoc|docsPerPage|sectionType|fieldList|normalizeScores|explainScores|f[0-9]+-.+|facet-.+|browse-*|email|.*-exclude|.*-join|.*-prox|.*-max|.*-ignore|freeformQuery'))]"/>
+         select="param[not(matches(@name,'style|smode|rmode|expand|brand|sort|startDoc|indexPath|docsPerPage|sectionType|fieldList|normalizeScores|explainScores|f[0-9]+-.+|facet-.+|browse-*|email|.*-exclude|.*-join|.*-prox|.*-max|.*-ignore|freeformQuery'))]"/>
       
       <and>
          <!-- Process the meta-data and text queries, if any -->
