@@ -231,7 +231,7 @@
                            </a>
                            <xsl:text>&#160;|&#160;</xsl:text>
                         </xsl:if>
-                        <a href="{$xtfURL}{$crossqueryPath}">
+                        <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath}">
                            <xsl:text>New Search</xsl:text>
                         </a>
                         <xsl:if test="$smode = 'showBag'">
@@ -488,7 +488,7 @@
                         </xsl:choose>
                      </td>
                      <td class="right">
-                        <a href="{$xtfURL}{$crossqueryPath}">
+                        <a href="{$xtfURL}{$crossqueryPath}?indexPath={$indexPath}">
                            <xsl:text>New Search</xsl:text>
                         </a>
                         <xsl:if test="$smode = 'showBag'">
