@@ -93,15 +93,16 @@ to a fixed value-->
          so the code below runs only once.
       -->
 
-      
-      
       <xsl:variable name="textIndexerConfPath" select="'../../conf/textIndexer.conf'"/>
-      <xsl:variable name="dataPath" select="document($textIndexerConfPath)//index/src/@path"/>      
 
-      
+      <xsl:variable name="docIDParts" select="tokenize($docId, ':')"/>
+      <xsl:variable name="indexName" select="$docIDParts[1]"/>
+      <xsl:variable name="docId" select="$docIDParts[2]"/>
+
+      <xsl:variable name="dataPath" select="document($textIndexerConfPath)//index[@name=$indexName]/src/@path"/>      
+      <xsl:variable name="indexPath" select="document($textIndexerConfPath)//index[@name=$indexName]/db/@path"/>
    
-      <xsl:variable name="file" select="concat($dataPath,'/',$docId)"/>
-
+      <xsl:variable name="file" select="concat($dataPath, '/', $docId)"/>
       
       <xsl:variable name="stub"
          select="if ($docId and FileUtils:exists($file)) then FileUtils:readXMLStub($file) else ()"/>
@@ -214,7 +215,7 @@ to a fixed value-->
          that place to fetch the persistent version.
       -->
 
-      <index configPath="conf/textIndexer.conf" name="default"/>
+      <index configPath="conf/textIndexer.conf" name="{$indexName}"/>
 
       <!-- ==================================================================
          The "prefilter" tag specifies a filesystem path, relative to the servlet
@@ -238,7 +239,6 @@ to a fixed value-->
 
          <xsl:variable name="query" select="/parameters/param[@name='query']"/>
          <xsl:variable name="sectionType" select="/parameters/param[@name='sectionType']"/>
-         <xsl:variable name="indexPath" select="/parameters/param[@name='indexPath']"/>
          
          <query indexPath="{$indexPath}" termLimit="1000" workLimit="500000">
             <xsl:apply-templates select="$query"/>
