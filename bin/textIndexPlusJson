@@ -13,7 +13,7 @@ jsonpath="/usr/htdocs/cudl/cudl-data/json/"
 
 # Call textIndexer and write console output to output.txt
 
-./textIndexer -index default | tee output.txt
+./textIndexer -index index-cudl | tee output.txt
 
 # From output.txt file, extract names of indexed XML docs
 
