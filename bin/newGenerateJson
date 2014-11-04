@@ -44,7 +44,10 @@ while (my $filename = <XMLNAMES>) {
     
     $json_filename=$jsonpath.$json_filename;
         
-    my $url=$url_prefix."/xtf/view?docId=".$filename;
+    my $url=$url_prefix."/xtf/view?docId=index-cudl:".$filename;
+    
+    
+    #print STDOUT "URL: $url\n";
     
     my $page=get($url);
     

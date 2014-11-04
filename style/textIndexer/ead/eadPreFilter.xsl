@@ -201,7 +201,7 @@
    <!--ids for structural item-->
    <xsl:template name="get-dmdID">
       
-      <xsl:variable name="normunitid" select="translate(normalize-space(*:did/*:unitid[not(@type='former reference')]), ' .:/', '----')" />
+      <xsl:variable name="normunitid" select="translate(normalize-space(*:did/*:unitid[not(@type)]), ' .:/', '----')" />
       
       <xsl:attribute name="xtf:subDocument" select="$normunitid"/>
       
@@ -374,11 +374,11 @@
                </xsl:element>
             </xsl:if>
             
-            <xsl:if test="normalize-space(*:did/*:unitid[not(@type='former reference')])">
+            <xsl:if test="normalize-space(*:did/*:unitid[not(@type)])">
                
                <xsl:element name="shelfLocator">
                   
-                  <xsl:variable name="shelfLocator" select="replace(normalize-space(*:did/*:unitid[not(@type='former reference')]), '^GBR/\d*/', '')"/>
+                  <xsl:variable name="shelfLocator" select="replace(normalize-space(*:did/*:unitid[not(@type)]), '^GBR/\d*/', '')"/>
                   
                   <xsl:attribute name="display" select="'true'" />
                   <xsl:attribute name="displayForm" select="$shelfLocator" />
@@ -390,10 +390,10 @@
             
          </xsl:when>
          <xsl:otherwise>
-            <xsl:if test="normalize-space(*:did/*:unitid[not(@type='former reference')])">
+            <xsl:if test="normalize-space(*:did/*:unitid[not(@type)])">
                <xsl:element name="reference">
                
-                  <xsl:variable name="reference" select="replace(normalize-space(*:did/*:unitid[not(@type='former reference')]), '^GBR/\d*/', '')"/>
+                  <xsl:variable name="reference" select="replace(normalize-space(*:did/*:unitid[not(@type)]), '^GBR/\d*/', '')"/>
                   
                   <xsl:attribute name="display" select="'true'" />
                   <xsl:attribute name="displayForm" select="$reference" />
@@ -946,7 +946,9 @@
                <xsl:attribute name="displayForm" select="normalize-space(.)" />
                <xsl:element name="shortForm">
                   <xsl:value-of select="normalize-space(.)" />
-               </xsl:element>                        
+               </xsl:element>
+            
+               
             </xsl:element>                                       
          </xsl:otherwise>
       </xsl:choose>
@@ -1399,7 +1401,7 @@
    
    <xsl:template name="make-logical-structure">
       
-      <xsl:variable name="normunitid" select="translate(normalize-space(*:did/*:unitid[not(@type='former reference')]), ' .:/', '----')" />
+      <xsl:variable name="normunitid" select="translate(normalize-space(*:did/*:unitid[not(@type)]), ' .:/', '----')" />
             
       <xsl:element name="logicalStructure">
          
@@ -1540,7 +1542,7 @@
                      <xsl:value-of select="$fileID"/>          
                   </fileID>
                
-                  <xsl:variable name="normunitid" select="translate(normalize-space(//*:archdesc/*:did/*:unitid[not(@type='former reference')]), ' .:/', '----')" />
+                  <xsl:variable name="normunitid" select="translate(normalize-space(//*:archdesc/*:did/*:unitid[not(@type)]), ' .:/', '----')" />
                   
                   <xsl:element name="dmdID">
                      <xsl:attribute name="xtf:noindex">true</xsl:attribute>
@@ -1589,7 +1591,7 @@
                   </fileID>
                   
                   <!-- Ideally we'd have the transcription daogrp/daoloc at the appropriate level in the EAD tree, but in the data we actually have it only at the top (archdesc) level, so this will always be the archdesc unitid. This means that when we come to do facet inheritance in prefilterCommon, we won't get stuff from lower down the tree --> 
-                  <xsl:variable name="normunitid" select="translate(normalize-space(../../*:did/*:unitid[not(@type='former reference')]), ' .:/', '----')" />
+                  <xsl:variable name="normunitid" select="translate(normalize-space(../../*:did/*:unitid[not(@type)]), ' .:/', '----')" />
                                     
                   <xsl:element name="dmdID"><xsl:value-of select="$normunitid"/></xsl:element>      
                   
