@@ -1604,16 +1604,36 @@
                      
                      <!--<xsl:value-of select="position()"/>-->
                      
-                     <xsl:variable name="transcriptionLabel" select="@label"/>
+                     <xsl:variable name="transcriptionLabel">
+                        <xsl:choose>
+                           <xsl:when test="contains(@label, '&amp;')">
+                              
+                              <xsl:value-of select="normalize-space(substring-before(@label, '&amp;'))"/>
+                              
+                           </xsl:when>
+                           <xsl:otherwise>
+                              <xsl:value-of select="@label"/>                              
+                              
+                           </xsl:otherwise>
+                        </xsl:choose>
+                        
+                        
+                     </xsl:variable>
                      <!--gets the position of the page within doc by looking at the corresponding page id-->
+                     
                      
                      <xsl:choose>
                         <xsl:when test="normalize-space(substring-after(/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=$transcriptionLabel]/@id, '-'))">
                            <xsl:value-of select="substring-after(/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=$transcriptionLabel]/@id, '-')"/>                           
                         </xsl:when>
+                        
+                        <xsl:when test="normalize-space(substring-after(/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($transcriptionLabel, ']')]/@id, '-'))">
+                           <xsl:value-of select="substring-after(/*:ead/*:archdesc/*:daogrp[@role='download']/*:daoloc[@label=concat($transcriptionLabel, ']')]/@id, '-')"/>                           
+                        </xsl:when>
+                        
                         <xsl:otherwise>
                            <!-- default if page image data missing -->
-                           <xsl:message>Error: failed to match transcription page label to page image label</xsl:message> 
+                           <xsl:message>Error: failed to match transcription page <xsl:message select="$transcriptionLabel"/> to page image label</xsl:message> 
                            <xsl:text>1</xsl:text>                           
                         </xsl:otherwise>
                      </xsl:choose>
