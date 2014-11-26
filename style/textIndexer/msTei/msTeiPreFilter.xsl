@@ -347,16 +347,16 @@
          <xsl:variable name="title">
             
             <xsl:choose>
-               <xsl:when test="//*:sourceDesc/*:msDesc/*:msContents/*:summary/*:title[@type='general']">
-                  <xsl:for-each-group select="//*:sourceDesc/*:msDesc/*:msContents/*:summary/*:title[@type='general']" group-by="normalize-space(.)">
+               <xsl:when test="//*:sourceDesc/*:msDesc/*:msContents/*:summary//*:title[@type='general']">
+                  <xsl:for-each-group select="//*:sourceDesc/*:msDesc/*:msContents/*:summary//*:title[@type='general']" group-by="normalize-space(.)">
                      <xsl:value-of select="normalize-space(.)"/>
                      <xsl:if test="not(position()=last())">
                         <xsl:text>, </xsl:text>
                      </xsl:if>
                   </xsl:for-each-group>
                </xsl:when>
-               <xsl:when test="//*:sourceDesc/*:msDesc/*:msContents/*:summary/*:title[not(@type)]">
-                  <xsl:for-each-group select="//*:sourceDesc/*:msDesc/*:msContents/*:summary/*:title[not(@type)]" group-by="normalize-space(.)">
+               <xsl:when test="//*:sourceDesc/*:msDesc/*:msContents/*:summary//*:title[not(@type)]">
+                  <xsl:for-each-group select="//*:sourceDesc/*:msDesc/*:msContents/*:summary//*:title[not(@type)]" group-by="normalize-space(.)">
                      <xsl:value-of select="normalize-space(.)"/>                                          
                      <xsl:if test="not(position()=last())">
                         <xsl:text>, </xsl:text>
