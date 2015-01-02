@@ -314,6 +314,7 @@
          <xsl:call-template name="make-metadata"/>
          
          <xsl:call-template name="get-numberOfPages"/>
+         <xsl:call-template name="get-embeddable"/>
          <xsl:call-template name="make-page" /> 
          <xsl:call-template name="make-logical-structure" /> 
          
@@ -894,6 +895,10 @@
    <!-- number of pages -->
    <xsl:template name="get-numberOfPages">
       <numberOfPages>1</numberOfPages>
+   </xsl:template>
+   
+   <xsl:template name="get-embeddable">
+      <embeddable>false</embeddable>
    </xsl:template>
    
    

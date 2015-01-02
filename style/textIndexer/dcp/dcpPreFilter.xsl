@@ -132,6 +132,9 @@
 
 
          <xsl:call-template name="get-numberOfPages"/>
+         <xsl:call-template name="get-embeddable"/>
+         
+         
          <xsl:call-template name="get-transcription-flag"/>
 
          <!--these are to do with the structure-->
@@ -942,7 +945,7 @@
    
 
    <!-- image rights -->
-   
+   <!--these should be in data rather than hardcoded here-->
    <xsl:template name="get-image-rights">
 
       <xsl:element name="displayImageRights">
@@ -1100,6 +1103,16 @@
          <xsl:value-of select="count(//addmat[type='download'])"/>
       </numberOfPages>
    </xsl:template>
+   
+   
+   <!-- embeddable -->
+   <!--should be dependent on download image rights statement - at the moment, this is hardcoded into prefilter, should be in data-->
+   <xsl:template name="get-embeddable">
+      
+      <embeddable>true</embeddable>
+      
+   </xsl:template>
+   
 
    <!--pages-->
    <!--Transcription for whole doc rather than for individual pages at present-->

@@ -86,6 +86,8 @@
          
          <xsl:call-template name="get-numberOfPages"/>
          
+         <xsl:call-template name="get-embeddable"/>
+         
          <xsl:call-template name="make-pages" />
          <xsl:call-template name="make-logical-structure" />
          
@@ -3599,6 +3601,22 @@
          <xsl:value-of select="count(//*:text/*:body/*:div[not(@type)]//*:pb)"/>
       </numberOfPages>
    </xsl:template>
+   
+   
+   <!-- ********************************* embeddable -->
+   <xsl:template name="get-embeddable">
+      
+      <xsl:variable name="downloadImageRights" select="normalize-space(//*:publicationStmt/*:availability[@xml:id='downloadImageRights'])"/>
+      
+      <embeddable>
+         <xsl:choose>
+            <xsl:when test="normalize-space($downloadImageRights)">true</xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+         </xsl:choose>
+      </embeddable>
+      
+   </xsl:template>
+   
    
    <!--*****************************make pages and urls which relate to them-->
    <xsl:template name="make-pages">

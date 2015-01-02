@@ -95,6 +95,8 @@
          
          <xsl:call-template name="get-numberOfPages"/>
          
+         <xsl:call-template name="get-embeddable"/>
+         
          <xsl:call-template name="make-pages" /> 
          <xsl:call-template name="make-logical-structures" /> 
          
@@ -1310,6 +1312,20 @@
       </numberOfPages>
    </xsl:template>
    
+   <!-- embeddable -->
+   <xsl:template name="get-embeddable">
+      
+      <xsl:variable name="downloadImageRights" select="normalize-space(//*:userestrict[@type='downloadImageRights'])"/>
+      
+      <embeddable>
+         <xsl:choose>
+            <xsl:when test="normalize-space($downloadImageRights)">true</xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+         </xsl:choose>
+      </embeddable>
+      
+   </xsl:template>
+   
    <!--pages with associated resources-->
    <xsl:template name="make-pages">
       
@@ -2129,10 +2145,6 @@
             
          </xsl:otherwise>
       </xsl:choose>
-      
-      
-      
-      
       
    </xsl:template>
    

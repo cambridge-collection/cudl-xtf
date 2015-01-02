@@ -784,11 +784,13 @@
       </cudl:element>
       
       <cudl:element name="numberOfPages" jsontype="number"/>
+      <cudl:element name="embeddable" jsontype="boolean"/>
       <cudl:element name="useTranscriptions" jsontype="boolean"/>
       <cudl:element name="useNormalisedTranscriptions" jsontype="boolean"/>
       <cudl:element name="useDiplomaticTranscriptions" jsontype="boolean"/>
       <cudl:element name="allTranscriptionDiplomaticURL" jsontype="string"/>
       <cudl:element name="useTranslations" jsontype="boolean"/>
+      
       
       <cudl:element name="pages" jsontype="array">
          <cudl:element name="page" jsontype="object">

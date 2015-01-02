@@ -109,6 +109,7 @@
          
          <!--these are to do with the document as a whole-->
          <xsl:call-template name="get-numberOfPages"/>
+         <xsl:call-template name="get-embeddable"/>
          <xsl:call-template name="get-transcription-flag"/>
          
          <!--these are to do with the structure-->
@@ -1386,7 +1387,21 @@
       </numberOfPages>
    </xsl:template>
    
-   
+   <!-- embeddable -->
+   <xsl:template name="get-embeddable">
+      
+      <xsl:variable name="imagesAdmID" select="//mets:fileGrp[@USE='download']/@ADMID"/>
+      
+      <xsl:variable name="downloadImageRights" select="normalize-space(//mets:amdSec[@ID=$imagesAdmID]/mets:rightsMD//RightsDeclaration)"/>
+      
+      <embeddable>
+         <xsl:choose>
+            <xsl:when test="normalize-space($downloadImageRights)">true</xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+         </xsl:choose>
+      </embeddable>
+      
+   </xsl:template>
 
    <!--pages-->
    <!--relies on us consistently using the same prefixes to our FILEID attributes, i.e. IMAGE, NORM, DIPL-->
