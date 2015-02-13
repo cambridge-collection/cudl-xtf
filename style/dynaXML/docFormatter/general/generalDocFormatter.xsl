@@ -762,6 +762,7 @@
             <cudl:element name="bibliographies" label="Bibliography" jsontype="array">
                <cudl:element name="bibliography" jsontype="string"/>               
             </cudl:element>
+            
             <!-- Non-display data: used by viewer but not displayed in metadata block -->
             <cudl:element name="thumbnailUrl" jsontype="string" />
             <cudl:element name="thumbnailOrientation" jsontype="string" />
@@ -790,6 +791,8 @@
       <cudl:element name="useDiplomaticTranscriptions" jsontype="boolean"/>
       <cudl:element name="allTranscriptionDiplomaticURL" jsontype="string"/>
       <cudl:element name="useTranslations" jsontype="boolean"/>
+      <cudl:element name="completeness" jsontype="string" />
+      
       
       
       <cudl:element name="pages" jsontype="array">

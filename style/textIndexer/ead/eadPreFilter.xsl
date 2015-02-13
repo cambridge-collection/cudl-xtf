@@ -97,6 +97,10 @@
          
          <xsl:call-template name="get-embeddable"/>
          
+         <xsl:if test=".//*:note[@type='completeness']">
+            <xsl:apply-templates select=".//*:note[@type='completeness']"/>
+         </xsl:if>
+         
          <xsl:call-template name="make-pages" /> 
          <xsl:call-template name="make-logical-structures" /> 
          
@@ -1324,6 +1328,14 @@
          </xsl:choose>
       </embeddable>
       
+   </xsl:template>
+   
+   <!--completeness-->
+   <xsl:template match="*:note[@type='completeness']">
+      <completeness>
+         
+         <xsl:value-of select="normalize-space(.)"/>
+      </completeness>
    </xsl:template>
    
    <!--pages with associated resources-->

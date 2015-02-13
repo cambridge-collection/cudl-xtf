@@ -77,6 +77,7 @@
       <!-- extract metadata from the TEI -->
       <xsl:variable name="meta">
 
+         <!--descriptive stuff-->
          <descriptiveMetadata>
             
             <xsl:call-template name="make-dmd-parts"/>
@@ -88,6 +89,13 @@
          
          <xsl:call-template name="get-embeddable"/>
          
+         <xsl:if test=".//*:note[@type='completeness']">
+            <xsl:apply-templates select=".//*:note[@type='completeness']"/>
+         </xsl:if>
+         
+         
+         
+         <!--structural stuff-->
          <xsl:call-template name="make-pages" />
          <xsl:call-template name="make-logical-structure" />
          
@@ -104,10 +112,15 @@
    
    <!--*******************Descriptive metadata************************************************************************************-->
    
-   <!--**********************This is all the structural stuff which lays out the descriptive metadata parts in the right hierarchy-->
+   <!--This is all the structural stuff which lays out the descriptive metadata parts in the right hierarchy-->
+   
+   <!--Descriptive metadata is organised into 'parts' - these are not nesting - hierarchy is organised by ids (like METS)-->
+
+   <!--each part has a unique xtf:subDocument attribute to facilitate search indexing against specific parts-->
 
    <xsl:template name="make-dmd-parts">      
       
+      <!--if there are no msParts-->
       <xsl:if test="//*:sourceDesc/*:msDesc/*:msContents/*:msItem">
          <xsl:choose>
             <xsl:when test="count(//*:sourceDesc/*:msDesc/*:msContents/*:msItem) = 1">
@@ -115,9 +128,8 @@
                <!-- Just one top-level msItem, so merge with doc level -->
                
                <part>
-                  
+                
                   <xsl:attribute name="xtf:subDocument" select="'ITEM-1'"/>
-                  
                   
                   <xsl:call-template name="get-doc-abstract"/>
                   
@@ -144,6 +156,7 @@
                   
                   <xsl:call-template name="get-collection-memberships"/> 
                   
+                  <!--not sure why this is called with a for-each - the above means that there will only ever be one msItem here-->
                   <xsl:for-each select="//*:sourceDesc/*:msDesc/*:msContents/*:msItem[1]" >
 
                      <xsl:call-template name="get-item-dmdID"/>
@@ -178,8 +191,6 @@
                
                <part>
                   <xsl:attribute name="xtf:subDocument" select="'DOCUMENT'"/>
-                  
-                  
                   
                   <xsl:call-template name="get-doc-dmdID"/>
                   <xsl:call-template name="get-doc-title"/>
@@ -224,6 +235,7 @@
       
    </xsl:template>
    
+   <!--each msItem is also a part-->
    <xsl:template match="*:msItem">
 
       <part>
@@ -282,7 +294,7 @@
       </fileID>
       
       <startPage>1</startPage>
-      
+      <!--documents always start on page 1!-->
       <startPageLabel>
          <xsl:value-of select="//*:text/*:body/*:div[not(@type)]//*:pb[1]/@n" />
         
@@ -307,6 +319,7 @@
       </fileID>
       
       <xsl:variable name="startPageLabel">
+         <!--should always be a locus attached to an msItem - but defaults to first page if none present-->
          <xsl:choose>
             <xsl:when test="*:locus/@from">
                <xsl:value-of select="normalize-space(*:locus/@from)" />
@@ -315,7 +328,6 @@
             <xsl:otherwise>
                <xsl:value-of select="//*:text/*:body/*:div[not(@type)]/*:pb[1]/@n" />
                
-              
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -344,6 +356,7 @@
    <!--TITLES-->
    
    <!--main titles-->
+   <!--whole document titles where there are multiple msItems are found in the summary - if not present, defaults to classmark-->
    <xsl:template name="get-doc-title">
       <title>
          <xsl:variable name="title">
@@ -814,7 +827,7 @@
          <creations>
             
             <xsl:attribute name="display" select="'true'" />
-            
+            <!--will there only ever be one of these?-->
             <xsl:for-each select="//*:sourceDesc/*:msDesc/*:history/*:origin">
                <event>
                   
@@ -1081,7 +1094,7 @@
    
    </xsl:template>
    
-   <!--physical location-->
+   <!--physical location and classmark-->
    <xsl:template name="get-doc-physloc">
       
       <physicalLocation>
@@ -1112,8 +1125,6 @@
       
          <xsl:variable name="graphic" select="//*:graphic[@decls='#document-thumbnail']"/>
          
-        
-         
          <xsl:if test="$graphic">
             
             <thumbnailUrl>            
@@ -1141,6 +1152,8 @@
          </xsl:if>
                
    </xsl:template>
+   
+   
    
    <!-- rights for images and metadata-->
    <xsl:template name="get-doc-image-rights">
@@ -1179,6 +1192,15 @@
    
    <xsl:template match="*:authority" mode="html">
       <xsl:apply-templates mode="html"/>
+   </xsl:template>
+   
+   <!--completeness-->
+   
+   <xsl:template match="*:note[@type='completeness']">
+      <completeness>
+         
+         <xsl:value-of select="normalize-space(.)"/>
+      </completeness>
    </xsl:template>
    
    <!--funding-->

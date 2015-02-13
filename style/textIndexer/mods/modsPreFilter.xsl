@@ -112,6 +112,11 @@
          <xsl:call-template name="get-embeddable"/>
          <xsl:call-template name="get-transcription-flag"/>
          
+         <xsl:if test=".//*:note[@type='completeness']">
+               <xsl:apply-templates select=".//*:note[@type='completeness']"/>
+         </xsl:if>
+         
+         
          <!--these are to do with the structure-->
          <xsl:call-template name="get-pages"/>
          <xsl:call-template name="get-logical-structures"/>
@@ -292,7 +297,6 @@
                      <xsl:apply-templates select=".//*:note[@type='language']"/>
                   </languageStrings>
                </xsl:if>
-               
                
                <xsl:if test=".//*:note[not(@type)]">
                   <notes>
@@ -1197,6 +1201,13 @@
       </languageString>
    </xsl:template>
    
+   <xsl:template match="*:note[@type='completeness']">
+      <completeness>
+         
+         <xsl:value-of select="normalize-space(.)"/>
+      </completeness>
+   </xsl:template>
+   
 
    <!--physicalLocation-->
    <xsl:template match="*:location/*:physicalLocation">
@@ -1402,6 +1413,8 @@
       </embeddable>
       
    </xsl:template>
+   
+  
 
    <!--pages-->
    <!--relies on us consistently using the same prefixes to our FILEID attributes, i.e. IMAGE, NORM, DIPL-->
