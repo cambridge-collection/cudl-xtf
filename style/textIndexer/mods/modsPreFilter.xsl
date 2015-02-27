@@ -155,7 +155,13 @@
                
                <!--and retrieves the descriptive metadata-->
                <!--these are all one-off values, some hard-coded-->
-               <xsl:call-template name="get-dmdID"/>
+               <xsl:variable name="dmdID" select="normalize-space(@ID)"/>
+               
+               <ID>
+                  <xsl:value-of select="$dmdID"/>
+               </ID>
+               
+               
                <xsl:call-template name="get-fileID"/>
                <xsl:call-template name="get-startpage"/>
 
@@ -247,7 +253,59 @@
                </xsl:if>
                
                <xsl:call-template name="get-video"/>
-               <xsl:call-template name="get-thumbnail"/>
+               
+               
+               <xsl:variable name="thumbnailID">
+                  
+                  <xsl:choose>
+                     <xsl:when test="normalize-space(//mets:structMap[@TYPE='LOGICAL']//mets:div[@DMDID=$dmdID]/mets:div[@TYPE='page'][1]/mets:fptr[starts-with(@FILEID, 'THUMB-')]/@FILEID)">
+                        
+                        <xsl:value-of select="//mets:structMap[@TYPE='LOGICAL']//mets:div[@DMDID=$dmdID]/mets:div[@TYPE='page'][1]/mets:fptr[starts-with(@FILEID, 'THUMB-')]/@FILEID"/>
+                        
+                     </xsl:when>
+                     
+                     <xsl:when test="normalize-space(//mets:structMap[@TYPE='LOGICAL']//mets:div[@DMDID=$dmdID]/mets:div[1]/mets:div[@TYPE='page'][1]/mets:fptr[starts-with(@FILEID, 'THUMB-')]/@FILEID)">
+                        
+                        <xsl:value-of select="//mets:structMap[@TYPE='LOGICAL']//mets:div[@DMDID=$dmdID]/mets:div[1]/mets:div[@TYPE='page'][1]/mets:fptr[starts-with(@FILEID, 'THUMB-')]/@FILEID"/>
+                        
+                     </xsl:when>
+                     
+                     <xsl:when test="normalize-space(//mets:structMap[@TYPE='LOGICAL']//mets:div[@DMDID=$dmdID]/mets:div[1]/mets:div[1]/mets:div[@TYPE='page'][1]/mets:fptr[starts-with(@FILEID, 'THUMB-')]/@FILEID)">
+                        
+                        <xsl:value-of select="//mets:structMap[@TYPE='LOGICAL']//mets:div[@DMDID=$dmdID]/mets:div[1]/mets:div[1]/mets:div[@TYPE='page'][1]/mets:fptr[starts-with(@FILEID, 'THUMB-')]/@FILEID"/>
+                        
+                     </xsl:when>
+                     
+                     
+                     
+                     <xsl:otherwise>
+                        
+                        <xsl:value-of select="//mets:fileGrp[@USE='thumbnail']/mets:file[1]/@ID"/>
+                        
+                        <xsl:message select="$fileID"/>
+                        
+                        
+                     </xsl:otherwise>
+                  </xsl:choose>
+                  
+                  
+               </xsl:variable>
+               
+               
+               <thumbnailUrl>
+                  
+                  <!--<xsl:message select="$thumbnailID"/>-->
+                  
+                  <xsl:variable name="thumbnailUrlOrig" select="//mets:fileGrp[@USE='thumbnail']/mets:file[@ID=$thumbnailID]/mets:FLocat/@xlink:href"/>
+                  <xsl:variable name="thumbnailUrlShort" select="replace($thumbnailUrlOrig, 'http://cudl.lib.cam.ac.uk/(newton|content)','/content')"/>
+                  
+                  <xsl:value-of
+                     select="normalize-space($thumbnailUrlShort)"/>
+               </thumbnailUrl>
+               <thumbnailOrientation>
+                  <xsl:value-of select="normalize-space(//mets:fileGrp[@USE='thumbnail']/mets:file[@ID=$thumbnailID]/@USE)"/>
+               </thumbnailOrientation>
+            
                
                <xsl:if test=".//*:originInfo[*:dateCreated]">
                   <creations>
@@ -427,12 +485,7 @@
    <!--to be indexed etc correctly, DESCRIPTIVE METADATA ELEMENTS CANNOT HAVE ANY INTERNAL STRUCTURE-->
    <!--i.e. if you're setting xtf:meta="true", no internal structure-->
 
-   <xsl:template name="get-dmdID">
-      <ID>
-         <xsl:value-of select="normalize-space(./@ID)"/>
-      </ID>
-      
-   </xsl:template>
+   
    
    <xsl:template name="get-fileID">
       <!-- Not currently in JSON -->
@@ -712,20 +765,7 @@
       
    </xsl:template>
 
-   <!--thumbnail-->
-   <xsl:template name="get-thumbnail">
-      <thumbnailUrl>
-         
-         <xsl:variable name="thumbnailUrlOrig" select="//mets:fileGrp[@USE='document-thumbnail']/mets:file/mets:FLocat/@xlink:href"/>
-         <xsl:variable name="thumbnailUrlShort" select="replace($thumbnailUrlOrig, 'http://cudl.lib.cam.ac.uk/(newton|content)','/content')"/>
-         
-         <xsl:value-of
-            select="normalize-space($thumbnailUrlShort)"/>
-      </thumbnailUrl>
-      <thumbnailOrientation>
-         <xsl:value-of select="normalize-space(//mets:fileGrp[@USE='document-thumbnail']/mets:file/@USE)"/>
-      </thumbnailOrientation>
-   </xsl:template>
+   
    
 
 
