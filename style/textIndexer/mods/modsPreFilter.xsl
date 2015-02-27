@@ -291,20 +291,46 @@
                   
                </xsl:variable>
                
+               <xsl:choose>
+                  <xsl:when test="$dmdID='DMD1' or $dmdID='DMD-1'">
+                     
+                     <thumbnailUrl>
+                        
+                        <!--<xsl:message select="$thumbnailID"/>-->
+                        
+                        <xsl:variable name="thumbnailUrlOrig" select="//mets:fileGrp[@USE='document-thumbnail']/mets:file/mets:FLocat/@xlink:href"/>
+                        <xsl:variable name="thumbnailUrlShort" select="replace($thumbnailUrlOrig, 'http://cudl.lib.cam.ac.uk/(newton|content)','/content')"/>
+                        
+                        <xsl:value-of select="normalize-space($thumbnailUrlShort)"/>
+                     </thumbnailUrl>
+                     <thumbnailOrientation>
+                        <xsl:value-of select="normalize-space(//mets:fileGrp[@USE='document-thumbnail']/mets:file/@USE)"/>
+                     </thumbnailOrientation>
+                     
+                     
+                  </xsl:when>
+                  
+                  <xsl:otherwise>
+                     
+                     <thumbnailUrl>
+                        
+                        <!--<xsl:message select="$thumbnailID"/>-->
+                        
+                        <xsl:variable name="thumbnailUrlOrig" select="//mets:fileGrp[@USE='thumbnail']/mets:file[@ID=$thumbnailID]/mets:FLocat/@xlink:href"/>
+                        <xsl:variable name="thumbnailUrlShort" select="replace($thumbnailUrlOrig, 'http://cudl.lib.cam.ac.uk/(newton|content)','/content')"/>
+                        
+                        <xsl:value-of
+                           select="normalize-space($thumbnailUrlShort)"/>
+                     </thumbnailUrl>
+                     <thumbnailOrientation>
+                        <xsl:value-of select="normalize-space(//mets:fileGrp[@USE='thumbnail']/mets:file[@ID=$thumbnailID]/@USE)"/>
+                     </thumbnailOrientation>
+                     
+                     
+                  </xsl:otherwise>
+                  
+               </xsl:choose>
                
-               <thumbnailUrl>
-                  
-                  <!--<xsl:message select="$thumbnailID"/>-->
-                  
-                  <xsl:variable name="thumbnailUrlOrig" select="//mets:fileGrp[@USE='thumbnail']/mets:file[@ID=$thumbnailID]/mets:FLocat/@xlink:href"/>
-                  <xsl:variable name="thumbnailUrlShort" select="replace($thumbnailUrlOrig, 'http://cudl.lib.cam.ac.uk/(newton|content)','/content')"/>
-                  
-                  <xsl:value-of
-                     select="normalize-space($thumbnailUrlShort)"/>
-               </thumbnailUrl>
-               <thumbnailOrientation>
-                  <xsl:value-of select="normalize-space(//mets:fileGrp[@USE='thumbnail']/mets:file[@ID=$thumbnailID]/@USE)"/>
-               </thumbnailOrientation>
             
                
                <xsl:if test=".//*:originInfo[*:dateCreated]">
