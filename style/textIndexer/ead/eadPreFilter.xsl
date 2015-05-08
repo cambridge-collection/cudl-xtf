@@ -1787,29 +1787,54 @@
 
    <xsl:template match="*:extref[not(*:persname|*:corpname|*:geogname)]" mode="html">
       
-      <xsl:apply-templates mode="html" />
+      
       
       <xsl:choose>
-         <xsl:when test="normalize-space(@href)">
-            <xsl:text> [</xsl:text>
+         
+         <xsl:when test="@role='normal'">
+            
             <xsl:text>&lt;a target=&apos;_blank&apos; class=&apos;externalLink&apos; href=&apos;</xsl:text>
             <xsl:value-of select="normalize-space(@href)" />
             <xsl:text>&apos;&gt;</xsl:text>
-            <xsl:choose>
-               <xsl:when test="normalize-space(@role)='nmm'">
-                  <xsl:text>&lt;img title="Link to RMG" alt=&apos;RMG icon&apos; class=&apos;nmm_icon&apos; src=&apos;/images/general/nmm_small.png&apos;/&gt;</xsl:text>
-               </xsl:when>
-               <xsl:when test="normalize-space(@role)">
-                  <xsl:value-of select="normalize-space(@role)" />
-               </xsl:when>
-               <xsl:otherwise>
-                  <xsl:text>link</xsl:text>
-               </xsl:otherwise>
-            </xsl:choose>
+            <xsl:apply-templates mode="html" />
             <xsl:text>&lt;/a&gt;</xsl:text>
-            <xsl:text>] </xsl:text>
+            
          </xsl:when>
-         <xsl:otherwise />
+         <xsl:otherwise>
+         
+            <xsl:apply-templates mode="html" />
+         
+            <xsl:choose>
+            
+               <xsl:when test="normalize-space(@href)">
+                  <xsl:text> [</xsl:text>
+                  <xsl:text>&lt;a target=&apos;_blank&apos; class=&apos;externalLink&apos; href=&apos;</xsl:text>
+                  <xsl:value-of select="normalize-space(@href)" />
+                  <xsl:text>&apos;&gt;</xsl:text>
+                  <xsl:choose>
+                     <xsl:when test="normalize-space(@role)='nmm'">
+                        <xsl:text>&lt;img title="Link to RMG" alt=&apos;RMG icon&apos; class=&apos;nmm_icon&apos; src=&apos;/images/general/nmm_small.png&apos;/&gt;</xsl:text>
+                     </xsl:when>
+                     <xsl:when test="normalize-space(@role)">
+                        <xsl:value-of select="normalize-space(@role)" />
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <xsl:text>link</xsl:text>
+                     </xsl:otherwise>
+                  </xsl:choose>
+                  <xsl:text>&lt;/a&gt;</xsl:text>
+                  <xsl:text>] </xsl:text>
+               </xsl:when>
+               <xsl:otherwise />
+               
+            
+            </xsl:choose>
+            
+            
+            
+         </xsl:otherwise>
+         
+         
       </xsl:choose>
       
    </xsl:template>
