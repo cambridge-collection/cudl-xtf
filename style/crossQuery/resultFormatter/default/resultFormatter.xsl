@@ -897,7 +897,7 @@
                         var span = YAHOO.util.Dom.get('moreLike_<xsl:value-of select="@rank"/>');
                         span.innerHTML = "Fetching...";
                         YAHOO.util.Connect.asyncRequest('GET', 
-                           '<xsl:value-of select="concat('search?smode=moreLike;docsPerPage=5;identifier=', $identifier)"/>',
+                           '<xsl:value-of select="concat('search?smode=moreLike;docsPerPage=5;identifier=', $identifier, ';indexPath=', $indexPath)"/>',
                            { success: function(o) { span.innerHTML = o.responseText; },
                              failure: function(o) { span.innerHTML = "Failed!" } 
                            }, null);
