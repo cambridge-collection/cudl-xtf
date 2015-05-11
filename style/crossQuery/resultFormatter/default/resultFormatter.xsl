@@ -645,24 +645,20 @@
                      <xsl:choose>
                         <xsl:when test="$smode = 'showBag'">
                            <script type="text/javascript">
-                                    remove_<xsl:value-of select="@rank"/>
-= function () {
-                                        var span = YAHOO.util.Dom.get('remove_<xsl:value-of select="@rank"/>
-                                    ');
-                                    span.innerHTML = "Deleting...";
-                                    YAHOO.util.Connect.asyncRequest('GET',
-                                    '<xsl:value-of select="concat($xtfURL, $crossqueryPath, '?smode=removeFromBag;identifier=', $identifier)"/>
-                                    ', { success: function (o) {
-                                            var main = YAHOO.util.Dom.get('main_<xsl:value-of select="@rank"/>
-                                    ');
-                                    main.parentNode.removeChild(main);--(YAHOO.util.Dom.get('itemCount').innerHTML);
-                                },
-                                failure: function (o) {
-                                    span.innerHTML = 'Failed to delete!';
-                                }
-                            },
-                            null);
-                        };</script>
+                              remove_<xsl:value-of select="@rank"/> = function() {
+                                 var span = YAHOO.util.Dom.get('remove_<xsl:value-of select="@rank"/>');
+                                 span.innerHTML = "Deleting...";
+                                 YAHOO.util.Connect.asyncRequest('GET', 
+                                    '<xsl:value-of select="concat($xtfURL, $crossqueryPath, '?smode=removeFromBag;identifier=', $identifier)"/>',
+                                    {  success: function(o) { 
+                                          var main = YAHOO.util.Dom.get('main_<xsl:value-of select="@rank"/>');
+                                          main.parentNode.removeChild(main);
+                                          --(YAHOO.util.Dom.get('itemCount').innerHTML);
+                                       },
+                                       failure: function(o) { span.innerHTML = 'Failed to delete!'; }
+                                    }, null);
+                              };
+                           </script>
                            <span id="remove_{@rank}">
                               <a href="javascript:remove_{@rank}()">Delete</a>
                            </span>
@@ -681,22 +677,19 @@
                               </xsl:when>
                               <xsl:otherwise>
                                  <script type="text/javascript">
-                                            add_<xsl:value-of select="@rank"/>
-= function () {
-                                                var span = YAHOO.util.Dom.get('add_<xsl:value-of select="@rank"/>
-                                            ');
-                                            span.innerHTML = "Adding...";
-                                            YAHOO.util.Connect.asyncRequest('GET',
-                                            '<xsl:value-of select="concat($xtfURL, $crossqueryPath, '?smode=addToBag;identifier=', $identifier)"/>
-                                            ', { success: function (o) {
-                                                    span.innerHTML = o.responseText;++(YAHOO.util.Dom.get('bagCount').innerHTML);
-                                                },
-                                                failure: function (o) {
-                                                    span.innerHTML = 'Failed to add!';
-                                                }
-                                            },
-                                            null);
-                                        };</script>
+                                    add_<xsl:value-of select="@rank"/> = function() {
+                                       var span = YAHOO.util.Dom.get('add_<xsl:value-of select="@rank"/>');
+                                       span.innerHTML = "Adding...";
+                                       YAHOO.util.Connect.asyncRequest('GET', 
+                                          '<xsl:value-of select="concat($xtfURL, $crossqueryPath, '?smode=addToBag;identifier=', $identifier)"/>',
+                                          {  success: function(o) { 
+                                                span.innerHTML = o.responseText;
+                                                ++(YAHOO.util.Dom.get('bagCount').innerHTML);
+                                             },
+                                             failure: function(o) { span.innerHTML = 'Failed to add!'; }
+                                          }, null);
+                                    };
+                                 </script>
                                  <span id="add_{@rank}">
                                     <a href="javascript:add_{@rank}()">Add</a>
                                  </span>
@@ -900,23 +893,16 @@
                </td>
                <td class="col3" colspan="2">
                   <script type="text/javascript">
-                        getMoreLike_<xsl:value-of select="@rank"/>
-= function () {
-                            var span = YAHOO.util.Dom.get('moreLike_<xsl:value-of select="@rank"/>
-                        ');
+                     getMoreLike_<xsl:value-of select="@rank"/> = function() {
+                        var span = YAHOO.util.Dom.get('moreLike_<xsl:value-of select="@rank"/>');
                         span.innerHTML = "Fetching...";
-                        YAHOO.util.Connect.asyncRequest('GET',
-                        '<xsl:value-of select="concat('search?smode=moreLike;docsPerPage=5;identifier=', $identifier)"/>
-                        ', {
-                            success: function (o) {
-                                span.innerHTML = o.responseText;
-                            },
-                            failure: function (o) {
-                                span.innerHTML = "Failed!"
-                            }
-                        },
-                        null);
-                    };</script>
+                        YAHOO.util.Connect.asyncRequest('GET', 
+                           '<xsl:value-of select="concat('search?smode=moreLike;docsPerPage=5;identifier=', $identifier)"/>',
+                           { success: function(o) { span.innerHTML = o.responseText; },
+                             failure: function(o) { span.innerHTML = "Failed!" } 
+                           }, null);
+                     };
+                  </script>
                   <span id="moreLike_{@rank}">
                      <a href="javascript:getMoreLike_{@rank}()">Find</a>
                   </span>
