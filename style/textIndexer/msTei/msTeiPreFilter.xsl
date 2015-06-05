@@ -53,21 +53,6 @@
 
    <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
-  
-   <!-- ====================================================================== -->
-   <!-- Root Template                                                          -->
-   <!-- ====================================================================== -->
-
-   <xsl:template match="/">
-      <xtf-converted>
-         <xsl:namespace name="xtf" select="'http://cdlib.org/xtf'"/>
-         <xsl:call-template name="get-meta"/>
-      </xtf-converted>
-   </xsl:template>
-
-   <!--filename-->
-   <xsl:variable name="fileID" select="substring-before(tokenize(document-uri(/), '/')[last()], '.xml')"/>        
-   
    <!-- ====================================================================== -->
    <!-- Metadata Indexing                                                      -->
    <!-- ====================================================================== -->
