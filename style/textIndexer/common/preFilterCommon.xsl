@@ -40,6 +40,10 @@
       ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
       POSSIBILITY OF SUCH DAMAGE.
    -->
+
+<!-- Similarity postprocessing step -->
+<xsl:import href="../common/similarity.xsl"/>
+
    <!-- ====================================================================== -->
    <!-- Variables                                                              -->
    <!-- ====================================================================== -->
@@ -100,6 +104,42 @@
       <my:century key="20">2000s C.E.</my:century>
       <my:century key="21">2100s C.E.</my:century>
    </my:centuries>
+
+   <!-- ====================================================================== -->
+   <!-- Root Template                                                          -->
+   <!-- ====================================================================== -->
+
+<!-- Root template: This is the entry point of the preFilter transforms.
+     It calls the get-meta template which is defined in each of our prefilter
+     types (dpc, msTei etc) -->
+<xsl:template match="/">
+   <xsl:variable name="tree">
+      <!--the whole output document is always wrapped up in xtf-converted-->
+      <xtf-converted>
+         <xsl:namespace name="xtf" select="'http://cdlib.org/xtf'"/>
+         <!--and then we get all the fields!-->
+         <xsl:call-template name="get-meta"/>
+      </xtf-converted>
+   </xsl:variable>
+
+   <!-- Post-process the built metadata/index tree to add fields for
+        similarity search. -->
+   <xsl:variable name="tree-with-similarity">
+      <xsl:apply-templates select="$tree" mode="similarity"/>
+   </xsl:variable>
+
+   <!-- Return the post-processed tree. -->
+   <xsl:copy-of select="$tree-with-similarity"/>
+</xsl:template>
+
+
+<!-- Blow up if an extending stylesheet fails to implement get-meta -->
+<xsl:template name="get-meta">
+   <xsl:message terminate="yes">
+      The "get-meta" template needs to be overridden in a stylesheet extending preFilterCommon.xsl.
+   </xsl:message>
+</xsl:template>
+
 
    <!-- ====================================================================== -->
    <!-- Templates                                                              -->
