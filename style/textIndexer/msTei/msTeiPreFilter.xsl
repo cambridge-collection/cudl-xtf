@@ -3629,10 +3629,23 @@
    <xsl:template name="get-embeddable">
       
       <xsl:variable name="downloadImageRights" select="normalize-space(//*:publicationStmt/*:availability[@xml:id='downloadImageRights'])"/>
+      <xsl:variable name="images" select="normalize-space(//*:facsimile/*:surface[1]/*:graphic[1]/@url)"/>
+      
+ 
       
       <embeddable>
          <xsl:choose>
-            <xsl:when test="normalize-space($downloadImageRights)">true</xsl:when>
+            
+            <xsl:when test="normalize-space($images)">
+               
+               <xsl:choose>
+                  <xsl:when test="normalize-space($downloadImageRights)">true</xsl:when>
+                  <xsl:otherwise>false</xsl:otherwise>
+               </xsl:choose>
+               
+               
+            </xsl:when>
+            
             <xsl:otherwise>false</xsl:otherwise>
          </xsl:choose>
       </embeddable>
