@@ -187,6 +187,8 @@
          
          <xsl:call-template name="get-biblio"/>
          
+         <xsl:call-template name="get-provenance"/>
+         
          <xsl:if test="local-name(.) = 'archdesc'">
             
             <xsl:call-template name="get-thumbnail"/>
@@ -1209,6 +1211,40 @@
       </xsl:element>
       
    </xsl:template>
+   
+   <!--provenance-->
+   <xsl:template name="get-provenance">
+      
+      <xsl:if test="normalize-space(*:acqinfo)">
+         
+         <xsl:element name="provenances">
+            <xsl:attribute name="display" select="'true'" />            
+            
+            <xsl:apply-templates select="*:acqinfo" />
+            
+         </xsl:element>
+         
+      </xsl:if>
+      
+   </xsl:template>
+   
+   <xsl:template match="*:acqinfo">
+      
+      <xsl:element name="provenance">
+         
+         <xsl:variable name="provenance">
+            <xsl:apply-templates select="*" mode="html" />
+         </xsl:variable>
+         
+         <xsl:attribute name="display" select="'true'" />            
+         <xsl:attribute name="displayForm" select="normalize-space($provenance)" />         
+         
+         <xsl:value-of select="normalize-space($provenance)" />
+         
+      </xsl:element>
+      
+   </xsl:template>
+   
    
    <!--rights-->
    <xsl:template name="get-rights">

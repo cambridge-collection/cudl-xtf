@@ -2022,24 +2022,24 @@
    
       <xsl:if test="//*:sourceDesc/*:msDesc/*:history/*:provenance">
          
-         <ownerships>
+         <provenances>
 
             <xsl:attribute name="display" select="'true'" />
             
-            <ownership>
+            <provenance>
                <xsl:attribute name="display" select="'true'" />
 
-               <xsl:variable name="ownership">               
+               <xsl:variable name="provenance">               
                   <xsl:apply-templates select="//*:sourceDesc/*:msDesc/*:history/*:provenance" mode="html"/>
                </xsl:variable>
                
-               <xsl:attribute name="displayForm" select="normalize-space($ownership)" />
+               <xsl:attribute name="displayForm" select="normalize-space($provenance)" />
   
-               <xsl:value-of select="normalize-space(replace($ownership, '&lt;[^&gt;]+&gt;', ''))"/>
+               <xsl:value-of select="normalize-space(replace($provenance, '&lt;[^&gt;]+&gt;', ''))"/>
                
-            </ownership>
+            </provenance>
                                     
-         </ownerships>
+         </provenances>
          
       </xsl:if>
    

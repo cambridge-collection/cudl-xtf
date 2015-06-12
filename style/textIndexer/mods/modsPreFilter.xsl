@@ -392,12 +392,12 @@
                </xsl:if>
                
                <xsl:if test=".//*:note[@type='ownership']">
-                  <ownerships>
+                  <provenances>
                      
                      <xsl:attribute name="display" select="'true'" />
                      
                      <xsl:apply-templates select=".//*:note[@type='ownership']"/>
-                  </ownerships>
+                  </provenances>
                </xsl:if>
                
                <xsl:if test=".//*:note[@type='binding']">
@@ -1122,14 +1122,14 @@
    
    </xsl:template>
 
-   <!-- ownership -->
+   <!-- provenance -->
    <xsl:template match="*:note[@type='ownership']">
       
-      <ownership>
+      <provenance>
          <xsl:attribute name="display" select="'true'" />
          <xsl:attribute name="displayForm" select="normalize-space(.)"/>
          <xsl:value-of select="normalize-space(.)"/>
-      </ownership>
+      </provenance>
    
    </xsl:template>
    

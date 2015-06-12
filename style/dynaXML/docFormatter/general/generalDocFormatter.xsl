@@ -740,8 +740,8 @@
             <cudl:element name="additions" label="Additions"  jsontype="array">   
                <cudl:element name="addition" jsontype="string" />                  
             </cudl:element>
-            <cudl:element name="ownerships" label="Ownership"  jsontype="array">
-               <cudl:element name="ownership" jsontype="string" />                  
+            <cudl:element name="provenances" label="Provenance"  jsontype="array">
+               <cudl:element name="provenance" jsontype="string" />                  
             </cudl:element>
             <cudl:element name="acquisitions"  jsontype="array">
                <cudl:element name="event" jsontype="object">
