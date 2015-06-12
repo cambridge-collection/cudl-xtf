@@ -36,6 +36,11 @@
              $ bin/textIndexer -clean -trace debug -dir mods/MS-ADD-03958 -index index-dbg | subl
          -->
 
+    <!-- Currently transcriptions are not indexed as XTF runs out of memory
+         while indexing. They'll get duplicated quite a bit for nested
+         documents... -->
+    <xsl:variable name="sim:INDEX_TRANSCRIPTIONS" select="false()"/>
+
     <!-- Index transcriptionPage elements by dmdID -->
     <xsl:key
         name="sim:transcription-pages-by-dmd"
@@ -119,9 +124,11 @@
 
             <xsl:apply-templates select="abstract|content" mode="similarity-field"/>
 
-            <xsl:apply-templates
-                select="key('sim:transcription-pages-by-dmd', ID)"
-                mode="similarity-field"/>
+            <xsl:if test="$sim:INDEX_TRANSCRIPTIONS">
+                <xsl:apply-templates
+                    select="key('sim:transcription-pages-by-dmd', ID)"
+                    mode="similarity-field"/>
+            </xsl:if>
 
             <xsl:apply-templates
                 select="subjects/subject" mode="similarity-field"/>
