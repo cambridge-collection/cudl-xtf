@@ -93,13 +93,21 @@
         <!-- $fileID is defined in preFilterCommon.xsl -->
         <xsl:variable name="qualifiedSimID" select="concat($fileID, '/', $similarityID)"/>
 
-        <similarity-match-candidate xtf:subDocument="{$qualifiedSimID}">
+        <similarity-match-candidate xtf:subDocument="similarity-{$similarityID}">
 
             <!-- The identifier field is used by XTF to identify the starting
                  point for similarity (moreLike) queries. -->
             <identifier xtf:meta="true" xtf:tokenize="no">
                 <xsl:value-of select="$qualifiedSimID"/>
             </identifier>
+
+            <itemId xtf:meta="true" xtf:index="false" xtf:store="true">
+                <xsl:value-of select="$fileID"/>
+            </itemId>
+
+            <structureNodeId xtf:meta="true" xtf:index="false" xtf:store="true">
+                <xsl:value-of select="$similarityID"/>
+            </structureNodeId>
 
             <!-- Generate similarity fields for each dmd section associated with
                  this logical structure. e.g. this structure node and its
