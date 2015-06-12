@@ -41,6 +41,12 @@
          documents... -->
     <xsl:variable name="sim:INDEX_TRANSCRIPTIONS" select="false()"/>
 
+    <!-- If false, similarity-* fields will be marked xtf:store="false"
+         It appears that moreLike queries don't work unless the similarity
+         fields are stored as well as indexed, which is annoying because they
+         never need to be fetched... -->
+    <xsl:variable name="sim:STORE_SIMILARITY" select="true()"/>
+
     <!-- Index transcriptionPage elements by dmdID -->
     <xsl:key
         name="sim:transcription-pages-by-dmd"
@@ -144,7 +150,7 @@
 
     <!-- similarity-titile contains the title of the subdocument -->
     <xsl:template match="title[normalize-space()]" mode="similarity-field">
-        <similarity-title xtf:meta="true" xtf:store="false">
+        <similarity-title xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
             <xsl:value-of select="normalize-space()"/>
         </similarity-title>
     </xsl:template>
@@ -152,7 +158,7 @@
     <!-- similarity-name contains any names of people associated with the
          subDocument. -->
     <xsl:template match="name[@displayForm]" mode="similarity-field">
-        <similarity-name xtf:meta="true" xtf:store="false">
+        <similarity-name xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
             <!-- FIXME: strip date ranges from names -->
             <xsl:value-of select="@displayForm"/>
         </similarity-name>
@@ -160,14 +166,14 @@
 
     <!-- similarity-text contains any available full-text fields -->
     <xsl:template match="abstract|content" mode="similarity-field">
-        <similarity-text xtf:meta="true" xtf:store="false">
+        <similarity-text xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
             <xsl:value-of select="normalize-space()"/>
         </similarity-text>
     </xsl:template>
 
     <xsl:template match="transcriptionPage[normalize-space(transcriptionText)]"
                   mode="similarity-field">
-        <similarity-text xtf:meta="true" xtf:store="false">
+        <similarity-text xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
             <xsl:value-of select="normalize-space(transcriptionText)"/>
         </similarity-text>
     </xsl:template>
@@ -175,7 +181,7 @@
     <!-- similarity-subject contains a subject/topic associated with the
          item -->
     <xsl:template match="subject[@displayForm]" mode="similarity-field">
-        <similarity-subject xtf:meta="true" xtf:store="false">
+        <similarity-subject xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
             <xsl:value-of select="@displayForm"/>
         </similarity-subject>
     </xsl:template>
@@ -183,7 +189,7 @@
     <!-- similarity-place contains the name of a location associated with the
          item -->
     <xsl:template match="place[@displayForm]" mode="similarity-field">
-        <similarity-place xtf:meta="true" xtf:store="false">
+        <similarity-place xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
             <xsl:value-of select="@displayForm"/>
         </similarity-place>
     </xsl:template>
