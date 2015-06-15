@@ -101,7 +101,7 @@
                 <xsl:value-of select="$qualifiedSimID"/>
             </identifier>
 
-            <itemId xtf:meta="true" xtf:index="false" xtf:store="true">
+            <itemId xtf:meta="true" xtf:index="true" xtf:tokenize="no" xtf:store="true">
                 <xsl:value-of select="$fileID"/>
             </itemId>
 
