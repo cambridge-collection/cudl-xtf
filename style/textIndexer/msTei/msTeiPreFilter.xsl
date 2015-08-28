@@ -4147,6 +4147,64 @@
       
    </xsl:template>
    
+   <!--tables-->
+   
+   <xsl:template match="*:table" mode="html">
+      
+      <xsl:text>&lt;table border='1'&gt;</xsl:text>
+      
+      <xsl:apply-templates mode="html" />
+      
+      <xsl:text>&lt;/table&gt;</xsl:text> 
+      
+   </xsl:template>
+   
+   
+   <xsl:template match="*:table/*:head" mode="html">
+      
+      <xsl:text>&lt;caption&gt;</xsl:text>
+      
+      <xsl:apply-templates mode="html" />
+      
+      <xsl:text>&lt;/caption&gt;</xsl:text> 
+      
+   </xsl:template>
+   
+  
+   
+   <xsl:template match="*:table/*:row" mode="html">
+      
+      <xsl:text>&lt;tr&gt;</xsl:text>
+      
+      <xsl:apply-templates mode="html" />
+      
+      <xsl:text>&lt;/tr&gt;</xsl:text> 
+      
+   </xsl:template>
+   
+   <xsl:template match="*:table/*:row[@role='label']/*:cell" mode="html">
+      
+      <xsl:text>&lt;th&gt;</xsl:text>
+      
+      <xsl:apply-templates mode="html" />
+      
+      <xsl:text>&lt;/th&gt;</xsl:text> 
+      
+   </xsl:template>
+   
+   <xsl:template match="*:table/*:row[@role='data']/*:cell" mode="html">
+      
+      <xsl:text>&lt;td&gt;</xsl:text>
+      
+      <xsl:apply-templates mode="html" />
+      
+      <xsl:text>&lt;/td&gt;</xsl:text> 
+      
+   </xsl:template>
+   
+   
+   <!--end of tables-->
+   
    
    <xsl:template match="*[not(local-name()='additions')]/*:list" mode="html">
       
