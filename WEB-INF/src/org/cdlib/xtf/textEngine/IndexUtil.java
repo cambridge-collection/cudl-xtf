@@ -46,6 +46,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import net.sf.saxon.Filter;
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.tree.TreeBuilder;
 import net.sf.saxon.value.StringValue;
 
 import org.cdlib.xtf.saxonExt.sql.SQLConnect;
@@ -56,6 +58,8 @@ import org.cdlib.xtf.util.Attrib;
 import org.cdlib.xtf.util.AttribList;
 import org.cdlib.xtf.util.DocTypeDeclRemover;
 import org.cdlib.xtf.util.Path;
+import org.cdlib.xtf.util.Trace;
+import org.cdlib.xtf.util.XMLWriter;
 import org.cdlib.xtf.util.XTFSaxonErrorListener;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -499,7 +503,23 @@ public class IndexUtil
     //
     Transformer transformer = stf.newTransformer();
     SAXSource transformSource = new SAXSource(lastInChain, xmlSource);
-    transformer.transform(transformSource, ultimateResult);
+
+    // Log the result of the preFilter transform if we're debug tracing.
+    if(Trace.getOutputLevel() >= Trace.debug) {
+      TreeBuilder transformResult = new TreeBuilder();
+      transformer.transform(transformSource, transformResult);
+
+      NodeInfo result = transformResult.getCurrentRoot();
+      Trace.debug("*** preFilter output ***\n" +
+              XMLWriter.toString(result));
+      Trace.debug("");
+
+      // Push the output into the indexer now that we've dumped it
+      transformer.transform(result, ultimateResult);
+    }
+    else {
+      transformer.transform(transformSource, ultimateResult);
+    }
 
     // If any SQL connections were opened during the transformation, close
     // them now.

@@ -99,20 +99,6 @@
       <xsl:value-of select="//status[@type='web']/transcription_view/@hide"/>
 
    </xsl:variable>
-   
-
-   <!-- ====================================================================== -->
-   <!-- Root Template                                                          -->
-   <!-- ====================================================================== -->
-
-   <xsl:template match="/">
-      <!--the whole output document is always wrapped up in xtf-converted-->
-      <xtf-converted>
-         <xsl:namespace name="xtf" select="'http://cdlib.org/xtf'"/>
-         <!--and then we get all the fields!-->
-         <xsl:call-template name="get-meta"/>
-      </xtf-converted>
-   </xsl:template>
 
    <!-- ====================================================================== -->
    <!-- Processes fields                                                      -->

@@ -288,5 +288,23 @@
                              else $sort }">
       </facet>
    </xsl:template>
-   
+
+   <!-- Override moreLike template from common.
+        We need to use our custom similarity-* fields rather than the
+        default title and subject fields. -->
+   <xsl:template name="moreLike">
+      <xsl:variable name="identifier" select="string(//param[@name='identifier']/@value)"/>
+      <and>
+         <moreLike fields="similarity-title,similarity-name,similarity-subject,similarity-place,similarity-text">
+            <term field="identifier"><xsl:value-of select="$identifier"/></term>
+         </moreLike>
+         <!-- Exclude similarity matches from our own document. -->
+         <not>
+            <term field="itemId">
+               <xsl:value-of select="substring-before($identifier, '/')"/>
+            </term>
+         </not>
+      </and>
+   </xsl:template>
+
 </xsl:stylesheet>

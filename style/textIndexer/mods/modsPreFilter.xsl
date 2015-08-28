@@ -76,23 +76,6 @@
    <!--general variables containing all the mods and mets metadata-->
    <xsl:variable name="modsMeta" select="//*:mods"/>
    <xsl:variable name="metsMeta" select="//*:mets"/>
-   
-   
-
-   
-   <!-- ====================================================================== -->
-   <!-- Root Template                                                          -->
-   <!-- ====================================================================== -->
-
-   <xsl:template match="/">
-      <!--the whole output document is always wrapped up in xtf-converted-->
-      <xtf-converted>
-         <xsl:namespace name="xtf" select="'http://cdlib.org/xtf'"/>
-         <!--and then we get all the fields!-->
-         <xsl:call-template name="get-meta"/>
-      </xtf-converted>
-      
-   </xsl:template>
 
    <!-- ====================================================================== -->
    <!-- Processes fields                                                      -->
