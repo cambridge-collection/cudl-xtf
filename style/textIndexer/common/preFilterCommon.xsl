@@ -939,6 +939,7 @@
       <xsl:variable name="no-accents-name">
          <xsl:value-of
             select="CharUtils:applyAccentMap('../../../conf/accentFolding/accentMap.txt', $name)"/>
+         <!--<xsl:value-of select="$name"/>-->
       </xsl:variable>
 
       <!-- Normalize Spaces & Case-->
@@ -1156,6 +1157,7 @@
          <xsl:value-of
             select="CharUtils:applyAccentMap('../../../conf/accentFolding/accentMap.txt', $string)"
          />
+         <!--<xsl:value-of select="$string"/>-->
       </xsl:variable>
 
       <!-- Normalize Spaces & Case-->

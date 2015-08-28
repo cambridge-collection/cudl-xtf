@@ -137,11 +137,15 @@
          <xsl:variable name="thisname" select="local-name()" />
          <xsl:variable name="seq" select="cudl:get-pos($layout, $thisname)"/>
          
+         
          <!-- process current input element -->
          <xsl:apply-templates select="." mode="json">
             <xsl:with-param name="cudl-element" select="$layout/cudl:element[@name=$thisname]"/>
             <xsl:with-param name="seq" select="$seq"/>
             <xsl:with-param name="cudl-parent" select="$layout"/>
+            
+            
+            
          </xsl:apply-templates>
 
          <xsl:if test="position() != last()">,</xsl:if>
@@ -168,6 +172,7 @@
       <xsl:param name="cudl-element" />
       <xsl:param name="seq" />
       <xsl:param name="cudl-parent" />
+      
       
       <!-- if parent not array then need JSON-label; if parent is array then no need -->
       <xsl:if test="not($cudl-parent/@jsontype='array')">
