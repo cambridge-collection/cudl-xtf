@@ -169,6 +169,8 @@
                
                <xsl:if test=".//*:name">
                   
+                  
+                  
                   <!-- Table of role relator codes and role element names -->
                   <xsl:variable name="rolemap">
                      <role code="aut" name="authors" />
@@ -202,7 +204,7 @@
                   
                   <!-- NOW DEAL WITH OTHER ROLES -->
                   
-                  <xsl:if test=".//*:name[*:role/*:roleTerm[@type='code'][@authority='marcrelator'][not(.=$rolemap/role/@code)]] or .//*:name[not(*:role)]">
+                  <xsl:if test=".//*:name[*:role/*:roleTerm[@type='code'][@authority='marcrelator'][not(.=$rolemap/role/@code)]] or .//*:name[not(*:role)] or .//*:name/*:role/*:roleTerm[@type='text']">
                      <xsl:variable name="elementName" select="'associated'" />
                      
                      <xsl:element name="{$elementName}">
@@ -210,9 +212,13 @@
                         
                         <xsl:apply-templates select=".//*:name[*:role/*:roleTerm[@type='code'][@authority='marcrelator'][not(.=$rolemap/role/@code)]]" />
                         <xsl:apply-templates select=".//*:name[not(*:role)]" />
-                           
+                        <xsl:apply-templates select=".//*:name[*:role/*:roleTerm[@type='text']]" />
+                          
+                          
                      </xsl:element>
-                           
+                       
+                     
+                       
                   </xsl:if>
                   
                   
@@ -725,7 +731,7 @@
          </type>
             
          <role>
-            <xsl:value-of select="normalize-space(./*:role/*:roleTerm)"/>
+            <xsl:value-of select="normalize-space(./*:role[1]/*:roleTerm)"/>
          </role>
             
       </name>
