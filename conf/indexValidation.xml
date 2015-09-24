@@ -8,9 +8,17 @@
 <index-validation>
   
   <!--local setting-->
-  <!-- <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=newton;indexPath=/home/jlf44/temp/indices/index-cudl</crossQuery> -->
+  <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=newton;indexPath=/usr/htdocs/cudl/indices/index-cudl</crossQuery>
+  <!-- search tags -->
+  <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=fulfilled;indexPath=/usr/htdocs/cudl/indices/indices-extra/index-annos</crossQuery>
+  <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=fulfilled;indexPath=/usr/htdocs/cudl/indices/indices-extra/index-tags</crossQuery>
+  <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=fulfilled;indexPath=/usr/htdocs/cudl/indices/indices-extra/index-annotags</crossQuery>
+  <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=fulfilled;indexPath=/usr/htdocs/cudl/indices/indices-extra/index-annometas</crossQuery>
+  <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=fulfilled;indexPath=/usr/htdocs/cudl/indices/indices-extra/index-tagmetas</crossQuery>
+  <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=fulfilled;indexPath=/usr/htdocs/cudl/indices/indices-extra/index-annotagmetas</crossQuery>
+  <!-- search tags end -->
   
   <!--live setting-->
-  <crossQuery minHits="0">http://cudl.lib.cam.ac.uk/xtf/search?keyword=newton;indexPath=/usr/local/indices/index-cudl</crossQuery>
+  <!-- <crossQuery minHits="0">http://cudl.lib.cam.ac.uk/xtf/search?keyword=newton;indexPath=/usr/local/indices/index-cudl</crossQuery> -->
   
 </index-validation>

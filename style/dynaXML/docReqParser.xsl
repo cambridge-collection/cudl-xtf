@@ -115,6 +115,27 @@ to a fixed value-->
             <xsl:variable name="ns" select="namespace-uri(*[1])"/>
 
             <xsl:choose>
+
+               <!-- 
+                     search tags
+               -->
+
+               <!-- Look for TAG XML files -->
+               <xsl:when 
+                  test="matches($root-element-name,'^documentTerms$')">
+                  <xsl:value-of select="'docterms'"/>
+               </xsl:when>
+
+               <!-- Look for Combined XML files -->
+               <xsl:when 
+                  test="matches($root-element-name,'^combined$')">
+                  <xsl:value-of select="'combined'"/>
+               </xsl:when>
+
+               <!-- 
+                     search tags end 
+               -->
+
                <!-- Look for EAD XML files -->
                <xsl:when
                   test="matches($root-element-name,'^ead$') or
@@ -184,7 +205,12 @@ to a fixed value-->
          else if ($fileType = 'essay') then 'style/dynaXML/docFormatter/general/generalDocFormatter.xsl'
          else if ($fileType = 'book') then 'style/dynaXML/docFormatter/bookreader/bookDocFormatter.xsl'
          else if ($fileType = 'mods') then 'style/dynaXML/docFormatter/general/generalDocFormatter.xsl'
+         
+         else if ($fileType = 'docterms') then 'style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl'
+         else if ($fileType = 'combined') then 'style/dynaXML/docFormatter/extra/combined/combinedDocFormatter.xsl'
+         
          else 'style/dynaXML/docFormatter/general/generalDocFormatter.xsl'}"/>
+         <!-- search tags, annotation, tag, annotag, combined-->
 
       <!-- ==================================================================
          The "source" tag specifies a filesystem path (relative to the servlet

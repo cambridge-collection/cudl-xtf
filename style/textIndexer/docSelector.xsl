@@ -253,6 +253,120 @@
                            </xsl:if>
 
                         </xsl:when>
+
+                        <!--
+                            search tags
+                        -->
+
+                        <!-- Look for ANNOTATION XML files -->
+                        <xsl:when test="matches($root-element-name,'^documentTerms$')">
+                           <indexFile fileName="{$fileName}"
+                                      preFilter="style/textIndexer/extra/doctermPreFilter.xsl"
+                                      displayStyle="style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl"/>
+                        </xsl:when>
+
+                        <!-- Look for COMBINED XML files -->
+                        <xsl:when  test="matches($root-element-name,'^combined$')">
+
+                           <xsl:variable name="meta-root-element-name" select="name(*[1]/metadata/*[1])"/>
+                           <xsl:variable name="meta-pid" select="unparsed-entity-public-id($meta-root-element-name)"/>
+                           <xsl:variable name="meta-uri" select="unparsed-entity-uri($meta-root-element-name)"/>
+                           <xsl:variable name="meta-ns" select="namespace-uri(*[1])"/>
+
+                           <xsl:choose>
+                              <!-- EAD -->
+                              <xsl:when test="matches($meta-root-element-name,'^ead$') or
+                                              matches($meta-pid,'EAD') or 
+                                              matches($meta-uri,'ead\.dtd') or 
+                                              matches($meta-ns,'ead')">
+                                 <indexFile fileName="{$fileName}"
+                                            preFilter="style/textIndexer/extra/combined/combinedEadPreFilter.xsl"
+                                            displayStyle="style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl"/>
+                              </xsl:when>
+                                                            
+                              <!-- NLM -->
+                              <xsl:when test="matches($meta-root-element-name,'^article$') or
+                                              matches($meta-pid,'NLM') or 
+                                              matches($meta-uri,'journalpublishing\.dtd') or 
+                                              matches($meta-ns,'nlm')">
+                                 <indexFile fileName="{$fileName}"
+                                            preFilter="style/textIndexer/extra/combined/combinedNlmPreFilter.xsl"
+                                            displayStyle="style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl"/>
+                              </xsl:when>
+
+                              <!-- TEI -->
+                              <xsl:when test="matches($meta-root-element-name,'^TEI') or 
+                                              matches($meta-pid,'TEI') or 
+                                              matches($meta-uri,'tei2\.dtd') or 
+                                              matches($meta-ns,'tei')">
+
+                                 <xsl:variable name="cteiData" select="document($file)/combined/metadata/*[1]"/>
+                                 <xsl:choose>
+                                    <xsl:when test="$cteiData//*:msDesc">
+                                       <indexFile fileName="{$fileName}"
+                                                  preFilter="style/textIndexer/extra/combined/combinedMsTeiPreFilter.xsl"
+                                                  displayStyle="style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                       <indexFile fileName="{$fileName}"
+                                                  preFilter="style/textIndexer/extra/combined/combinedTeiPreFilter.xsl"
+                                                  displayStyle="style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl"/>
+                                    </xsl:otherwise>
+                                 </xsl:choose>
+                              </xsl:when>
+
+                              <!-- DCP -->
+                              <xsl:when test="matches($meta-root-element-name,'^data$')">
+                                 <indexFile fileName="{$fileName}"
+                                            preFilter="style/textIndexer/extra/combined/combinedDcpPreFilter.xsl"
+                                            displayStyle="style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl"/>
+                              </xsl:when>
+
+                              <!-- Essay -->
+                              <xsl:when test="matches($meta-root-element-name,'^essay$')">
+                                 <indexFile fileName="{$fileName}"
+                                            preFilter="style/textIndexer/extra/combined/combinedEssayPreFilter.xsl"
+                                            displayStyle="style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl"/>
+                              </xsl:when>
+
+                              <!-- DjVu -->
+                              <xsl:when test="matches($meta-root-element-name, 'DjVuXML')">
+                                 <!-- skip -->
+                              </xsl:when>
+
+                              <!-- METS-encoded scanned books -->
+                              <xsl:when test="matches($meta-root-element-name,'^METS')">
+                                 <xsl:variable name="cmetsData" select="document($file)/combined/metadata/*[1]"/>
+                                 <xsl:if test="$cmetsData//*:book">
+                                    <indexFile fileName="{$fileName}"
+                                               preFilter="style/textIndexer/extra/combined/combinedBookPreFilter.xsl"
+                                               displayStyle="style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl"/>
+                                 </xsl:if>
+                              </xsl:when>
+
+                              <!-- METS/MODS -->
+                              <xsl:when test="matches($meta-root-element-name,'^mets')">
+                                 <xsl:variable name="cmetsData" select="document($file)/combined/metadata/*[1]"/>
+                                 <xsl:if test="$cmetsData//*:mods">
+                                    <indexFile fileName="{$fileName}"
+                                               preFilter="style/textIndexer/extra/combined/combinedModsPreFilter.xsl"
+                                               displayStyle="style/dynaXML/docFormatter/extra/doctermDocFormatter.xsl"/>
+                                 </xsl:if>
+                              </xsl:when>
+
+                              <!-- Default -->
+                              <xsl:otherwise>
+                                 <indexFile fileName="{$fileName}" type="XML"
+                                            preFilter="style/textIndexer/extra/combined/combinedDefaultPreFilter.xsl"/>
+                              </xsl:otherwise>
+                           </xsl:choose>
+
+                        </xsl:when>
+
+                        <!--
+                            search tags end
+                        -->
+
                         <!-- Default processing for XML files -->
                         <xsl:otherwise>
                            <indexFile fileName="{$fileName}" type="XML"

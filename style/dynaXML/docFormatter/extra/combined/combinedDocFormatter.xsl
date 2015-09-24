@@ -48,8 +48,8 @@
    <!-- Import Common Templates                                                -->
    <!-- ====================================================================== -->
    
-   <xsl:import href="../common/docFormatterCommon.xsl"/>
-   <xsl:import href="../../../xtfCommon/xtfCommon.xsl"/>
+   <xsl:import href="../../common/docFormatterCommon.xsl"/>
+   <xsl:import href="../../../../xtfCommon/xtfCommon.xsl"/>
    
    <!-- ====================================================================== -->
    <!-- Output Format                                                          -->
@@ -784,6 +784,19 @@
                </cudl:element>
             </cudl:element>
             <!-- <cudl:element name="content" jsontype="string" /> -->
+
+            <!-- search tags -->
+            <cudl:element name="extra" jsontype="object">
+               <cudl:element name="docID" jsontype="string"/>
+               <cudl:element name="total" jsontype="number"/>
+               <cudl:element name="terms" jsontype="array">
+                  <cudl:element name="term" jsontype="object">
+                     <cudl:element name="name" jsontype="string"/>
+                     <cudl:element name="raw" jsontype="number"/>
+                     <cudl:element name="value" jsontype="number"/>
+                  </cudl:element>
+               </cudl:element>
+            </cudl:element>
             
          </cudl:element>           
          
