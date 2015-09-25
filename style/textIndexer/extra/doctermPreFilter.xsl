@@ -40,7 +40,7 @@
          </xtf-converted>
       </xsl:variable>
       <xsl:copy-of select="$tempxml" />
-      <xsl:result-document href="{concat('../tmp/', $fileID, '.xml')}" method="xml">
+      <xsl:result-document href="{concat('./xtf/tmp/', $fileID, '.xml')}" method="xml">
          <xsl:copy-of select="$tempxml" />
       </xsl:result-document>
 

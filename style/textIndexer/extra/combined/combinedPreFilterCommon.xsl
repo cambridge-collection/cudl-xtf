@@ -18,22 +18,22 @@
    <!-- override template in preFilterCommon.xsl -->
    <xsl:template match="/">
       
-      <!-- <xtf-converted>
+      <xtf-converted>
          <xsl:namespace name="xtf" select="'http://cdlib.org/xtf'"/>
          <xsl:call-template name="get-combined"/>
-      </xtf-converted> -->
+      </xtf-converted>
 
       <!-- for debugging, output temp xml -->
-      <xsl:variable name="tree">
+      <!-- <xsl:variable name="tmpxml">
          <xtf-converted>
             <xsl:namespace name="xtf" select="'http://cdlib.org/xtf'"/>
             <xsl:call-template name="get-combined"/>
          </xtf-converted>
       </xsl:variable>
-      <xsl:copy-of select="$tree" />
-      <xsl:result-document href="{concat('../tmp/combined/', $fileID, '.xml')}" method="xml">
-         <xsl:copy-of select="$tree" />
-      </xsl:result-document>
+      <xsl:copy-of select="$tmpxml" />
+      <xsl:result-document href="{concat('./xtf/tmp/combined/', $fileID, '.xml')}" method="xml">
+         <xsl:copy-of select="$tmpxml" />
+      </xsl:result-document> -->
 
    </xsl:template>
 

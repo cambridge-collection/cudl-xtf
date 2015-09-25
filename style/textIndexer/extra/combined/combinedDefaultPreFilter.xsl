@@ -6,7 +6,7 @@
    <!-- Import Default Templates and Functions                                 -->
    <!-- ====================================================================== -->
 
-   <xsl:import href="../../default/defaultFilterCommon.xsl"/>
+   <xsl:import href="../../default/defaultPreFilter.xsl"/>
 
    <!-- ====================================================================== -->
    <!-- Import Combined PreFilter Common.                                      -->
