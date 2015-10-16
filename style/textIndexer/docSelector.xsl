@@ -256,9 +256,10 @@
                         <!-- Default processing for XML files -->
                         <xsl:otherwise>
                            <indexFile fileName="{$fileName}" type="XML"
-                              preFilter="style/textIndexer/default/defaultPreFilter.xsl"/>
+                              preFilter="style/textIndexer/prefilter/jsonprefilter.xsl"
+                              displayStyle="style/dynaXML/docFormatter/general/generalDocFormatter.xsl"/>
                            <xsl:message
-                              select="'Unrecognized XML structure. Indexing using the default preFilter.'"
+                              select="'Indexing using the json preFilter.'"
                            />
                         </xsl:otherwise>
                      </xsl:choose>
@@ -287,6 +288,11 @@
 
          <!-- Plain text files. Exception: skip book/*.txt as they're typically subordinate. -->
          <xsl:when test="ends-with(@fileName, '.txt') and not(matches($dirPath, '/bookreader/'))">
+            <indexFile fileName="{@fileName}" type="text"
+               preFilter="style/textIndexer/default/defaultPreFilter.xsl"/>
+         </xsl:when>
+	<!--json-->
+	<xsl:when test="ends-with(@fileName, '.json')">
             <indexFile fileName="{@fileName}" type="text"
                preFilter="style/textIndexer/default/defaultPreFilter.xsl"/>
          </xsl:when>
