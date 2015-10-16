@@ -167,9 +167,7 @@
                                         matches($uri,'ead\.dtd') or 
                                         matches($ns,'ead')">
                            
-                           <indexFile fileName="{$fileName}"
-                              preFilter="style/textIndexer/ead/eadPreFilter.xsl"
-                              displayStyle="style/dynaXML/docFormatter/general/generalDocFormatter.xsl"/>
+                           <!-- skip as ead indexed through json files now -->
                               
                         </xsl:when>
                         <!-- Look for NLM XML files -->
@@ -192,10 +190,7 @@
                            <xsl:choose>
                               <!--is this an enrich-style tei document?-->
                               <xsl:when test="$teiData//*:msDesc">
-                                 <indexFile fileName="{$fileName}"
-                                    preFilter="style/textIndexer/msTei/msTeiPreFilter.xsl"
-                                    displayStyle="style/dynaXML/docFormatter/general/generalDocFormatter.xsl"
-                                 />
+                                 <!-- skip as mstei done through json file-->
                               </xsl:when>
                               <!--or is it normal tei?-->
                               <xsl:otherwise>
@@ -210,20 +205,14 @@
                         <!-- we may need to differentiate in future if other formats have root element data-->
                         <xsl:when
                            test="matches($root-element-name,'^data$')">
-                          
-                           <indexFile fileName="{$fileName}"
-                              preFilter="style/textIndexer/dcp/dcpPreFilter.xsl"
-                              displayStyle="style/dynaXML/docFormatter/general/generalDocFormatter.xsl"
-                           />
+                           <!-- skip as dcp done through json file-->
+                           
                         </xsl:when>
                         <!-- Look for Longitude Essay XML file -->
                         <xsl:when
                            test="matches($root-element-name,'^essay$')">
+                           <!-- skip as essay done through json file-->
                            
-                           <indexFile fileName="{$fileName}"
-                              preFilter="style/textIndexer/essay/essayPreFilter.xsl"
-                              displayStyle="style/dynaXML/docFormatter/general/generalDocFormatter.xsl"
-                           />
                         </xsl:when>
                         <!-- DjVu files are typically subordinate to a main doc -->
                         <xsl:when test="matches($root-element-name, 'DjVuXML')">
@@ -246,10 +235,7 @@
 
                            <xsl:if test="$metsData//*:mods">
 
-                              <indexFile fileName="{$fileName}"
-                                 preFilter="style/textIndexer/mods/modsPreFilter.xsl"
-                                 displayStyle="style/dynaXML/docFormatter/general/generalDocFormatter.xsl"
-                              />
+                              <!-- skip as mods done through json file-->
                            </xsl:if>
 
                         </xsl:when>
@@ -291,11 +277,7 @@
             <indexFile fileName="{@fileName}" type="text"
                preFilter="style/textIndexer/default/defaultPreFilter.xsl"/>
          </xsl:when>
-	<!--json-->
-	<xsl:when test="ends-with(@fileName, '.json')">
-            <indexFile fileName="{@fileName}" type="text"
-               preFilter="style/textIndexer/default/defaultPreFilter.xsl"/>
-         </xsl:when>
+	
       </xsl:choose>
 
    </xsl:template>
