@@ -19,6 +19,14 @@
                 indent="yes" 
                 encoding="UTF-8"/>
 
+    <!-- import properties file - properties.xml -->
+    <xsl:variable name="propertiesfile" select="document('properties.xml')"/>
+    <!-- get the services url from properties file -->
+    <xsl:variable name="services" >
+        
+            <xsl:value-of select="$propertiesfile/properties/services-url"/>
+       
+    </xsl:variable>
     <!-- ====================================================================== -->
     <!-- Default: identity transformation                                       -->
     <!-- ====================================================================== -->
@@ -1594,7 +1602,7 @@
                         <xsl:if test="$url!=''">
                             <xsl:variable name="transcriptionText">
                                 <xsl:variable name="concaturl" >
-                                    <xsl:value-of select="concat('http://services.cudl.lib.cam.ac.uk',$url)"/>
+                                    <xsl:value-of select="concat($services,$url)"/>
                                 </xsl:variable>
                                 <xsl:variable name="transcriptionAllText" select="document($concaturl)"/>
                                 <!--                                <xsl:copy-of select="$transcriptionAllText//*:body"/>-->
@@ -1655,7 +1663,7 @@
                                         <xsl:if test="$url!=''">
                                             <xsl:variable name="transcriptionText">
                                                 <xsl:variable name="concaturl" >
-                                                    <xsl:value-of select="concat('http://services.cudl.lib.cam.ac.uk',$url)"/>
+                                                    <xsl:value-of select="concat($services,$url)"/>
                                                 </xsl:variable>
                                                 <xsl:variable name="transcriptionAllText" select="document($concaturl)"/>
                                                 <!--                                <xsl:copy-of select="$transcriptionAllText//*:body"/>-->
@@ -1673,7 +1681,7 @@
                                             <xsl:if test="$url!=''">
                                                 <xsl:variable name="transcriptionText">
                                                     <xsl:variable name="concaturl" >
-                                                        <xsl:value-of select="concat('http://services.cudl.lib.cam.ac.uk',$url)"/>
+                                                        <xsl:value-of select="concat($services,$url)"/>
                                                     </xsl:variable>
                                                     <xsl:variable name="transcriptionAllText" select="document($concaturl)"/>
                                                     <!--                                <xsl:copy-of select="$transcriptionAllText//*:body"/>-->
@@ -1696,7 +1704,7 @@
                                     <xsl:if test="$url!=''">
                                         <xsl:variable name="translationText">
                                             <xsl:variable name="concaturl" >
-                                                <xsl:value-of select="concat('http://services.cudl.lib.cam.ac.uk',$url)"/>
+                                                <xsl:value-of select="concat($services,$url)"/>
                                             </xsl:variable>
                                             <xsl:variable name="translationAllText" select="document($concaturl)"/>
                                             <!--                                <xsl:copy-of select="$transcriptionAllText//*:body"/>-->
