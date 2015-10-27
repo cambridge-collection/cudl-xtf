@@ -99,187 +99,30 @@
     pre-compute the keys so they need not be calculated later during the 
     display process. 
     
-    The 'displayStyle' attribute simply specifies a stylesheet that the
-    text indexer will look in to gather XSLT key definitions. Then it will
-    pre-compute all of these keys for the document and store them on disk.
--->
+        The 'displayStyle' attribute simply specifies a stylesheet that the
+        text indexer will look in to gather XSLT key definitions. Then it will
+        pre-compute all of these keys for the document and store them on disk.
+    -->
 
-   <!-- ====================================================================== -->
-   <!-- Templates                                                              -->
-   <!-- ====================================================================== -->
+    <!-- ====================================================================== -->
+    <!-- Templates                                                              -->
+    <!-- ====================================================================== -->
 
-   <xsl:template match="directory">
-      <indexFiles>
-         <xsl:apply-templates/>
-      </indexFiles>
-   </xsl:template>
+    <xsl:template match="directory">
+        <indexFiles>
+            <xsl:apply-templates/>
+        </indexFiles>
+    </xsl:template>
 
-   <xsl:template match="file">
-      <xsl:variable name="dirPath" select="parent::*/@dirPath"/>
-      
+    <xsl:template match="file">
+        <xsl:variable name="dirPath" select="parent::*/@dirPath"/>
       <xsl:choose>
-         <!-- XML files -->
-         <xsl:when test="ends-with(@fileName, '.xml')">
-
-            <xsl:choose>
-               <!--TODO - WILL WE NEED TO IGNORE TEI FILES ACCOMPANYING MODS ETC HERE?-->
-               
-               <!-- Skip document-less METS and DC files -->
-               <xsl:when test="ends-with(@fileName, '.mets.xml') or ends-with(@fileName, '.dc.xml')"/>
-
-               <!-- Skip bookreader page files -->
-               <xsl:when
-                  test="matches($dirPath, '^.*bookreader') and matches(@fileName, '\d{8}\.xml')"/>
-               
-               <!-- Skip all docs under "transcription-only" directory (or directories) -->
-               <xsl:when test="contains($dirPath, 'transcription')" />
-               
-               <!-- All other XML files -->
-               <xsl:otherwise>
-
-                  <xsl:variable name="fileName" select="@fileName"/>
-                  <xsl:variable name="file" select="concat($dirPath,$fileName)"/>
-                  
-                  <!-- We need to determine what kind of XML file we're looking at. XTF provides a
-                       handy function that quickly reads in only the first part of an XML file
-                       (up to the first close element tag, e.g. </element>). We make our decision
-                       based on the name of the root element, the entity information, and namespace.
-                       
-                       Note that the "unparsed-entity-public-id" and "unparsed-entity-uri" XPath
-                       functions operate on whatever document is the current context. We use
-                       <xsl:for-each> to switch to the target document's context, rather than the
-                       context of the input we received from the textIndexer. In this case,
-                       "for-each" is a bit of a misnomer, since the stub is a single document
-                       so the code below runs only once.
-                  -->
-                  <xsl:for-each select="FileUtils:readXMLStub($file)">
-
-                     <xsl:variable name="root-element-name" select="name(*[1])"/>
-                     <xsl:variable name="pid" select="unparsed-entity-public-id($root-element-name)"/>
-                     <xsl:variable name="uri" select="unparsed-entity-uri($root-element-name)"/>
-                     <xsl:variable name="ns" select="namespace-uri(*[1])"/>
-
-                     <xsl:choose>
-                        <!-- Look for EAD XML files -->
-                        <xsl:when
-                           test="matches($root-element-name,'^ead$') or
-                                        matches($pid,'EAD') or 
-                                        matches($uri,'ead\.dtd') or 
-                                        matches($ns,'ead')">
-                           
-                           <!-- skip as ead indexed through json files now -->
-                              
-                        </xsl:when>
-                        <!-- Look for NLM XML files -->
-                        <xsl:when
-                           test="matches($root-element-name,'^article$') or
-                                        matches($pid,'NLM') or 
-                                        matches($uri,'journalpublishing\.dtd') or 
-                                        matches($ns,'nlm')">
-                           <indexFile fileName="{$fileName}"
-                              preFilter="style/textIndexer/nlm/nlmPreFilter.xsl"
-                              displayStyle="style/dynaXML/docFormatter/nlm/nlmDocFormatter.xsl"/>
-                        </xsl:when>
-                        <!-- Look for TEI XML file -->
-                        <xsl:when
-                           test="matches($root-element-name,'^TEI') or 
-                           matches($pid,'TEI') or 
-                           matches($uri,'tei2\.dtd') or 
-                           matches($ns,'tei')">
-                           <xsl:variable name="teiData" select="document($file)"/>
-                           <xsl:choose>
-                              <!--is this an enrich-style tei document?-->
-                              <xsl:when test="$teiData//*:msDesc">
-                                 <!-- skip as mstei done through json file-->
-                              </xsl:when>
-                              <!--or is it normal tei?-->
-                              <xsl:otherwise>
-                                 <indexFile fileName="{$fileName}"
-                                    preFilter="style/textIndexer/tei/teiPreFilter.xsl"
-                                    displayStyle="style/dynaXML/docFormatter/general/generalDocFormatter.xsl"
-                                 />
-                              </xsl:otherwise>
-                           </xsl:choose>
-                        </xsl:when>
-                        <!-- Look for Darwin Correspondence Project XML file -->
-                        <!-- we may need to differentiate in future if other formats have root element data-->
-                        <xsl:when
-                           test="matches($root-element-name,'^data$')">
-                           <!-- skip as dcp done through json file-->
-                           
-                        </xsl:when>
-                        <!-- Look for Longitude Essay XML file -->
-                        <xsl:when
-                           test="matches($root-element-name,'^essay$')">
-                           <!-- skip as essay done through json file-->
-                           
-                        </xsl:when>
-                        <!-- DjVu files are typically subordinate to a main doc -->
-                        <xsl:when test="matches($root-element-name, 'DjVuXML')">
-                           <!-- skip -->
-                        </xsl:when>
-                        <!-- Look for METS-encoded scanned books, skip other METS files as likely subordinate -->
-                        <xsl:when test="matches($root-element-name,'^METS')">
-                           <xsl:variable name="metsData" select="document($file)"/>
-                           <xsl:if test="$metsData//*:book">
-                              <indexFile fileName="{$fileName}"
-                                 preFilter="style/textIndexer/bookreader/bookPreFilter.xsl"
-                                 displayStyle="style/dynaXML/docFormatter/bookreader/bookDocFormatter.xsl"
-                              />
-                           </xsl:if>
-                        </xsl:when>
-                        <!--LIVE-->
-                        <!-- METS/MODS files -->
-                        <xsl:when test="matches($root-element-name,'^mets')">
-                           <xsl:variable name="metsData" select="document($file)"/>
-
-                           <xsl:if test="$metsData//*:mods">
-
-                              <!-- skip as mods done through json file-->
-                           </xsl:if>
-
-                        </xsl:when>
-                        <!-- Default processing for XML files -->
-                        <xsl:otherwise>
-                           <indexFile fileName="{$fileName}" type="XML"
-                              preFilter="style/textIndexer/prefilter/jsonprefilter.xsl"
-                              displayStyle="style/dynaXML/docFormatter/general/generalDocFormatter.xsl"/>
-                           <xsl:message
-                              select="'Indexing using the json preFilter.'"
-                           />
-                        </xsl:otherwise>
-                     </xsl:choose>
-                  </xsl:for-each>
-               </xsl:otherwise>
-            </xsl:choose>
+        <!--JSON files -->
+         <xsl:when test="ends-with(@fileName, '.json')">
+            <indexFile fileName="{@fileName}" type="JSON"
+               preFilter="style/textIndexer/prefilter/xmlprefilter.xsl"/>
          </xsl:when>
-
-         <!-- HTML files -->
-         <xsl:when test="ends-with(@fileName, 'html') or ends-with(@fileName, '.xhtml')">
-            <indexFile fileName="{@fileName}" type="HTML"
-               preFilter="style/textIndexer/html/htmlPreFilter.xsl"/>
-         </xsl:when>
-
-         <!-- PDF files -->
-         <xsl:when test="ends-with(@fileName, '.pdf')">
-            <indexFile fileName="{@fileName}" type="PDF"
-               preFilter="style/textIndexer/default/defaultPreFilter.xsl"/>
-         </xsl:when>
-
-         <!-- Microsoft Word documents -->
-         <xsl:when test="ends-with(@fileName, '.doc')">
-            <indexFile fileName="{@fileName}" type="MSWord"
-               preFilter="style/textIndexer/default/defaultPreFilter.xsl"/>
-         </xsl:when>
-
-         <!-- Plain text files. Exception: skip book/*.txt as they're typically subordinate. -->
-         <xsl:when test="ends-with(@fileName, '.txt') and not(matches($dirPath, '/bookreader/'))">
-            <indexFile fileName="{@fileName}" type="text"
-               preFilter="style/textIndexer/default/defaultPreFilter.xsl"/>
-         </xsl:when>
-	
-      </xsl:choose>
-
-   </xsl:template>
+</xsl:choose>
+    </xsl:template>
 
 </xsl:stylesheet>

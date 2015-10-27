@@ -519,6 +519,7 @@ public class SrcTreeProcessor
       else if (attrName.equalsIgnoreCase("type")) 
       {
         format = attrVal;
+       // System.out.println("hi json here!!");
         if (format.equalsIgnoreCase("XML"))
           format = "XML";
         else if (format.equalsIgnoreCase("PDF"))
@@ -531,6 +532,9 @@ public class SrcTreeProcessor
           format = "Text";
         else if (format.equalsIgnoreCase("MARC"))
           format = "MARC";
+        else if (format.equalsIgnoreCase("JSON"))
+          format = "JSON";
+//          System.out.println("hi json here!!");break;}
         else {
           Trace.error("Error: docSelector returned unknown type: '" + format +
                       "'");
@@ -585,6 +589,8 @@ public class SrcTreeProcessor
         format = "Text";
       else if (lcFileName.endsWith(".marc") || lcFileName.endsWith(".mrc"))
         format = "MARC";
+       else if (lcFileName.endsWith(".json") || lcFileName.endsWith(".json"))
+        format = "JSON";
       else {
         Trace.warning(
           "Warning: cannot deduce file type from extension on file '" +
@@ -650,6 +656,8 @@ public class SrcTreeProcessor
       srcFile = new MSWordIndexSource(srcPath, key, preFilters, displayStyle, null);
     else if (format.equalsIgnoreCase("Text"))
       srcFile = new TextIndexSource(srcPath, key, preFilters, displayStyle, null);
+    else if (format.equalsIgnoreCase("JSON"))
+      srcFile = new JSONIndexSource(srcPath, key, preFilters, displayStyle, null);
     else if (format.equalsIgnoreCase("MARC"))
       srcFile = new MARCIndexSource(srcPath, key, preFilters, displayStyle);
     else
