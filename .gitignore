@@ -2,7 +2,4 @@
 WEB-INF/dist
 WEB-INF/javadoc
 
-# Ignore everything in classes except class files. I guess these have to be
-# included as XTF is deployed from this repo.
-WEB-INF/classes
-!WEB-INF/classes/**/*.class
+
