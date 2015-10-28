@@ -519,7 +519,7 @@ public class SrcTreeProcessor
       else if (attrName.equalsIgnoreCase("type")) 
       {
         format = attrVal;
-       // System.out.println("hi json here!!");
+       
         if (format.equalsIgnoreCase("XML"))
           format = "XML";
         else if (format.equalsIgnoreCase("PDF"))
@@ -534,7 +534,6 @@ public class SrcTreeProcessor
           format = "MARC";
         else if (format.equalsIgnoreCase("JSON"))
           format = "JSON";
-//          System.out.println("hi json here!!");break;}
         else {
           Trace.error("Error: docSelector returned unknown type: '" + format +
                       "'");

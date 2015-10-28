@@ -104,9 +104,9 @@
         pre-compute all of these keys for the document and store them on disk.
     -->
 
-    <!-- ====================================================================== -->
+    
     <!-- Templates                                                              -->
-    <!-- ====================================================================== -->
+    
 
     <xsl:template match="directory">
         <indexFiles>
@@ -116,13 +116,14 @@
 
     <xsl:template match="file">
         <xsl:variable name="dirPath" select="parent::*/@dirPath"/>
-      <xsl:choose>
-        <!--JSON files -->
-         <xsl:when test="ends-with(@fileName, '.json')">
-            <indexFile fileName="{@fileName}" type="JSON"
-               preFilter="style/textIndexer/prefilter/xmlprefilter.xsl"/>
-         </xsl:when>
-</xsl:choose>
+        <xsl:choose>
+            <!--JSON files -->
+            <xsl:when test="ends-with(@fileName, '.json')">
+                <indexFile fileName="{@fileName}" type="JSON"
+                       preFilter="style/textIndexer/prefilter/xmlprefilter.xsl"
+                       displayStyle="style/dynaXML/docFormatter/general/generalDocFormatter.xsl"/>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
 
 </xsl:stylesheet>

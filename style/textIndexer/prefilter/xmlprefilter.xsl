@@ -6,14 +6,14 @@
                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                 xmlns:x="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="#all">
-    <!-- ====================================================================== -->
+    
     <!-- Import Common Templates and Functions                                  -->
-    <!-- ====================================================================== -->
+    
    
     <xsl:import href="../common/preFilterCommon.xsl"/>
-    <!-- ====================================================================== -->
+   
     <!-- Output parameters                                                      -->
-    <!-- ====================================================================== -->
+    
    
     <xsl:output method="xml" 
                 indent="yes" 
@@ -24,12 +24,12 @@
     <!-- get the services url from properties file -->
     <xsl:variable name="services" >
         
-            <xsl:value-of select="$propertiesfile/properties/services-url"/>
+        <xsl:value-of select="$propertiesfile/properties/services-url"/>
        
     </xsl:variable>
-    <!-- ====================================================================== -->
+    
     <!-- Default: identity transformation                                       -->
-    <!-- ====================================================================== -->
+   
    
     <xsl:template match="@*|node()">
         <!--                <xsl:copy>
@@ -37,18 +37,7 @@
         </xsl:copy>-->
     </xsl:template>
    
-    <!-- ====================================================================== -->
-    <!-- Root Template                                                          -->
-    <!-- ====================================================================== -->
    
-    <!--            <xsl:template match="/*">
-        <xsl:copy>
-            <xsl:namespace name="xtf" select="'http://cdlib.org/xtf'"/>
-            <xsl:copy-of select="@*"/>
-            <xsl:call-template name="get-meta"/>
-            <xsl:apply-templates/>
-        </xsl:copy>
-    </xsl:template>-->
     
     <!-- ====================================================================== -->
     <!-- Metadata Indexing                                                      -->
@@ -57,7 +46,7 @@
     <xsl:template name="get-meta">
          
         <xsl:variable name="meta">
-            <!--            <itemType>essay</itemType>-->
+            
             <xsl:call-template name="make-dmd-parts"/>
             <xsl:call-template name="numberOfPages"/>
             <xsl:call-template name="get-embeddable"/>
@@ -148,7 +137,7 @@
             <xsl:apply-templates select="metadataRights"/>
             <xsl:apply-templates select="dataRevisions"/>
             <xsl:apply-templates select="fundings"/>
-           <!-- <xsl:call-template name="get-collection-memberships"/>-->
+           
         </part>
          
     </xsl:template>
@@ -870,60 +859,60 @@
         <xsl:element name="creations">
             <xsl:attribute name="display" select="$displayvalue"/>
             <xsl:for-each select="value">
-            <xsl:element name="event">
-                <xsl:attribute name="display" select="$displayvalue"/>
-                <xsl:element name="type">
-                    <xsl:text>creation</xsl:text>
-                </xsl:element>
-                <xsl:element name="dateStart">
-<!--                    <xsl:message>-->
-                    <xsl:value-of select="dateStart"/>
-<!--                    </xsl:message>-->
-                </xsl:element>
-                <xsl:element name="dateEnd">
-                    <xsl:value-of select="dateEnd"/>
-                </xsl:element>
-                <xsl:element name="dateDisplay">
-                    <xsl:variable name="displayvalue" select="dateDisplay/display"/>
-                    <xsl:variable name="displayformvalue" select="dateDisplay/displayForm"/>
+                <xsl:element name="event">
                     <xsl:attribute name="display" select="$displayvalue"/>
-                    <xsl:attribute name="displayForm" select="$displayformvalue"/>
-                    <xsl:value-of select="$displayformvalue"/>
-                </xsl:element>
-                <xsl:if test="places">
-                    <xsl:element name="places">
-                        <xsl:variable name="displayvalue" select="places/display"/>
-                        
-                        <xsl:attribute name="display" select="$displayvalue"/>
-                        <xsl:element name="place">
-                            <xsl:variable name="displayvalue" select="places/value/display"/>
-                            <xsl:variable name="displayformvalue" select="places/value/displayForm"/>
-                            <xsl:attribute name="display" select="$displayvalue"/>
-                            <xsl:attribute name="displayForm" select="$displayformvalue"/>
-                            <xsl:element name="fullForm">
-                                <xsl:value-of select="places/value/fullForm"/>
-                            </xsl:element>
-                            <xsl:if test="places/value/shortForm">
-                                <xsl:element name="shortForm">
-                                    <xsl:value-of select="places/value/shortForm"/>
-                                </xsl:element>
-                            </xsl:if>
-                            <xsl:element name="authority">
-                                <xsl:value-of select="places/value/authority"/>
-                            </xsl:element>
-                            <xsl:if test="places/value/authorityURI">
-                                <xsl:element name="authorityURI">
-                                    <xsl:value-of select="places/value/authorityURI"/>
-                                </xsl:element>
-                            </xsl:if>
-                            <xsl:element name="valueURI">
-                                <xsl:value-of select="places/value/valueURI"/>
-                            </xsl:element>
-                            
-                        </xsl:element>
+                    <xsl:element name="type">
+                        <xsl:text>creation</xsl:text>
                     </xsl:element>
-                </xsl:if>
-            </xsl:element>
+                    <xsl:element name="dateStart">
+                        <!--                    <xsl:message>-->
+                        <xsl:value-of select="dateStart"/>
+                        <!--                    </xsl:message>-->
+                    </xsl:element>
+                    <xsl:element name="dateEnd">
+                        <xsl:value-of select="dateEnd"/>
+                    </xsl:element>
+                    <xsl:element name="dateDisplay">
+                        <xsl:variable name="displayvalue" select="dateDisplay/display"/>
+                        <xsl:variable name="displayformvalue" select="dateDisplay/displayForm"/>
+                        <xsl:attribute name="display" select="$displayvalue"/>
+                        <xsl:attribute name="displayForm" select="$displayformvalue"/>
+                        <xsl:value-of select="$displayformvalue"/>
+                    </xsl:element>
+                    <xsl:if test="places">
+                        <xsl:element name="places">
+                            <xsl:variable name="displayvalue" select="places/display"/>
+                        
+                            <xsl:attribute name="display" select="$displayvalue"/>
+                            <xsl:element name="place">
+                                <xsl:variable name="displayvalue" select="places/value/display"/>
+                                <xsl:variable name="displayformvalue" select="places/value/displayForm"/>
+                                <xsl:attribute name="display" select="$displayvalue"/>
+                                <xsl:attribute name="displayForm" select="$displayformvalue"/>
+                                <xsl:element name="fullForm">
+                                    <xsl:value-of select="places/value/fullForm"/>
+                                </xsl:element>
+                                <xsl:if test="places/value/shortForm">
+                                    <xsl:element name="shortForm">
+                                        <xsl:value-of select="places/value/shortForm"/>
+                                    </xsl:element>
+                                </xsl:if>
+                                <xsl:element name="authority">
+                                    <xsl:value-of select="places/value/authority"/>
+                                </xsl:element>
+                                <xsl:if test="places/value/authorityURI">
+                                    <xsl:element name="authorityURI">
+                                        <xsl:value-of select="places/value/authorityURI"/>
+                                    </xsl:element>
+                                </xsl:if>
+                                <xsl:element name="valueURI">
+                                    <xsl:value-of select="places/value/valueURI"/>
+                                </xsl:element>
+                            
+                            </xsl:element>
+                        </xsl:element>
+                    </xsl:if>
+                </xsl:element>
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
@@ -1325,9 +1314,7 @@
                     <xsl:if test="transcriptionDiplomaticURL">
                         <xsl:element name="transcriptionDiplomaticURL">
                             <!-- transcription content present so set up page extract URI  -->
-<!--                            <transcriptionDiplomaticURL>-->
-                                <xsl:value-of select="transcriptionDiplomaticURL"/>
-<!--                            </transcriptionDiplomaticURL>-->
+                            <xsl:value-of select="transcriptionDiplomaticURL"/>
                         </xsl:element>
                     </xsl:if>
                     <xsl:if test="transcriptionNormalisedURL">
@@ -1344,54 +1331,11 @@
                     <xsl:if test="/root/pages[text()[normalize-space(.)]!='']">
                         <xsl:element name="content">
                             <xsl:for-each select="text()">
-                        
-                            
                                 <xsl:value-of select="normalize-space(.)"/>
-                            
-                        
                             </xsl:for-each>
                         </xsl:element>
                     </xsl:if>
-                    <!-- transcription indexing -->
-                    
-
-<!--                <xsl:element name="transcriptionPage">
-                    <xsl:attribute name="xtf:subDocument" >
-                        <xsl:value-of select="concat('sub-', normalize-space(startPageLabel))"/>
-                    </xsl:attribute>
-                    <xsl:element name="fileID">
-                        <xsl:value-of select="fileID"/>
-                    </xsl:element>
-                    <xsl:element name="dmdID">
-                        <xsl:value-of select="dmdID"/>
-                    </xsl:element>
-                    <xsl:element name="startPageLabel">
-                        <xsl:value-of select="startPageLabel"/>
-                    </xsl:element>
-                    <xsl:element name="startPage">
-                        <xsl:value-of select="startPage"/>
-                    </xsl:element>
-                    <xsl:element name="title">
-                        <xsl:value-of select="title"/>
-                    </xsl:element>
-                    <xsl:element name="sort-title">
-                        <xsl:value-of select="sort-title"/>
-                    </xsl:element>
-                    <xsl:variable name="transcriptionURI" select="cudl:transcription-uri(http://services.cudl.lib.cam.ac.uk/v1/transcription/bezae/diplomatic/Bezae-Latin.xml/MS-NN-00002-00041/78r/78r)"/>
-                    <xsl:element name="transcriptionText">
-                        <xsl:variable name="transcriptionText">
-                              
-                            <xsl:variable name="transcriptionAllText" select="document('http://services.cudl.lib.cam.ac.uk/v1/transcription/bezae/diplomatic/Bezae-Latin.xml/MS-NN-00002-00041/78r/78r')"/>
-                            <xsl:value-of select="$transcriptionAllText//*:body"/>
-                        
-                            </xsl:variable>
-                            <xsl:value-of select="normalize-space(translate($transcriptionText, '&#xa0;', ' '))"/>
-                        </xsl:element>
-                    </xsl:element>-->
-
                 </xsl:element>
-                <!-- transcription indexing end-->
-            
             </xsl:for-each>
         </xsl:element>
 
@@ -1399,9 +1343,7 @@
     
     <!-- content -->
     <xsl:template name="content">
-       
         <xsl:for-each select="/root/pages">
-            <!--            <xsl:for-each select="text()[last()]">-->
             <xsl:if test="/root/pages[text()[normalize-space(.)]!='']">
                 <xsl:element name="content">
                     <xsl:for-each select="text()">
@@ -1412,7 +1354,6 @@
                 </xsl:element>
             </xsl:if>
         </xsl:for-each>
-        <!--        </xsl:if>-->
     </xsl:template>    
     
     <!-- get the logicalStructures-->
@@ -1551,6 +1492,7 @@
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
+    
     <!-- make-transcription-->
     <xsl:template name="make-transcription-pages"> 
         <xsl:if test="/root/useTranscriptions">
@@ -1570,7 +1512,7 @@
             </xsl:element>
         </xsl:if>
         <xsl:choose>
-            <!-- dcp pre-filter -->
+            <!-- for dcp files  -->
             <xsl:when test="/root/allTranscriptionDiplomaticURL">
                 <xsl:element name="allTranscriptionDiplomaticURL">
                     <xsl:value-of select="/root/allTranscriptionDiplomaticURL"/>
@@ -1605,7 +1547,7 @@
                                     <xsl:value-of select="concat($services,$url)"/>
                                 </xsl:variable>
                                 <xsl:variable name="transcriptionAllText" select="document($concaturl)"/>
-                                <!--                                <xsl:copy-of select="$transcriptionAllText//*:body"/>-->
+                                
                                 <xsl:value-of select="$transcriptionAllText"/>
                                 
                                 <xsl:value-of select="normalize-space(replace($transcriptionAllText//*:body, '&lt;[^&gt;]+&gt;', ''))" />
@@ -1707,7 +1649,7 @@
                                                 <xsl:value-of select="concat($services,$url)"/>
                                             </xsl:variable>
                                             <xsl:variable name="translationAllText" select="document($concaturl)"/>
-                                            <!--                                <xsl:copy-of select="$transcriptionAllText//*:body"/>-->
+                                            
                                             <xsl:value-of select="normalize-space(replace($translationAllText//*:body, '&lt;[^&gt;]+&gt;', ''))" />
                                         </xsl:variable>
                                         <xsl:value-of select="normalize-space(translate($translationText, '&#xa0;', ' '))" />
@@ -1720,18 +1662,5 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
-    <!--collection membership-->
-   <!-- <xsl:template name="get-collection-memberships">-->
-        <!-- Lookup collections of which this item is a member (from SQL database) -->
-      
-  <!--      <xsl:element name="collections">
-            <xsl:for-each select="cudl:get-memberships($fileID)">
-                <xsl:element name="collection">
-                    <xsl:value-of select="title"/>
-                </xsl:element>
-            </xsl:for-each>         
-        </xsl:element>
-      
-    </xsl:template>-->
+   
 </xsl:stylesheet>
