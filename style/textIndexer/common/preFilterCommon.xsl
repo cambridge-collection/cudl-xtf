@@ -64,7 +64,7 @@
    <!-- File ID                                       -->
    <!-- ====================================================================== -->
       
-   <xsl:variable name="fileID" select="substring-before(tokenize(document-uri(/), '/')[last()], '.xml')"/>
+   <xsl:variable name="fileID" select="substring-before(tokenize(document-uri(/), '/')[last()], '.json')"/>
       
    <!-- ====================================================================== -->
    <!-- Centuries lookup for date faceting                                 -->

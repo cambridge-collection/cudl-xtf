@@ -137,7 +137,7 @@
             <xsl:apply-templates select="metadataRights"/>
             <xsl:apply-templates select="dataRevisions"/>
             <xsl:apply-templates select="fundings"/>
-           
+            <xsl:call-template name="get-collection-memberships"/>
         </part>
          
     </xsl:template>
@@ -1662,5 +1662,17 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-   
+    <!--collection membership-->
+    <xsl:template name="get-collection-memberships">
+        <!-- Lookup collections of which this item is a member (from Postgres database) -->
+      
+        <xsl:element name="collections">
+            <xsl:for-each select="cudl:get-memberships($fileID)">
+                <xsl:element name="collection">
+                    <xsl:value-of select="title"/>
+                </xsl:element>
+            </xsl:for-each>         
+        </xsl:element>
+      
+    </xsl:template>
 </xsl:stylesheet>
