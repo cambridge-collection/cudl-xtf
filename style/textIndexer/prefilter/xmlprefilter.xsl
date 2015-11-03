@@ -158,7 +158,7 @@
         
         <!--get the startpage label and startpage position for cover -->
         <xsl:for-each select="/root/logicalStructures">
-            <xsl:if test="descriptiveMetadataID[1]=$unitid">
+<!--            <xsl:if test="descriptiveMetadataID[1]=$unitid">-->
                 <xsl:element name="startPageLabel">
                     <xsl:choose>
                         <xsl:when test="startPageLabel">
@@ -179,32 +179,60 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:element>
-            </xsl:if>
+<!--            </xsl:if>-->
         </xsl:for-each>
         
         <!--get the startpage label and startpage position for the children -->
-        <xsl:for-each select="/root/logicalStructures/children">
-            <xsl:if test="descriptiveMetadataID[1]=$unitid">
-                <xsl:element name="startPageLabel">
-                    <xsl:choose>
-                        <xsl:when test="startPageLabel">
-                            <xsl:value-of select="startPageLabel"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>1</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:element>
-                <xsl:element name="startPage">
-                    <xsl:choose>
-                        <xsl:when test="startPagePosition">
-                            <xsl:value-of select="startPagePosition"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>1</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:element>
+        <xsl:for-each select="/root/logicalStructures">
+            <xsl:if test="children">
+                <xsl:choose>
+                    <xsl:when test="descriptiveMetadataID[1]=$unitid">
+                        <xsl:element name="startPageLabel">
+                            <xsl:choose>
+                                <xsl:when test="startPageLabel">
+                                    <xsl:value-of select="startPageLabel"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:text>1</xsl:text>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:element>
+                        <xsl:element name="startPage">
+                            <xsl:choose>
+                                <xsl:when test="startPagePosition">
+                                    <xsl:value-of select="startPagePosition"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:text>1</xsl:text>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:element>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:if test="children/children">
+                            <xsl:element name="startPageLabel">
+                                <xsl:choose>
+                                    <xsl:when test="startPageLabel">
+                                        <xsl:value-of select="startPageLabel"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:text>1</xsl:text>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:element>
+                            <xsl:element name="startPage">
+                                <xsl:choose>
+                                    <xsl:when test="startPagePosition">
+                                        <xsl:value-of select="startPagePosition"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:text>1</xsl:text>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:element>
+                        </xsl:if>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:if>
         </xsl:for-each>
     </xsl:template>
