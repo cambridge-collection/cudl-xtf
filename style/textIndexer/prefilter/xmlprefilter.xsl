@@ -27,7 +27,14 @@
         <xsl:value-of select="$propertiesfile/properties/services-url"/>
        
     </xsl:variable>
-    
+
+    <!-- Map from descriptive metadata ID to logical structure node -->
+    <xsl:key
+        name="structure-by-dmd"
+        match="/root/logicalStructures|/root/logicalStructures//children"
+        use="descriptiveMetadataID"/>
+
+
     <!-- Default: identity transformation                                       -->
    
    
@@ -144,97 +151,32 @@
   
     <!--   ids for structural item-->
     <xsl:template match="ID">
-        <xsl:variable name="unitid" >
-            <xsl:value-of select="current()"/>
+        <xsl:variable name="sectionId" >
+            <xsl:value-of select="normalize-space(.)"/>
         </xsl:variable>
-        <xsl:attribute name="xtf:subDocument" select="$unitid"/>
+
+        <xsl:attribute name="xtf:subDocument" select="$sectionId"/>
+
         <xsl:element name="ID">
-            <xsl:value-of select="$unitid"/>
-        </xsl:element>      
-      
+            <xsl:value-of select="$sectionId"/>
+        </xsl:element>
+
         <xsl:element name="fileID">
             <xsl:value-of select="$fileID"/>
         </xsl:element>
-        
-        <!--get the startpage label and startpage position for cover -->
-        <xsl:for-each select="/root/logicalStructures">
-<!--            <xsl:if test="descriptiveMetadataID[1]=$unitid">-->
-                <xsl:element name="startPageLabel">
-                    <xsl:choose>
-                        <xsl:when test="startPageLabel">
-                            <xsl:value-of select="startPageLabel"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>1</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:element>
-                <xsl:element name="startPage">
-                    <xsl:choose>
-                        <xsl:when test="startPagePosition">
-                            <xsl:value-of select="startPagePosition"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:text>1</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:element>
-<!--            </xsl:if>-->
-        </xsl:for-each>
-        
-        <!--get the startpage label and startpage position for the children -->
-        <xsl:for-each select="/root/logicalStructures">
-            <xsl:if test="children">
-                <xsl:choose>
-                    <xsl:when test="descriptiveMetadataID[1]=$unitid">
-                        <xsl:element name="startPageLabel">
-                            <xsl:choose>
-                                <xsl:when test="startPageLabel">
-                                    <xsl:value-of select="startPageLabel"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:text>1</xsl:text>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:element>
-                        <xsl:element name="startPage">
-                            <xsl:choose>
-                                <xsl:when test="startPagePosition">
-                                    <xsl:value-of select="startPagePosition"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:text>1</xsl:text>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:element>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:if test="children/children">
-                            <xsl:element name="startPageLabel">
-                                <xsl:choose>
-                                    <xsl:when test="startPageLabel">
-                                        <xsl:value-of select="startPageLabel"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:text>1</xsl:text>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:element>
-                            <xsl:element name="startPage">
-                                <xsl:choose>
-                                    <xsl:when test="startPagePosition">
-                                        <xsl:value-of select="startPagePosition"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:text>1</xsl:text>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:element>
-                        </xsl:if>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:if>
-        </xsl:for-each>
+
+        <!-- Each metadata section has a structure node which contains details
+             of the physical area of the item the metadata covers.  -->
+        <xsl:variable name="structureNode"
+                      select="key('structure-by-dmd', $sectionId)"/>
+
+        <startPageLabel>
+            <xsl:value-of select="$structureNode/startPageLabel"/>
+        </startPageLabel>
+
+        <startPage>
+            <xsl:value-of select="$structureNode/startPagePosition"/>
+        </startPage>
     </xsl:template>
         
        
