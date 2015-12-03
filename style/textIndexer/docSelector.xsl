@@ -126,4 +126,8 @@
         </xsl:choose>
     </xsl:template>
 
+    <!-- Strip unnecessary whitespace to reduce output length when debugging. -->
+    <xsl:template match="text()">
+      <xsl:value-of select="normalize-space()"/>
+    </xsl:template>
 </xsl:stylesheet>
