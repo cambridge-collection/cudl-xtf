@@ -1,0 +1,11 @@
+# http://editorconfig.org/
+[{similarity.xsl,darwin-transcription.xsl}]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Enable this once whitespace has been cleaned up
+# [style/**/*.xsl]
+# end_of_line = lf
+# insert_final_newline = true
+# trim_trailing_whitespace = true
