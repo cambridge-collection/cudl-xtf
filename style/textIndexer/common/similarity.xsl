@@ -72,10 +72,12 @@
         <xsl:call-template name="sim:copy-with-extra-content">
             <xsl:with-param name="extra-content">
 
-                <!-- Introduce a new set of subdocuments to index similarity
-                     info. We'll need to exclude these from the regular search
-                     results... -->
-                <xsl:apply-templates select=".//logicalStructure" mode="similarity-subdoc"/>
+                <similarity-match-candidates>
+                    <!-- Introduce a new set of subdocuments to index similarity
+                         info. We'll need to exclude these from the regular search
+                         results... -->
+                    <xsl:apply-templates select=".//logicalStructure" mode="similarity-subdoc"/>
+                </similarity-match-candidates>
 
             </xsl:with-param>
         </xsl:call-template>
