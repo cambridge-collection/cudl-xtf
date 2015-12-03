@@ -34,18 +34,9 @@
         match="/root/logicalStructures|/root/logicalStructures//children"
         use="descriptiveMetadataID"/>
 
+    <!-- Default: delete everything -->
+    <xsl:template match="@*|node()"/>
 
-    <!-- Default: identity transformation                                       -->
-   
-   
-    <xsl:template match="@*|node()">
-        <!--                <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>-->
-    </xsl:template>
-   
-   
-    
     <!-- ====================================================================== -->
     <!-- Metadata Indexing                                                      -->
     <!-- ====================================================================== -->
