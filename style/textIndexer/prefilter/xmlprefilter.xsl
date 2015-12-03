@@ -11,6 +11,7 @@
     
    
     <xsl:import href="../common/preFilterCommon.xsl"/>
+    <xsl:import href="./darwin-transcription.xsl"/>
    
     <!-- Output parameters                                                      -->
     
@@ -1499,21 +1500,11 @@
                         <xsl:value-of select="'Letter'"/>
                     </xsl:element>
                     <xsl:element name="transcriptionText">
-                        <xsl:variable name="url" >
-                            <xsl:value-of select = "$allTranscriptionDiplomaticURL"/>
-                        </xsl:variable>
-                        <xsl:if test="$url!=''">
+                        <xsl:if test="$allTranscriptionDiplomaticURL != ''">
                             <xsl:variable name="transcriptionText">
-                                <xsl:variable name="concaturl" >
-                                    <xsl:value-of select="concat($services,$url)"/>
-                                </xsl:variable>
-                                <xsl:variable name="transcriptionAllText" select="document($concaturl)"/>
-                                
-                                <xsl:value-of select="$transcriptionAllText"/>
-                                
-                                <xsl:value-of select="normalize-space(replace($transcriptionAllText//*:body, '&lt;[^&gt;]+&gt;', ''))" />
+                                <xsl:apply-templates select="document(resolve-uri($allTranscriptionDiplomaticURL, $servicesURI))" mode="darwin-transcription"/>
                             </xsl:variable>
-                            <xsl:value-of select="normalize-space(translate($transcriptionText, '&#xa0;', ' '))" />
+                            <xsl:value-of select="normalize-space($transcriptionText)" />
                         </xsl:if>
                     </xsl:element>
                 </xsl:element>
