@@ -29,6 +29,7 @@
        
     </xsl:variable>
 
+
     <!-- Map from descriptive metadata ID to logical structure node -->
     <xsl:key
         name="structure-by-dmd"
@@ -1426,33 +1427,22 @@
     
     <!-- make-list items-->
     <xsl:template name="make-listitems">
-        <xsl:element name="listItemPages">
-            <xsl:for-each select="/root/listItemPages">
-                
-                <xsl:element name="listItemPage">
-                    <xsl:attribute name="xtf:subDocument" select="concat('listItem-', position())"/>
-                    <xsl:element name="fileID">
-                        <xsl:value-of select="$fileID"/>
-                    </xsl:element>
-                    <xsl:element name="dmdID">
-                        <xsl:attribute name="xtf:noindex">true</xsl:attribute>
-                        <xsl:value-of select="dmdID"/>
-                    </xsl:element>
-                    <xsl:element name="startPageLabel">
-                        <xsl:value-of select="startPageLabel"/>
-                    </xsl:element>
-                    <xsl:element name="startPage">
-                        <xsl:value-of select="startPage"/>
-                    </xsl:element>
-                    <xsl:element name="title">
-                        <xsl:value-of select="title"/>
-                    </xsl:element>
-                    <xsl:element name="listItemText">
-                        <xsl:value-of select="listItemText"/>
-                    </xsl:element>
-                </xsl:element>
-            </xsl:for-each>
-        </xsl:element>
+        <xsl:if test="/root/listItemPages">
+            <listItemPages>
+                <xsl:for-each select="/root/listItemPages">
+                    <listItemPage xtf:subDocument="list-item-{position()}">
+                        <fileID>
+                            <xsl:value-of select="$fileID"/>
+                        </fileID>
+                        <dmdID>
+                            <xsl:attribute name="xtf:noindex">true</xsl:attribute>
+                            <xsl:value-of select="dmdID"/>
+                        </dmdID>
+                        <xsl:copy-of select="startPageLabel|startPage|title|listItemText"/>
+                    </listItemPage>
+                </xsl:for-each>
+            </listItemPages>
+        </xsl:if>
     </xsl:template>
 
     <!-- make-transcription-->
