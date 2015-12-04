@@ -1454,166 +1454,80 @@
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- make-transcription-->
     <xsl:template name="make-transcription-pages"> 
-        <xsl:if test="/root/useTranscriptions">
-            <xsl:element name="useTranscriptions">
-                <xsl:value-of select="/root/useTranscriptions"/>
-            </xsl:element>
-        </xsl:if>
-        <xsl:if test="/root/useDiplomaticTranscriptions">
-            
-            <xsl:element name="useDiplomaticTranscriptions">
-                <xsl:value-of select="/root/useDiplomaticTranscriptions"/>
-            </xsl:element>
-        </xsl:if>
-        <xsl:if test="/root/useNormalisedTranscriptions">
-            <xsl:element name="useNormalisedTranscriptions">
-                <xsl:value-of select="/root/useNormalisedTranscriptions"/>
-            </xsl:element>
-        </xsl:if>
         <xsl:choose>
             <!-- for dcp files  -->
             <xsl:when test="/root/allTranscriptionDiplomaticURL">
-                <xsl:element name="allTranscriptionDiplomaticURL">
-                    <xsl:value-of select="/root/allTranscriptionDiplomaticURL"/>
-                </xsl:element>
-                <xsl:variable name="allTranscriptionDiplomaticURL">
-                    <xsl:value-of select="/root/allTranscriptionDiplomaticURL"/>
-                </xsl:variable>
-                <xsl:element name="transcriptionPage">
-                    <xsl:attribute name="xtf:subDocument">letter</xsl:attribute>
-                    <xsl:element name="fileID">
+                <transcriptionPage xtf:subDocument="transcription">
+                    <fileID>
                         <xsl:value-of select="$fileID"/>
-                    </xsl:element>
-                    <xsl:element name="dmdID">
+                    </fileID>
+                    <dmdID>
                         <xsl:value-of select="/root/logicalStructures/descriptiveMetadataID"/>
-                    </xsl:element>
-                    <xsl:element name="startPageLabel">
+                    </dmdID>
+                    <startPageLabel>
                         <xsl:value-of select="/root/pages[1]/label"/>
-                    </xsl:element>
-                    <xsl:element name="startPage">
+                    </startPageLabel>
+                    <startPage>
                         <xsl:value-of select="/root/pages[1]/sequence"/>
-                    </xsl:element>
-                    <xsl:element name="title">
+                    </startPage>
+                    <title>
                         <xsl:value-of select="'Letter'"/>
-                    </xsl:element>
-                    <xsl:element name="transcriptionText">
-                        <xsl:if test="$allTranscriptionDiplomaticURL != ''">
-                            <xsl:variable name="transcriptionText">
-                                <xsl:apply-templates select="document(resolve-uri($allTranscriptionDiplomaticURL, $servicesURI))" mode="darwin-transcription"/>
-                            </xsl:variable>
-                            <xsl:value-of select="normalize-space($transcriptionText)" />
-                        </xsl:if>
-                    </xsl:element>
-                </xsl:element>
+                    </title>
+                    <transcriptionText>
+                        <xsl:variable name="transcriptionText">
+                            <xsl:apply-templates select="document(resolve-uri(/root/allTranscriptionDiplomaticURL, $servicesURI))" mode="darwin-transcription"/>
+                        </xsl:variable>
+                        <xsl:value-of select="normalize-space($transcriptionText)" />
+                    </transcriptionText>
+                </transcriptionPage>
             </xsl:when>
-            <xsl:otherwise>
-                
-           
 
-                <xsl:element name="transcriptionPages">
-                    <xsl:variable name="allTranscriptionDiplomaticURL">
-                        <xsl:value-of select="/root/allTranscriptionDiplomaticURL"/>
-                    </xsl:variable>
-                    <xsl:for-each select="/root/pages">
-                        <xsl:element name="transcriptionPage">
-                            <xsl:variable name="startPageLabel">
-                                <xsl:value-of select="label"/>
-                            </xsl:variable>
-                    
-                            <xsl:attribute name="xtf:subDocument" >
-                                <xsl:value-of select="concat('sub-', normalize-space(label))"/>
-                            </xsl:attribute>
-                            <xsl:element name="fileID">
+            <xsl:otherwise>
+                <transcriptionPages>
+                    <xsl:for-each select="/root/pages[transcriptionNormalisedURL|transcriptionDiplomaticURL|translationURL]">
+                        <transcriptionPage xtf:subDocument="transcription-{normalize-space(sequence)}">
+                            <fileID>
                                 <xsl:value-of select="$fileID"/>
-                            </xsl:element>
-                            <xsl:element name="dmdID">
+                            </fileID>
+                            <dmdID>
                                 <xsl:value-of select="/root/logicalStructures/descriptiveMetadataID"/>
-                            </xsl:element>
-                            <xsl:element name="startPageLabel">
-                        
-                                <xsl:value-of select="$startPageLabel"/>
-                            </xsl:element>
-                            <xsl:element name="startPage">
+                            </dmdID>
+                            <startPageLabel>
+                                <xsl:value-of select="label"/>
+                            </startPageLabel>
+                            <startPage>
                                 <xsl:value-of select="sequence"/>
-                            </xsl:element>
-                            <xsl:element name="title">
+                            </startPage>
+                            <title>
                                 <xsl:value-of select="label"/>
-                            </xsl:element>
-                            <xsl:element name="sort-title">
+                            </title>
+                            <sort-title>
                                 <xsl:value-of select="label"/>
-                            </xsl:element>
-                   
-                   
-                            <xsl:element name="transcriptionText">
-                                <xsl:choose>
-                                    <xsl:when test="transcriptionNormalisedURL">
-                               
-                                        <xsl:variable name="url" >
-                                            <xsl:value-of select = "transcriptionNormalisedURL"/>
-                                        </xsl:variable>
-                                        <xsl:if test="$url!=''">
-                                            <xsl:variable name="transcriptionText">
-                                                <xsl:variable name="concaturl" >
-                                                    <xsl:value-of select="concat($services,$url)"/>
-                                                </xsl:variable>
-                                                <xsl:variable name="transcriptionAllText" select="document($concaturl)"/>
-                                                <!--                                <xsl:copy-of select="$transcriptionAllText//*:body"/>-->
-                                                <xsl:value-of select="normalize-space(replace($transcriptionAllText//*:body, '&lt;[^&gt;]+&gt;', ''))" />
-                                            </xsl:variable>
-                                            <xsl:value-of select="normalize-space(translate($transcriptionText, '&#xa0;', ' '))" />
-                                        </xsl:if>
-                       
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:if test="transcriptionDiplomaticURL">
-                                            <xsl:variable name="url" >
-                                                <xsl:value-of select = "transcriptionDiplomaticURL"/>
-                                            </xsl:variable>
-                                            <xsl:if test="$url!=''">
-                                                <xsl:variable name="transcriptionText">
-                                                    <xsl:variable name="concaturl" >
-                                                        <xsl:value-of select="concat($services,$url)"/>
-                                                    </xsl:variable>
-                                                    <xsl:variable name="transcriptionAllText" select="document($concaturl)"/>
-                                                    <!--                                <xsl:copy-of select="$transcriptionAllText//*:body"/>-->
-                                                    <xsl:value-of select="normalize-space(replace($transcriptionAllText//*:body, '&lt;[^&gt;]+&gt;', ''))" />
-                                                </xsl:variable>
-                                                <xsl:value-of select="normalize-space(translate($transcriptionText, '&#xa0;', ' '))" />
-                                            </xsl:if>
-                                        </xsl:if>
-                                
-                               
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                        
-                            </xsl:element>
-                            <xsl:element name="translation">
-                                <xsl:if test="translationURL">
-                                    <xsl:variable name="url" >
-                                        <xsl:value-of select = "translationURL"/>
-                                    </xsl:variable>
-                                    <xsl:if test="$url!=''">
-                                        <xsl:variable name="translationText">
-                                            <xsl:variable name="concaturl" >
-                                                <xsl:value-of select="concat($services,$url)"/>
-                                            </xsl:variable>
-                                            <xsl:variable name="translationAllText" select="document($concaturl)"/>
-                                            
-                                            <xsl:value-of select="normalize-space(replace($translationAllText//*:body, '&lt;[^&gt;]+&gt;', ''))" />
-                                        </xsl:variable>
-                                        <xsl:value-of select="normalize-space(translate($translationText, '&#xa0;', ' '))" />
-                                    </xsl:if>
-                                </xsl:if>
-                            </xsl:element>
-                        </xsl:element>
+                            </sort-title>
+
+                            <xsl:if test="transcriptionNormalisedURL|transcriptionDiplomaticURL">
+                                <!-- Fetch a transcription from services, preferring
+                                     the normalised version. -->
+                                <transcriptionText>
+                                    <xsl:value-of select="normalize-space(document(resolve-uri((transcriptionNormalisedURL|transcriptionDiplomaticURL)[1], $servicesURI))/x:html/x:body)"/>
+                                </transcriptionText>
+                            </xsl:if>
+
+                            <xsl:if test="translationURL">
+                                <translation>
+                                    <xsl:value-of select="normalize-space(document(resolve-uri(translationURL, $servicesURI))/x:html/x:body)"/>
+                                </translation>
+                            </xsl:if>
+                        </transcriptionPage>
                     </xsl:for-each>
-                </xsl:element>
+                </transcriptionPages>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
     <!--collection membership-->
     <xsl:template name="get-collection-memberships">
         <!-- Lookup collections of which this item is a member (from Postgres database) -->
