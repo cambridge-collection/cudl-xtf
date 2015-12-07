@@ -1,8 +1,13 @@
 <xsl:stylesheet version="2.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:xtf="http://cdlib.org/xtf"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:sim="http://cudl.lib.cam.ac.uk/xtf/ns/similarity"
+    xmlns:util="http://cudl.lib.cam.ac.uk/xtf/ns/util"
     exclude-result-prefixes="#all">
+
+    <xsl:import href="./funcs.xsl"/>
 
     <!-- This stylesheet is responsible for generating fields used by the CUDL
          similarity sugestions. We use XTF's moreLike query to get results
@@ -47,40 +52,48 @@
          never need to be fetched... -->
     <xsl:variable name="sim:STORE_SIMILARITY" select="true()"/>
 
-    <!-- Index transcriptionPage elements by dmdID -->
-    <xsl:key
-        name="sim:transcription-pages-by-dmd"
-        match="/xtf-converted/xtf:meta/transcriptionPage"
-        use="dmdID"/>
-
-    <!-- Index descriptive metadat sections by their ID -->
+    <!-- Index descriptive metadata sections by their ID -->
     <xsl:key
         name="sim:dmd-sections"
-        match="/xtf-converted/xtf:meta/descriptiveMetadata/part"
+        match="/root/descriptiveMetadata"
         use="ID"/>
 
+    <!-- Index structure nodes by the individual page numbers they cover -->
+    <xsl:key
+        name="sim:structure-by-page"
+        match="/root/logicalStructures|/root/logicalStructures//children"
+        use="xs:integer(startPagePosition) to xs:integer(endPagePosition)"/>
+
+    <!-- Index pages by the metadata sections that reference them
+         (via logical strucures) -->
+    <xsl:key
+        name="sim:pages-by-dmd"
+        match="/root/pages"
+        use="key('sim:structure-by-page', xs:integer(sequence))/descriptiveMetadataID"/>
+
+    <xsl:function name="sim:similarity-candidates">
+        <xsl:param name="json-meta-root"/>
+
+        <xsl:apply-templates select="$json-meta-root" mode="sim:candidates"/>
+    </xsl:function>
+
+
     <!-- Keep everything as-is unless we explicitly change anything -->
-    <xsl:template match="@*|node()" mode="similarity">
+    <xsl:template match="@*|node()" mode="sim:candidates">
         <xsl:copy>
-            <xsl:apply-templates select="@*|node()" mode="similarity"/>
+            <xsl:apply-templates select="@*|node()" mode="sim:candidates"/>
         </xsl:copy>
     </xsl:template>
 
     <!-- Add our new similarity subdocuments to the meta block alongside the
          other data. -->
-    <xsl:template match="xtf:meta" mode="similarity">
-        <xsl:call-template name="sim:copy-with-extra-content">
-            <xsl:with-param name="extra-content">
-
-                <similarity-match-candidates>
-                    <!-- Introduce a new set of subdocuments to index similarity
-                         info. We'll need to exclude these from the regular search
-                         results... -->
-                    <xsl:apply-templates select=".//logicalStructure" mode="similarity-subdoc"/>
-                </similarity-match-candidates>
-
-            </xsl:with-param>
-        </xsl:call-template>
+    <xsl:template match="/" mode="sim:candidates">
+        <similarity-match-candidates>
+            <!-- Introduce a new set of subdocuments to index similarity
+                 info. We'll need to exclude these from the regular search
+                 results... -->
+            <xsl:apply-templates select=".//logicalStructures|.//logicalStructures//children" mode="sim:candidate"/>
+        </similarity-match-candidates>
     </xsl:template>
 
     <!-- Each logical structure node is indexed for similarity.
@@ -88,7 +101,7 @@
          (narowest & deepest) node for a given page is used to obtain the
          similarity ID for a page.
           -->
-    <xsl:template match="logicalStructure" mode="similarity-subdoc">
+    <xsl:template match="logicalStructures|children" mode="sim:candidate">
         <!-- The 0-based position of the logical structure item is the
              similarity ID. -->
         <xsl:variable name="similarityID" select="position() - 1"/>
@@ -114,52 +127,53 @@
             <!-- Generate similarity fields for each dmd section associated with
                  this logical structure. e.g. this structure node and its
                  ancestors. -->
-            <xsl:for-each select="reverse(ancestor-or-self::logicalStructure)">
+            <xsl:for-each select="reverse(ancestor-or-self::*[self::logicalStructures or self::children])">
                 <!-- TODO: Could modify the xtf:wordBoost value for similarity
                      fields from different depths in the logical structure tree.
                      e.g. boost deeper (more specific) fields or unboost less
                      specific fields (closer to the top). -->
                 <xsl:apply-templates
                     select="key('sim:dmd-sections', descriptiveMetadataID)"
-                    mode="similarity-subdoc"/>
+                    mode="sim:candidate"/>
             </xsl:for-each>
 
         </similarity-match-candidate>
     </xsl:template>
 
     <!-- Add similarity fields to descriptive metadata.  -->
-    <xsl:template match="descriptiveMetadata/part" mode="similarity-subdoc">
+    <xsl:template match="descriptiveMetadata" mode="sim:candidate">
 
         <similarity-fields for="descriptive-metadata {ID}">
 
-            <xsl:apply-templates select="title" mode="similarity-field"/>
+            <xsl:apply-templates select="title/displayForm" mode="sim:field"/>
 
             <xsl:apply-templates
-                select="authors/name|recipients/name|associated/name"
-                mode="similarity-field"/>
+                select="authors|recipients|associated|donors"
+                mode="sim:field"/>
 
-            <xsl:apply-templates select="abstract|content" mode="similarity-field"/>
+            <xsl:apply-templates select="abstract|content" mode="sim:field"/>
 
             <xsl:if test="$sim:INDEX_TRANSCRIPTIONS">
+
                 <xsl:apply-templates
-                    select="key('sim:transcription-pages-by-dmd', ID)"
-                    mode="similarity-field"/>
+                    select="key('sim:pages-by-dmd', ID)"
+                    mode="sim:field"/>
             </xsl:if>
 
             <xsl:apply-templates
-                select="subjects/subject" mode="similarity-field"/>
+                select="subjects" mode="sim:field"/>
 
             <xsl:apply-templates
-                select="creations/event/places/place"
-                mode="similarity-field"/>
+                select="creations/value/places"
+                mode="sim:field"/>
 
         </similarity-fields>
     </xsl:template>
 
     <!-- These are the possible similarity fields which can be created: -->
 
-    <!-- similarity-titile contains the title of the subdocument -->
-    <xsl:template match="title[normalize-space()]" mode="similarity-field">
+    <!-- similarity-title contains the title of the subdocument -->
+    <xsl:template match="title/displayForm[normalize-space()]" mode="sim:field">
         <similarity-title xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
             <xsl:value-of select="normalize-space()"/>
         </similarity-title>
@@ -167,57 +181,58 @@
 
     <!-- similarity-name contains any names of people associated with the
          subDocument. -->
-    <xsl:template match="name[@displayForm]" mode="similarity-field">
+    <xsl:template match="*[self::authors or self::recipients or self::associated or self::donors]/value/displayForm[normalize-space()]" mode="sim:field">
         <similarity-name xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
             <!-- FIXME: strip date ranges from names -->
-            <xsl:value-of select="@displayForm"/>
+            <xsl:value-of select="normalize-space()"/>
         </similarity-name>
     </xsl:template>
 
     <!-- similarity-text contains any available full-text fields -->
-    <xsl:template match="abstract|content" mode="similarity-field">
+    <xsl:template match="*[self::abstract or self::content]/displayForm[normalize-space()]" mode="sim:field">
         <similarity-text xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
-            <xsl:value-of select="normalize-space()"/>
+            <xsl:value-of select="normalize-space(util:strip-html-tags(.))"/>
         </similarity-text>
     </xsl:template>
 
-    <xsl:template match="transcriptionPage[normalize-space(transcriptionText)]"
-                  mode="similarity-field">
-        <similarity-text xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
-            <xsl:value-of select="normalize-space(transcriptionText)"/>
+    <!-- If sim:INDEX_TRANSCRIPTIONS is enabled, similarity-text nodes will be
+         generated containing the transcription text from each page referenced
+         by a metadata section's logical structure.  -->
+    <xsl:template match="pages[transcriptionNormalisedURL|
+                               transcriptionDiplomaticURL]"
+                  mode="sim:field">
+        <xsl:variable name="url"
+                      select="(transcriptionNormalisedURL|transcriptionDiplomaticURL)[1]"/>
+
+        <similarity-text xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}" source="page {sequence} transcription">
+            <xsl:value-of select="normalize-space(document(resolve-uri($url, $servicesURI))/xhtml:html/xhtml:body)"/>
         </similarity-text>
     </xsl:template>
+
+    <!-- Ignore pages w/o transcriptions -->
+    <xsl:template match="pages" mode="sim:field"/>
 
     <!-- similarity-subject contains a subject/topic associated with the
          item -->
-    <xsl:template match="subject[@displayForm]" mode="similarity-field">
+    <xsl:template match="subjects/value/displayForm[normalize-space()]" mode="sim:field">
         <similarity-subject xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
-            <xsl:value-of select="@displayForm"/>
+            <xsl:value-of select="normalize-space()"/>
         </similarity-subject>
     </xsl:template>
 
     <!-- similarity-place contains the name of a location associated with the
          item -->
-    <xsl:template match="place[@displayForm]" mode="similarity-field">
+    <xsl:template match="places/value/displayForm[normalize-space()]" mode="sim:field">
         <similarity-place xtf:meta="true" xtf:index="true" xtf:store="{$sim:STORE_SIMILARITY}">
-            <xsl:value-of select="@displayForm"/>
+            <xsl:value-of select="normalize-space()"/>
         </similarity-place>
     </xsl:template>
 
-    <!-- Utilities -->
-    <xsl:template name="sim:copy-with-extra-content">
-        <xsl:param name="extra-content"/>
-
-        <xsl:copy>
-            <!-- Copy attributes unchanged -->
-            <xsl:apply-templates select="@*" mode="similarity"/>
-
-            <!-- Insert the extra content before the existing elements. -->
-            <xsl:copy-of select="$extra-content"/>
-
-            <!-- Copy all the other nodes -->
-            <xsl:apply-templates select="node()" mode="similarity"/>
-        </xsl:copy>
+    <!-- Keep looking for matches in children while processing fields -->
+    <xsl:template match="*" mode="sim:field">
+        <xsl:apply-templates select="*" mode="sim:field"/>
     </xsl:template>
 
+    <!-- Ignore everything by default while processing fields -->
+    <xsl:template match="@*|node()" priority="-1" mode="sim:field"/>
 </xsl:stylesheet>

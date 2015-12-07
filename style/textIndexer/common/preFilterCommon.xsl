@@ -7,6 +7,8 @@
    xmlns:FileUtils="java:org.cdlib.xtf.xslt.FileUtils"
    xmlns:CharUtils="java:org.cdlib.xtf.xslt.CharUtils" 
    xmlns:cudl="http://cudl.lib.cam.ac.uk/xtf/"
+   xmlns:sim="http://cudl.lib.cam.ac.uk/xtf/ns/similarity"
+   xmlns:util="http://cudl.lib.cam.ac.uk/xtf/ns/util"
    xmlns:my="blah"
    extension-element-prefixes="saxon FileUtils" 
    exclude-result-prefixes="#all">
@@ -41,8 +43,9 @@
       POSSIBILITY OF SUCH DAMAGE.
    -->
 
-<!-- Similarity postprocessing step -->
-<xsl:import href="../common/similarity.xsl"/>
+   <!-- Similarity postprocessing step -->
+   <xsl:import href="../common/similarity.xsl"/>
+   <xsl:import href="../common/funcs.xsl"/>
 
    <!-- ====================================================================== -->
    <!-- Variables                                                              -->
@@ -122,14 +125,13 @@
       </xtf-converted>
    </xsl:variable>
 
-   <!-- Post-process the built metadata/index tree to add fields for
-        similarity search. -->
-   <xsl:variable name="tree-with-similarity">
-      <xsl:apply-templates select="$tree" mode="similarity"/>
-   </xsl:variable>
+   <!-- Generate subdocuments for similarity search from the input JSON -->
+   <xsl:variable name="similarity-match-candidates"
+                 select="sim:similarity-candidates(/)"/>
 
-   <!-- Return the post-processed tree. -->
-   <xsl:copy-of select="$tree-with-similarity"/>
+   <!-- Return the result of merging the similarity documents into the
+        generated index tree. -->
+   <xsl:copy-of select="util:merge($tree, $similarity-match-candidates)"/>
 </xsl:template>
 
 
