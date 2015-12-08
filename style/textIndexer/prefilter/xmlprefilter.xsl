@@ -1318,113 +1318,25 @@
             </xsl:if>
         </xsl:for-each>
     </xsl:template>    
-    
+
     <!-- get the logicalStructures-->
     <xsl:template name="make-logicalstructures">
-        <xsl:element name="logicalStructures">
-            <xsl:for-each select="/root/logicalStructures">
-                <xsl:element name="logicalStructure">
-                    <xsl:element name="descriptiveMetadataID">
-                        <xsl:value-of select="descriptiveMetadataID"/> 
-                    </xsl:element>
-                    <xsl:element name="label">
-                        <xsl:value-of select="label"/> 
-                    </xsl:element>
-                    <xsl:element name="startPageLabel">
-                        <xsl:value-of select="startPageLabel"/> 
-                    </xsl:element> 
-                    <xsl:element name="startPagePosition">
-                        <xsl:value-of select="startPagePosition"/> 
-                    </xsl:element>  
-                    <xsl:element name="startPageID">
-                        <xsl:value-of select="startPageID"/> 
-                    </xsl:element>   
-                    <xsl:element name="endPageLabel">
-                        <xsl:value-of select="endPageLabel"/> 
-                    </xsl:element>     
-                    <xsl:element name="endPagePosition">
-                        <xsl:value-of select="endPagePosition"/> 
-                    </xsl:element>     
-                    <xsl:if test="endPageID">
-                        <xsl:element name="endPageID">
-                            <xsl:value-of select="endPageID"/> 
-                        </xsl:element> 
-                    </xsl:if>
-                
-                    <xsl:if test="children">
-                        <xsl:element name="children">
-                            <xsl:for-each select="children">
-                                <xsl:element name="logicalStructure">
-                                    <xsl:element name="descriptiveMetadataID">
-                                        <xsl:value-of select="descriptiveMetadataID"/> 
-                                    </xsl:element>
-                                    <xsl:element name="label">
-                                        <xsl:value-of select="label"/> 
-                                    </xsl:element>
-                                    <xsl:element name="startPageLabel">
-                                        <xsl:value-of select="startPageLabel"/> 
-                                    </xsl:element> 
-                                    <xsl:element name="startPagePosition">
-                                        <xsl:value-of select="startPagePosition"/> 
-                                    </xsl:element>  
-                                    <xsl:element name="startPageID">
-                                        <xsl:value-of select="startPageID"/> 
-                                    </xsl:element>   
-                                    <xsl:element name="endPageLabel">
-                                        <xsl:value-of select="endPageLabel"/> 
-                                    </xsl:element>     
-                                    <xsl:element name="endPagePosition">
-                                        <xsl:value-of select="endPagePosition"/> 
-                                    </xsl:element> 
-                                    <xsl:if test="endPageID" >    
-                                        <xsl:element name="endPageID">
-                                            <xsl:value-of select="endPageID"/> 
-                                        </xsl:element> 
-                                    </xsl:if>
-                                    <!-- test if furthur childern exists-->
-                                    <xsl:if test="children">
-                                        <xsl:element name="children">
-                                            <xsl:for-each select="children">
-                                                <xsl:element name="logicalStructure">
-                                                    <xsl:element name="descriptiveMetadataID">
-                                                        <xsl:value-of select="descriptiveMetadataID"/> 
-                                                    </xsl:element>
-                                                    <xsl:element name="label">
-                                                        <xsl:value-of select="label"/> 
-                                                    </xsl:element>
-                                                    <xsl:element name="startPageLabel">
-                                                        <xsl:value-of select="startPageLabel"/> 
-                                                    </xsl:element> 
-                                                    <xsl:element name="startPagePosition">
-                                                        <xsl:value-of select="startPagePosition"/> 
-                                                    </xsl:element>  
-                                                    <xsl:element name="startPageID">
-                                                        <xsl:value-of select="startPageID"/> 
-                                                    </xsl:element>   
-                                                    <xsl:element name="endPageLabel">
-                                                        <xsl:value-of select="endPageLabel"/> 
-                                                    </xsl:element>     
-                                                    <xsl:element name="endPagePosition">
-                                                        <xsl:value-of select="endPagePosition"/> 
-                                                    </xsl:element> 
-                                                    <xsl:if test="endPageID" >    
-                                                        <xsl:element name="endPageID">
-                                                            <xsl:value-of select="endPageID"/> 
-                                                        </xsl:element> 
-                                                    </xsl:if>
-                                                </xsl:element>
-                                            </xsl:for-each>
-                                        </xsl:element>
-                                    </xsl:if>
-                                </xsl:element>
-                            </xsl:for-each>
-                        </xsl:element>
-                    </xsl:if>
-                </xsl:element>
-            </xsl:for-each>
-        </xsl:element>
+        <logicalStructures>
+            <xsl:apply-templates select="/root/logicalStructures" mode="cudl:logical-structure"/>
+        </logicalStructures>
     </xsl:template>
-    
+
+    <xsl:template match="logicalStructures|logicalStructures//children"
+                  mode="cudl:logical-structure">
+        <logicalStructure>
+            <!-- Copy all the child elements except for the <children> -->
+            <xsl:copy-of select="@*|(node() except children)"/>
+
+            <!-- Recursively generate child structures -->
+            <xsl:apply-templates select="children" mode="cudl:logical-structure"/>
+        </logicalStructure>
+    </xsl:template>
+
     <!-- make-list items-->
     <xsl:template name="make-listitems">
         <xsl:if test="/root/listItemPages">
