@@ -20,16 +20,6 @@
                 indent="yes" 
                 encoding="UTF-8"/>
 
-    <!-- import properties file - properties.xml -->
-    <xsl:variable name="propertiesfile" select="document('properties.xml')"/>
-    <!-- get the services url from properties file -->
-    <xsl:variable name="services" >
-        
-        <xsl:value-of select="$propertiesfile/properties/services-url"/>
-       
-    </xsl:variable>
-
-
     <!-- Map from descriptive metadata ID to logical structure node -->
     <xsl:key
         name="structure-by-dmd"
