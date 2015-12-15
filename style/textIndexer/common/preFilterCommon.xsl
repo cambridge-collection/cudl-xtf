@@ -67,7 +67,7 @@
    <!-- File ID                                       -->
    <!-- ====================================================================== -->
       
-   <xsl:variable name="fileID" select="substring-before(tokenize(document-uri(/), '/')[last()], '.json')"/>
+   <xsl:variable name="fileID" select="util:doc-id(/)"/>
       
    <!-- ====================================================================== -->
    <!-- Centuries lookup for date faceting                                 -->
