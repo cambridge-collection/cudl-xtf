@@ -131,7 +131,7 @@
 
    <!-- Return the result of merging the similarity documents into the
         generated index tree. -->
-   <xsl:copy-of select="util:merge($tree, $similarity-match-candidates)"/>
+   <xsl:copy-of select="util:merge($tree/*, $similarity-match-candidates)"/>
 </xsl:template>
 
 

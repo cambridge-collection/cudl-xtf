@@ -1,5 +1,6 @@
 <xsl:stylesheet version="2.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:xtf="http://cdlib.org/xtf"
     xmlns:util="http://cudl.lib.cam.ac.uk/xtf/ns/util">
 
@@ -11,14 +12,26 @@
         <xsl:value-of select="replace($html, '&lt;/?[a-zA-Z][^&gt;]*&gt;', '')"/>
     </xsl:function>
 
+    <xsl:function name="util:root" as="element()">
+        <xsl:param name="el" as="element()"/>
+
+        <xsl:copy-of select="($el/ancestor-or-self::*)[1]"/>
+    </xsl:function>
+
+    <xsl:function name="util:doc" as="document-node()">
+        <xsl:param name="node" as="node()"/>
+
+        <xsl:copy-of select="$node/ancestor-or-self::document-node()"/>
+    </xsl:function>
+
 
     <!-- Merge extra element(s) into the base tree's root tag. -->
-    <xsl:function name="util:merge">
-        <xsl:param name="base-tree"/>
-        <xsl:param name="extra-content"/>
+    <xsl:function name="util:merge" as="element()">
+        <xsl:param name="base-tree" as="element()"/>
+        <xsl:param name="extra-content" as="node()*"/>
 
         <!-- for-each used to estabish the context node -->
-        <xsl:for-each select="$base-tree/*">
+        <xsl:for-each select="$base-tree">
             <xsl:copy>
                <!-- Copy attributes and all child nodes. -->
                 <xsl:copy-of select="@*|node()"/>
@@ -64,10 +77,10 @@
         </xsl:copy>
     </xsl:template>
 
-    <xsl:function name="util:doc-id">
-        <xsl:param name="json-meta-element"/>
+    <xsl:function name="util:doc-id" as="xs:string">
+        <xsl:param name="json-meta-element" as="node()"/>
         <xsl:variable name="filename"
-                      select="tokenize(document-uri($json-meta-element), '/')[last()]"/>
+                      select="tokenize(document-uri(util:doc($json-meta-element)), '/')[last()]"/>
 
         <xsl:value-of select="substring-before($filename, '.json')"/>
     </xsl:function>
