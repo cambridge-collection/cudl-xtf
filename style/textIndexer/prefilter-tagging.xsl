@@ -7,13 +7,11 @@
     xmlns:cudl="http://cudl.lib.cam.ac.uk/xtf/"
     xmlns:tag="http://cudl.lib.cam.ac.uk/xtf/ns/tagging"
     xmlns:util="http://cudl.lib.cam.ac.uk/xtf/ns/util"
-    xmlns:annotation="http://cudl.lib.cam.ac.uk/xtf/ns/annotation"
     exclude-result-prefixes="#all">
 
     <xsl:import href="./prefilter/xmlprefilter.xsl"/>
     <xsl:import href="./common/funcs.xsl"/>
     <xsl:import href="./passes/tagging.xsl"/>
-    <xsl:import href="./passes/annotations.xsl"/>
 
 
     <xsl:template match="/">
@@ -30,17 +28,6 @@
         <xsl:variable name="with-tags" 
                       select="tag:insert-tag-fields(/root, $prefiltered)"/>
 
-
-        <xsl:message>
-            @ root:
-                doc uri: <xsl:value-of select="document-uri(/)"/>
-                doc: <xsl:value-of select="document-uri(/root/pages[1]/ancestor::document-node())"/>
-                doc: <xsl:value-of select="document-uri(util:doc(/root/pages[1]))"/>
-                doc uri: <xsl:value-of select="document-uri(/root/pages[1])"/>
-        </xsl:message>
-
-        <!-- Insert per-page annotations in a sub document for each page which
-             has annotations. -->
-        <xsl:copy-of select="annotation:insert-annotation-fields(/, $with-tags)"/>
+        <xsl:copy-of select="$with-tags"/>
     </xsl:template>
 </xsl:stylesheet>
