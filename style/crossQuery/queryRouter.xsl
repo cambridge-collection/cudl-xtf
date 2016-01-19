@@ -1,4 +1,6 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet
+   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:util="http://cudl.lib.cam.ac.uk/xtf/ns/util"
    exclude-result-prefixes="#all"
    version="2.0">
    
@@ -44,10 +46,12 @@
       As shipped, there are two domains, "default" and "oai", which supports OAI 
       harvesting of your collections
    -->
-   
+
+   <xsl:import href="../xtfCommon/cudl.xsl"/>
+
    <xsl:output method="xml" indent="yes" encoding="utf-8"/>
    <xsl:strip-space elements="*"/>
-   
+
    <!-- ====================================================================== -->
    <!-- Root Template                                                          -->
    <!-- ====================================================================== -->
@@ -58,6 +62,9 @@
       <!--Can change the query parser depending on where the query originates (i.e. url)-->
       <route>
          <xsl:choose>
+            <xsl:when test="/parameters/param[@name='indexName' and util:get-index-conf(@value)/cudlIndexMode/@value='tagging']">
+               <queryParser path="style/crossQuery/queryParser/tagging/queryParser.xsl"/>
+            </xsl:when>
             <!-- oai -->
             <xsl:when test="matches($http.URL,'oai\?')">
                <!-- using the redirect extension mechanism to support the OAI resumptionToken -->
