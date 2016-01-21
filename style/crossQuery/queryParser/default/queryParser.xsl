@@ -1,8 +1,11 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-   xmlns:session="java:org.cdlib.xtf.xslt.Session"
+<xsl:stylesheet
+   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"
    xmlns:freeformQuery="java:org.cdlib.xtf.xslt.FreeformQuery"
-   extension-element-prefixes="session freeformQuery"
-   exclude-result-prefixes="#all" 
+   xmlns:util="http://cudl.lib.cam.ac.uk/xtf/ns/util"
+   xmlns:defaultqp="http://cudl.lib.cam.ac.uk/xtf/ns/queryParser/default"
+   extension-element-prefixes="freeformQuery"
+   exclude-result-prefixes="#all"
    version="2.0">
    
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -49,7 +52,9 @@
    <!-- ====================================================================== -->
    
    <xsl:import href="../common/queryParserCommon.xsl"/>
-   
+
+   <xsl:import href="../../../xtfCommon/cudl.xsl"/>
+
    <!-- ====================================================================== -->
    <!-- Output Parameters                                                      -->
    <!-- ====================================================================== -->
@@ -71,7 +76,14 @@
       eventPublicationDateStart eventPublicationDateEnd eventPublicationDateDisplay 
       physicalLocation shelfLocator search-shelfLocator
       nameFullForm subjectFullForm languageString placeFullForm'"/>
-   
+
+   <!-- Old indexPath param. This contains the absolute path to the XTF index
+        to search. Superceded by indexName. -->
+   <xsl:param name="indexPath"/>
+
+   <!-- The name of the index in textIndexer.conf to search. -->
+   <xsl:param name="indexName" select="'index-cudl'"/>
+
    <!-- ====================================================================== -->
    <!-- Root Template                                                          -->
    <!-- ====================================================================== -->
@@ -84,7 +96,7 @@
       <!-- The top-level query element tells what stylesheet will be used to
          format the results, which document to start on, and how many documents
          to display on this page. -->
-      <query indexPath="{$indexPath}" termLimit="1000" workLimit="1000000" style="{$stylesheet}" startDoc="{$startDoc}" maxDocs="{$docsPerPage}">
+      <query indexPath="{defaultqp:get-index-path()}" termLimit="1000" workLimit="1000000" style="{$stylesheet}" startDoc="{$startDoc}" maxDocs="{$docsPerPage}">
          
          <!-- sort attribute -->
          <!--comes in url-->
@@ -192,7 +204,7 @@
       
       <!-- Find the meta-data and full-text queries, if any -->
       <xsl:variable name="queryParams"
-         select="param[not(matches(@name,'style|smode|rmode|expand|brand|sort|startDoc|indexPath|docsPerPage|sectionType|fieldList|normalizeScores|explainScores|f[0-9]+-.+|facet-.+|browse-*|email|.*-exclude|.*-join|.*-prox|.*-max|.*-ignore|freeformQuery'))]"/>
+         select="param[not(matches(@name,'style|smode|rmode|expand|brand|sort|startDoc|indexPath|docsPerPage|sectionType|fieldList|normalizeScores|explainScores|f[0-9]+-.+|facet-.+|browse-*|email|.*-exclude|.*-join|.*-prox|.*-max|.*-ignore|freeformQuery|indexName'))]"/>
       
       <and>
          <!-- Process the meta-data and text queries, if any -->
@@ -306,5 +318,33 @@
          </not>
       </and>
    </xsl:template>
+
+   <!-- Resolve the absolute path to an index database.
+
+        If the indexName is provided and resolves to an entry in
+        textIndexer.conf then the path value from the conf is used. Otherwise
+        the provided indexPath is used directly.
+
+        The indexPath is maintained for backwards compatability, it can be
+        removed once all XTF clients have been updated. -->
+   <xsl:function name="defaultqp:get-index-path" as="xs:string?">
+      <xsl:param name="indexName" as="xs:string?"/>
+      <xsl:param name="indexPath" as="xs:string?"/>
+
+      <xsl:choose>
+         <xsl:when test="$indexName and util:get-index-path($indexName)">
+            <xsl:copy-of select="util:get-index-path($indexName)"/>
+         </xsl:when>
+         <xsl:when test="$indexPath">
+            <xsl:copy-of select="$indexPath"/>
+         </xsl:when>
+      </xsl:choose>
+   </xsl:function>
+
+   <!-- As defaultqp::get-index-path(indexName, indePath) but use index path and
+        name provided in query params. -->
+   <xsl:function name="defaultqp:get-index-path" as="xs:string?">
+      <xsl:copy-of select="defaultqp:get-index-path($indexName, $indexPath)"/>
+   </xsl:function>
 
 </xsl:stylesheet>
