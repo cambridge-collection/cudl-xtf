@@ -132,14 +132,19 @@
         <xsl:param name="doc-id" as="xs:string"/>
         <xsl:param name="sources" as="xs:string*"/>
 
+        <!-- Note that resolve-uri('?foo', '/bar/baz') = /bar/?foo
+             in XTF's version of Saxon. This is incorrect (at least, according
+             to RFC 3986, not sure about RFC 2396 which the XPath spec allows
+             compatability with).
+            -->
         <xsl:value-of select="
-            resolve-uri(
-                if (sources != ())
-                    then concat('?sources=', encode-for-uri(string-join($sources, ',')))
-                    else '',
+            concat(
                 resolve-uri(concat($doc-id, '.xml'),
                     resolve-uri('/v1/tags2/', util:config-get-services-url())
-                )
+                ),
+                if (count($sources) != 0)
+                    then concat('?sources=', encode-for-uri(string-join($sources, ',')))
+                    else ''
             )"/>
     </xsl:function>
 </xsl:stylesheet>
