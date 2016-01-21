@@ -11,22 +11,20 @@
 
     <!-- Controls which tagging fields are included, and at what weight.
 
-          precisionScale = 0:
+          recallScale = 0:
             No tagging fields
 
-          0 < precisionScale <= 0.5:
-            - OR w/ secondary literature tags @ weight = precisionScale * 2
+          0 < recallScale <= 0.5:
+            - OR w/ secondary literature tags @ weight = recallScale * 2
 
-          0.5 < precisionScale <= 1:
+          0.5 < recallScale <= 1:
             - OR w/ secondary literature tags @ weight =
-                1 - ((precisionScale - 0.5) * 2):
+                1 - ((recallScale - 0.5) * 2):
             - OR w/ secondary & crowdsourced tags @ weight =
-                (precisionScale - 0.5) * 2
+                (recallScale - 0.5) * 2
         -->
-    <xsl:param name="precisionScale" select="0" as="xs:decimal"/>
+    <xsl:param name="recallScale" select="0" as="xs:decimal"/>
 
-    <!-- TODO: Override multi-field keyword template to include variable
-         precision query for tag fields. -->
     <xsl:template match="param[@name = 'keyword']">
         <or>
             <and fields="{replace($fieldList, 'text ?', '')}"
@@ -38,16 +36,15 @@
             <and field="text" maxSnippets="3" maxContext="60">
                 <xsl:apply-templates/>
             </and>
-            <!-- TODO: Generate variable precision query -->
-            <xsl:copy-of select="tag:variable-precision-query(token, $precisionScale)"/>
+            <xsl:copy-of select="tag:variable-recall-query(token, $recallScale)"/>
         </or>
     </xsl:template>
 
-    <xsl:function name="tag:variable-precision-query">
+    <xsl:function name="tag:variable-recall-query">
         <xsl:param name="keyword-tokens" as="element(token)+"/>
-        <xsl:param name="precision-scale" as="xs:double"/>
+        <xsl:param name="recall-scale" as="xs:double"/>
 
-        <xsl:variable name="scale" select="tag:clamp($precision-scale, 0, 1)"/>
+        <xsl:variable name="scale" select="tag:clamp($recall-scale, 0, 1)"/>
 
         <xsl:variable name="terms">
             <xsl:apply-templates select="$keyword-tokens"/>
