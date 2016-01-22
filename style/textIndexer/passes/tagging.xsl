@@ -140,7 +140,7 @@
         <xsl:value-of select="
             concat(
                 resolve-uri(concat($doc-id, '.xml'),
-                    resolve-uri('/v1/tags2/', util:config-get-services-url())
+                    resolve-uri('/v1/tags/', util:config-get-services-url())
                 ),
                 if (count($sources) != 0)
                     then concat('?sources=', encode-for-uri(string-join($sources, ',')))
