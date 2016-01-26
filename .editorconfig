@@ -1,8 +1,19 @@
 # http://editorconfig.org/
-[{similarity.xsl,darwin-transcription.xsl}]
+[{similarity.xsl,darwin-transcription.xsl,funcs.xsl,merge.xsl,annotations.xsl,tagging.xsl}]
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+[style/**/tagging/queryParser.xsl]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[docSelector.xsl]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_size = 4
 
 # Enable this once whitespace has been cleaned up
 # [style/**/*.xsl]
