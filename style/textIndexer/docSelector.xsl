@@ -21,8 +21,8 @@
     </xsl:template>
 
     <xsl:template match="/directory/file">
-            <!--JSON files -->
-        <xsl:if test="ends-with(@fileName, 'PR-CHINESE-RUBBINGS-00001.json')">
+        <!--JSON files -->
+        <xsl:if test="ends-with(@fileName, '.json')">
             <indexFile
                 fileName="{@fileName}"
                 type="JSON"
