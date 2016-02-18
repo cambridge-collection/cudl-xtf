@@ -120,7 +120,7 @@
     </xsl:function>
 
     <!-- Fetch the tag data for a document ID. -->
-    <xsl:function name="tag:get-tag-data" as="document-node()">
+    <xsl:function name="tag:get-tag-data" as="document-node()?">
         <xsl:param name="doc-id" as="xs:string"/>
         <xsl:param name="sources" as="xs:string*"/>
 
