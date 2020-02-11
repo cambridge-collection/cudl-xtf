@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  build:
+    build:
+      context: .
+      dockerfile: docker/build.Dockerfile
+    environment:
+      DOCKER_HOST: ${DOCKER_HOST:-unix:///var/run/docker.sock}
+    volumes:
+      # Provide access to our docker daemon to the build container so that it
+      # can use it to build the image. Note: this is only for local runs, under
+      # Bitbucket Pipelines DOCKER_HOST specifies a tcp:// URL for the docker
+      # daemon.
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/code
+    command: make docker-image
