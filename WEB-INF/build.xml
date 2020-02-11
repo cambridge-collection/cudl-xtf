@@ -93,8 +93,10 @@
         <include name="regress/**/*"/>
         <exclude name="regress/**/IndexDB/**/*"/>
         <exclude name="regress/**/*-test.xml"/>
-        <include name="bin/regressTest"/>
       </fileset>
+      <zipfileset dir=".." filemode="755">
+        <include name="bin/regressTest"/>
+      </zipfileset>
     </zip>
 
     <!-- Make a zip file of all the source code, plus the extra
@@ -172,7 +174,11 @@
     <!-- Now make the main distribution WAR file -->
     <delete file="${dist}/xtf-${DSTAMP}.war" quiet="true"/>
     <jar jarfile="${dist}/xtf-${DSTAMP}.war">
+      <zipfileset dir="build-tmp" filemode="755">
+        <include name="bin/**/*"/>
+      </zipfileset>
       <fileset dir="build-tmp">
+        <exclude name="bin/**/*"/>
         <include name="**/*"/>
       </fileset>
     </jar>
@@ -180,8 +186,10 @@
     <!-- Make a subset for the "core" distribution -->
     <delete file="${dist}/xtf-core-${DSTAMP}.zip" quiet="true"/>
     <zip destfile="${dist}/xtf-core-${DSTAMP}.zip">
-      <fileset dir="build-tmp">
+      <zipfileset dir="build-tmp" filemode="755">
         <include name="bin/**/*"/>
+      </zipfileset>
+      <fileset dir="build-tmp">
         <include name="WEB-INF/**/*"/>
         <include name="INSTALL"/>
         <include name="LICENSE"/>
