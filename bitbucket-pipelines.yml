@@ -1,0 +1,19 @@
+image: camdl/docker-compose-pipelines:1.0.1
+
+pipelines:
+  default:
+    - step:
+        name: Build [unpublished] camdl/cudl-xtf image
+        script:
+          - env
+          - docker-compose run build
+          - >
+            docker container run --rm camdl/cudl-xtf:$(git rev-parse --short=4 HEAD) textIndexer | grep -F 'Usage: textIndexer {options} -index indexname'
+        services:
+          - docker
+        caches:
+          - docker
+definitions:
+  services:
+    docker:
+      memory: 3072
