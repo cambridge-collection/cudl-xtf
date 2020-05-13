@@ -1,5 +1,6 @@
 .idea
 WEB-INF/dist
 WEB-INF/javadoc
+.env
 
 
