@@ -148,6 +148,13 @@
             <xsl:with-param name="topGroups" select="'*[1-30]'"/>
             <xsl:with-param name="sort" select="'totalDocs'"/>
          </xsl:call-template>
+
+         <!-- language facet -->
+         <xsl:call-template name="facet">
+            <xsl:with-param name="field" select="'facet-language'"/>
+            <xsl:with-param name="topGroups" select="'*'"/>
+            <xsl:with-param name="sort" select="'totalDocs'"/>
+         </xsl:call-template>
          
          <!-- hierarchical date facet, shows most recent years first -->
          <xsl:call-template name="facet">

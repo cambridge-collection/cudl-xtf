@@ -358,6 +358,31 @@
          <xsl:apply-templates mode="meta"/>
       </xsl:element>
    </xsl:template>
+
+   <!-- languages need facets -->
+   <xsl:template
+           match="*:languageStrings/*:languageString"
+           mode="meta">
+
+      <!--copies with extra attribute xtf:noindex=true-->
+      <xsl:copy>
+         <xsl:attribute name="xtf:noindex">true</xsl:attribute>
+         <xsl:apply-templates select="node()|@*" mode="meta"/>
+      </xsl:copy>
+
+      <!--generates facet-->
+      <xsl:element name="facet-language">
+         <xsl:attribute name="xtf:meta" select="'true'"/>
+         <xsl:attribute name="xtf:facet" select="'yes'"/>
+         <xsl:value-of select="normalize-unicode(string(.))"/>
+      </xsl:element>
+
+      <!--adds new element-->
+      <xsl:element name="{local-name(.)}">
+         <xsl:attribute name="xtf:meta">true</xsl:attribute>
+         <xsl:apply-templates mode="meta"/>
+      </xsl:element>
+   </xsl:template>
    
 
    <!-- "Nested" fields - generate camel-case "composite" element name using parent element name and type attribute -->
@@ -595,13 +620,13 @@
    
    
    <!--****THIS SECTION HANDLES INHERITANCE OF FACETS***-->
-   <!--both dmdSecs with no subjects/dates and transcription pages need to inherit facets from the first
+   <!--both dmdSecs with no subjects/languages/dates and transcription pages need to inherit facets from the first
    dmdSec up the tree with the right info-->
    
    
-   <!--inheritance of facets for dmd parts without subjects or dates-->
+   <!--inheritance of facets for dmd parts without subjects, languages or dates-->
    <!-- parts should always have a collection facet so no need to inherit-->
-   <xsl:template match="*:part[not(*:subjects) or not(*/*:event)]" mode="meta">
+   <xsl:template match="*:part[not(*:subjects) or not(*:languageStrings) or not(*/*:event)]" mode="meta">
       
       <xsl:copy>
          
@@ -617,6 +642,14 @@
                <xsl:with-param name="dmdID" select="$dmdID"/>
             </xsl:call-template>
             
+         </xsl:if>
+
+         <xsl:if test=".[not(*:languageStrings)]">
+
+            <xsl:call-template name="inherit-facet-languages">
+               <xsl:with-param name="dmdID" select="$dmdID"/>
+            </xsl:call-template>
+
          </xsl:if>
          
          <xsl:if test=".[not(*/*:event)]">
@@ -649,7 +682,10 @@
          <xsl:call-template name="inherit-facet-subjects">
             <xsl:with-param name="transDmdID" select="$dmdID"/>
          </xsl:call-template>
-      
+
+         <xsl:call-template name="inherit-facet-languages">
+            <xsl:with-param name="transDmdID" select="$dmdID"/>
+         </xsl:call-template>
          
          <xsl:call-template name="inherit-facet-dates">
             <xsl:with-param name="transDmdID" select="$dmdID"/>
@@ -680,8 +716,11 @@
          <xsl:call-template name="inherit-facet-subjects">
             <xsl:with-param name="transDmdID" select="$dmdID"/>
          </xsl:call-template>
-         
-         
+
+         <xsl:call-template name="inherit-facet-languages">
+            <xsl:with-param name="transDmdID" select="$dmdID"/>
+         </xsl:call-template>
+
          <xsl:call-template name="inherit-facet-dates">
             <xsl:with-param name="transDmdID" select="$dmdID"/>
          </xsl:call-template>
@@ -798,6 +837,63 @@
       
       </xsl:if>
       
+   </xsl:template>
+
+   <!--template for language inheritance-->
+   <xsl:template name="inherit-facet-languages">
+      <!--different param depending on whether first call was from dmdSec or transcriptionPage-->
+      <xsl:param name="dmdID"/>
+      <xsl:param name="transDmdID"/>
+
+      <xsl:variable name="useDmdID">
+
+         <xsl:choose>
+            <xsl:when test="$dmdID">
+               <xsl:value-of select="//*:logicalStructure[*:descriptiveMetadataID=$dmdID]/ancestor::*:logicalStructure[1]/*:descriptiveMetadataID"/>
+            </xsl:when>
+            <xsl:when test="$transDmdID">
+               <xsl:value-of select="$transDmdID"/>
+            </xsl:when>
+
+         </xsl:choose>
+
+      </xsl:variable>
+
+
+      <xsl:if test="normalize-space($useDmdID)">
+
+         <xsl:choose>
+            <xsl:when test="//*:part[ID=$useDmdID]/*:languageStrings">
+
+               <xsl:for-each select="//*:part[ID=$useDmdID]/*:languageStrings/*:languageString">
+
+                  <!--generates facet-->
+                  <xsl:element name="facet-language">
+                     <xsl:attribute name="xtf:meta" select="'true'"/>
+                     <xsl:attribute name="xtf:facet" select="'yes'"/>
+                     <xsl:value-of select="normalize-unicode(string(.))"/>
+                  </xsl:element>
+
+                  <xsl:element name="{local-name(.)}">
+                     <xsl:attribute name="xtf:meta">true</xsl:attribute>
+                     <xsl:apply-templates mode="meta"/>
+                  </xsl:element>
+
+               </xsl:for-each>
+
+            </xsl:when>
+            <xsl:otherwise>
+
+               <xsl:call-template name="inherit-facet-languages">
+                  <xsl:with-param name="dmdID" select="$useDmdID"/>
+               </xsl:call-template>
+
+            </xsl:otherwise>
+
+         </xsl:choose>
+
+      </xsl:if>
+
    </xsl:template>
    
    <!--template for date inheritance-->
