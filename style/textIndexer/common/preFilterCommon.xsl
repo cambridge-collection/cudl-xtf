@@ -246,7 +246,6 @@
       |*:transcriptionPage/*:startPage
       |*:listItemPage/*:startPage
       |*:languageCode|*:languageString
-      |*:physicalLocation
       |*:part/*:type
       |*:part/*:startPageLabel
       |*:transcriptionPage/*:startPageLabel
@@ -298,13 +297,32 @@
       </xsl:element>
       
    </xsl:template>
+
+   <!-- Create physicalLocation facets -->
+   <xsl:template
+           match="*:physicalLocation"
+           mode="meta">
+
+      <xsl:copy>
+         <xsl:attribute name="xtf:meta">true</xsl:attribute>
+         <xsl:attribute name="xtf:wordboost" select="1.5"/>
+         <xsl:apply-templates select="node()|@*" mode="meta"/>
+      </xsl:copy>
+
+      <!--generates facet-->
+      <xsl:element name="facet-location">
+         <xsl:attribute name="xtf:meta" select="'true'"/>
+         <xsl:attribute name="xtf:facet" select="'yes'"/>
+         <xsl:value-of select="normalize-unicode(string(.))"/>
+      </xsl:element>
+
+   </xsl:template>
    
 
    <!-- "Nested" fields - generate camel-case "composite" element name using parent element name -->
-   <!--names and places don't need facet-->
+   <!--names don't need facets-->
    <xsl:template
-      match="*:place/*:fullForm
-      |*:name/*:fullForm"
+      match="*:name/*:fullForm"
       mode="meta">
 
       <!--TODO - do we need these original values at all?-->
@@ -318,6 +336,38 @@
       <xsl:variable name="camelThisName">
          <xsl:value-of
             select="concat(upper-case(substring(local-name(.), 1, 1)), substring(normalize-space(local-name(.)), 2, (string-length(local-name(.)) - 1)))"
+         />
+      </xsl:variable>
+
+      <xsl:element name="{concat(local-name(..), $camelThisName)}">
+         <xsl:attribute name="xtf:meta">true</xsl:attribute>
+         <xsl:apply-templates mode="meta"/>
+      </xsl:element>
+   </xsl:template>
+
+   <!--places do need facets-->
+   <xsl:template
+           match="*:place/*:fullForm"
+           mode="meta">
+
+      <!--TODO - do we need these original values at all?-->
+      <!--copies with extra attribute xtf:noindex=true-->
+      <xsl:copy>
+         <xsl:attribute name="xtf:noindex">true</xsl:attribute>
+         <xsl:apply-templates select="node()|@*" mode="meta"/>
+      </xsl:copy>
+
+      <!--generates facet-->
+      <xsl:element name="{concat('facet-',local-name(..))}">
+         <xsl:attribute name="xtf:meta" select="'true'"/>
+         <xsl:attribute name="xtf:facet" select="'yes'"/>
+         <xsl:value-of select="normalize-unicode(string(.))"/>
+      </xsl:element>
+
+      <!--and then adds new one-->
+      <xsl:variable name="camelThisName">
+         <xsl:value-of
+                 select="concat(upper-case(substring(local-name(.), 1, 1)), substring(normalize-space(local-name(.)), 2, (string-length(local-name(.)) - 1)))"
          />
       </xsl:variable>
 

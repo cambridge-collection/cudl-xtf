@@ -155,6 +155,20 @@
             <xsl:with-param name="topGroups" select="'*'"/>
             <xsl:with-param name="sort" select="'totalDocs'"/>
          </xsl:call-template>
+
+         <!-- place facet -->
+         <xsl:call-template name="facet">
+            <xsl:with-param name="field" select="'facet-place'"/>
+            <xsl:with-param name="topGroups" select="'*'"/>
+            <xsl:with-param name="sort" select="'totalDocs'"/>
+         </xsl:call-template>
+
+         <!-- location facet -->
+         <xsl:call-template name="facet">
+            <xsl:with-param name="field" select="'facet-location'"/>
+            <xsl:with-param name="topGroups" select="'*'"/>
+            <xsl:with-param name="sort" select="'totalDocs'"/>
+         </xsl:call-template>
          
          <!-- hierarchical date facet, shows most recent years first -->
          <xsl:call-template name="facet">
