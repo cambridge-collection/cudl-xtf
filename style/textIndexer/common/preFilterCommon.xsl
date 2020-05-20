@@ -524,7 +524,7 @@
                </xsl:otherwise>
             </xsl:choose>
          </xsl:variable>
-         
+
          <xsl:variable name="endDate">
             <xsl:choose>
                <!--
@@ -1251,19 +1251,25 @@
          </xsl:when>
 
          <!-- Pattern: 1980 -->
-         <xsl:when test="matches($date, '([^0-9]|^)([12]\d\d\d)([^0-9]|$)')">
-            <xsl:analyze-string select="$date" regex="([^0-9]|^)([12]\d\d\d)([^0-9]|$)">
+         <xsl:when test="matches($date, '([^-0-9]|^)(\d\d\d\d)([^0-9]|$)')">
+            <xsl:analyze-string select="$date" regex="([^-0-9]|^)(\d\d\d\d)([^0-9]|$)">
                <xsl:matching-substring>
                   <xsl:copy-of select="regex-group(2)"/>
                </xsl:matching-substring>
             </xsl:analyze-string>
          </xsl:when>
 
-         <!-- Pattern: any 4 digits starting with 1 or 2 -->
-         <xsl:when test="matches($date, '([12]\d\d\d)')">
-            <xsl:analyze-string select="$date" regex="([12]\d\d\d)">
+         <!-- Pattern: any 4 digits, positive (CE) or negative (BCE) -->
+         <xsl:when test="matches($date, '(-?\d\d\d\d)')">
+            <xsl:analyze-string select="$date" regex="(-?\d\d\d\d)">
                <xsl:matching-substring>
-                  <xsl:copy-of select="regex-group(1)"/>
+                  <xsl:copy-of select="number(regex-group(1))"/>
+
+                  <xsl:message>
+                     Pattern: any 4 digits, positive (CE) or negative (BCE)
+                     <xsl:copy-of select="number(regex-group(1))"/>
+                  </xsl:message>
+
                </xsl:matching-substring>
             </xsl:analyze-string>
          </xsl:when>
