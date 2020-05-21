@@ -74,6 +74,27 @@
    <!-- ====================================================================== -->
 
    <my:centuries>
+      <my:century key="-31">3000s B.C.E.</my:century>
+      <my:century key="-30">2900s B.C.E.</my:century>
+      <my:century key="-29">2800s B.C.E.</my:century>
+      <my:century key="-28">2700s B.C.E.</my:century>
+      <my:century key="-27">2600s B.C.E.</my:century>
+      <my:century key="-26">2500s B.C.E.</my:century>
+      <my:century key="-25">2400s B.C.E.</my:century>
+      <my:century key="-24">2300s B.C.E.</my:century>
+      <my:century key="-23">2200s B.C.E.</my:century>
+      <my:century key="-22">2100s B.C.E.</my:century>
+      <my:century key="-21">2000s B.C.E.</my:century>
+      <my:century key="-20">1900s B.C.E.</my:century>
+      <my:century key="-19">1800s B.C.E.</my:century>
+      <my:century key="-18">1700s B.C.E.</my:century>
+      <my:century key="-17">1600s B.C.E.</my:century>
+      <my:century key="-16">1500s B.C.E.</my:century>
+      <my:century key="-15">1400s B.C.E.</my:century>
+      <my:century key="-14">1300s B.C.E.</my:century>
+      <my:century key="-13">1200s B.C.E.</my:century>
+      <my:century key="-12">1100s B.C.E.</my:century>
+      <my:century key="-11">1000s B.C.E.</my:century>
       <my:century key="-10">0900s B.C.E.</my:century>
       <my:century key="-9">0800s B.C.E.</my:century>
       <my:century key="-8">0700s B.C.E.</my:century>
@@ -512,32 +533,37 @@
                </xsl:when>
             </xsl:choose>
          </xsl:variable>
+
+         <xsl:variable name="endDate">
+            <xsl:choose>
+               <xsl:when test="./*:dateEnd">
+                  <xsl:value-of select="./*:dateEnd"/>
+               </xsl:when>
+            </xsl:choose>
+         </xsl:variable>
+
+         <!-- Generate sort-year (if range, only use first year) -->
+         <xsl:variable name="startYear" select="number(parse:year(string($startDate)))"/>
+         <xsl:variable name="endYear" select="number(parse:year(string($endDate)))"/>
+         <xsl:variable name="yearRange" select="concat($startYear,'-',$endYear)"/>
+
+         <sort-year xtf:meta="true" xtf:tokenize="no">
+            <xsl:value-of select="$startYear"/>
+         </sort-year>
+
+         <year xtf:meta="true">
+            <xsl:copy-of select="$yearRange"/>
+         </year>
          
          <!--for date facet-->
          <xsl:variable name="startCentury">
             <xsl:choose>
                <xsl:when test="starts-with($startDate, '-')">
-                  <xsl:value-of select="substring($startDate, 1,3)"/>
+                  <xsl:value-of select="ceiling( number($startYear) div 100 ) - 1"/>
                </xsl:when>
                <xsl:otherwise>
-                  <xsl:value-of select="substring($startDate, 1,2)"/>
+                  <xsl:value-of select="floor( number($startYear) div 100 )"/>
                </xsl:otherwise>
-            </xsl:choose>
-         </xsl:variable>
-
-         <xsl:variable name="endDate">
-            <xsl:choose>
-               <!--
-               <xsl:when test="./*:event[*:type='creation']/*:dateEnd">
-                  <xsl:value-of select="./*:event[*:type='creation']/*:dateEnd"/>
-               </xsl:when>
-               <xsl:when test="./*:event[*:type='publication']/*:dateEnd">
-                  <xsl:value-of select="./*:event[*:type='publication']/*:dateEnd"/>
-               </xsl:when>
-               -->
-               <xsl:when test="./*:dateEnd">
-                  <xsl:value-of select="./*:dateEnd"/>
-               </xsl:when>
             </xsl:choose>
          </xsl:variable>
          
@@ -545,64 +571,51 @@
          <xsl:variable name="endCentury">
             <xsl:choose>
                <xsl:when test="starts-with($endDate, '-')">
-                  <xsl:value-of select="substring($endDate, 1,3)"/>
+                  <xsl:value-of select="ceiling( number($endYear) div 100 ) - 1"/>
                </xsl:when>
                <xsl:otherwise>
-                  <xsl:value-of select="substring($endDate, 1,2)"/>
+                  <xsl:value-of select="floor( number($endYear) div 100 )"/>
                </xsl:otherwise>
             </xsl:choose>
          </xsl:variable>
          
-         
-         <!-- Generate sort-year (if range, only use first year) -->
-         <xsl:variable name="startYear" select="parse:year(string($startDate))"/>
-         <xsl:variable name="endYear" select="parse:year(string($endDate))"/>
-         <xsl:variable name="yearRange" select="concat($startYear,'-',$endYear)"/>
-         
-         <sort-year xtf:meta="true" xtf:tokenize="no">
-            <xsl:value-of select="$startYear"/>
-         </sort-year>
-         
-         <year xtf:meta="true">
-            <xsl:copy-of select="$yearRange"/>
-         </year>
-         
          <!--creates date facet-->
          <xsl:call-template name="facet-date">
-            <xsl:with-param name="i" select="$startCentury"/>
-            <xsl:with-param name="count" select="$endCentury"/>
+            <xsl:with-param name="startCentury" select="$startCentury"/>
+            <xsl:with-param name="endCentury" select="$endCentury"/>
          </xsl:call-template>
          
       </xsl:for-each>
       
    </xsl:template>
    
-   <!--creates date facets-->
+   <!-- Creates a date facet for every century within the date range of the item, starting with the century of the
+    start date, each intermediate century, and finishing with the century of the end date. -->
    <xsl:template name="facet-date">
       
-      <xsl:param name="i" />
-      <xsl:param name="count" />
+      <xsl:param name="startCentury" />
+      <xsl:param name="endCentury" />
       <!--converts parameters to numbers-->
-      <xsl:variable name="inumber" select="number($i)"/>
-      <xsl:variable name="countnumber" select="number($count)"/>
+      <xsl:variable name="currentCenturyNumber" select="number($startCentury)"/>
+      <xsl:variable name="endCenturyNumber" select="number($endCentury)"/>
       
       
-      <xsl:if test="$inumber &lt;= $countnumber">
+      <xsl:if test="$currentCenturyNumber &lt;= $endCenturyNumber">
          <facet-date xtf:meta="true" xtf:facet="yes">
-            <xsl:variable name="centuryString" select="document('')/*/my:centuries/my:century[@key=$inumber]"/>
+            <xsl:variable name="centuryString" select="document('')/*/my:centuries/my:century[@key=$currentCenturyNumber]"/>
             <xsl:value-of select="$centuryString"/>
          </facet-date>
          
       </xsl:if>
       
-      <xsl:if test="$inumber &lt;= $countnumber">
+      <xsl:if test="$currentCenturyNumber &lt; $endCenturyNumber">
          
          <xsl:call-template name="facet-date">
-            <xsl:with-param name="i">
-               <xsl:value-of select="$inumber + 1"/>
+            <xsl:with-param name="startCentury">
+               <xsl:value-of select="$currentCenturyNumber + 1"/>
             </xsl:with-param>
-            <xsl:with-param name="count">
-               <xsl:value-of select="$countnumber"/>
+            <xsl:with-param name="endCentury">
+               <xsl:value-of select="$endCenturyNumber"/>
             </xsl:with-param>
          </xsl:call-template>
       </xsl:if>
@@ -1001,49 +1014,47 @@
                      </xsl:otherwise>
                   </xsl:choose>
                </xsl:variable>
-               
-   
+
+               <!-- Generate sort-year (if range, only use first year) -->
+               <xsl:variable name="startYear" select="number(parse:year(string($startDate)))"/>
+               <xsl:variable name="endYear" select="number(parse:year(string($endDate)))"/>
+               <xsl:variable name="yearRange" select="concat($startYear,'-',$endYear)"/>
+
+               <sort-year xtf:meta="true" xtf:tokenize="no">
+                  <xsl:value-of select="$startYear"/>
+               </sort-year>
+
+               <year xtf:meta="true">
+                  <xsl:copy-of select="$yearRange"/>
+               </year>
+
                <!--centuries are for date facet-->
                <xsl:variable name="startCentury">
                   <xsl:choose>
                      <xsl:when test="starts-with($startDate, '-')">
-                        <xsl:value-of select="substring($startDate, 1,3)"/>
+                        <xsl:value-of select="ceiling( number($startYear) div 100 ) - 1"/>
                      </xsl:when>
                      <xsl:otherwise>
-                        <xsl:value-of select="substring($startDate, 1,2)"/>
+                        <xsl:value-of select="floor( number($startYear) div 100 )"/>
                      </xsl:otherwise>
                   </xsl:choose>
                </xsl:variable>
-               
+
                <xsl:variable name="endCentury">
                   <xsl:choose>
                      <xsl:when test="starts-with($endDate, '-')">
-                        <xsl:value-of select="substring($endDate, 1,3)"/>
+                        <xsl:value-of select="ceiling( number($endYear) div 100 ) - 1"/>
                      </xsl:when>
                      <xsl:otherwise>
-                        <xsl:value-of select="substring($endDate, 1,2)"/>
+                        <xsl:value-of select="floor( number($endYear) div 100 )"/>
                      </xsl:otherwise>
                   </xsl:choose>
                </xsl:variable>
                
-               
-               <!-- Generate sort-year (if range, only use first year) -->
-               <xsl:variable name="startYear" select="parse:year(string($startDate))"/>
-               <xsl:variable name="endYear" select="parse:year(string($endDate))"/>
-               <xsl:variable name="yearRange" select="concat($startYear,'-',$endYear)"/>
-               
-               <sort-year xtf:meta="true" xtf:tokenize="no">
-                  <xsl:value-of select="$startYear"/>
-               </sort-year>
-               
-               <year xtf:meta="true">
-                  <xsl:copy-of select="$yearRange"/>
-               </year>
-               
                <!--creates date facet-->
                <xsl:call-template name="facet-date">
-                  <xsl:with-param name="i" select="$startCentury"/>
-                  <xsl:with-param name="count" select="$endCentury"/>
+                  <xsl:with-param name="startCentury" select="$startCentury"/>
+                  <xsl:with-param name="endCentury" select="$endCentury"/>
                </xsl:call-template>
                
             </xsl:when>
@@ -1178,9 +1189,9 @@
 
          <!-- Pattern: 1989-12-1 -->
          <xsl:when
-            test="matches($date, '([^0-9]|^)(\d\d\d\d)[^0-9]*[\-/][^0-9]*\d\d?[^0-9]*[\-/][^0-9]*\d\d?([^0-9]|$)')">
+            test="matches($date, '([^-0-9]|^)(-?\d\d\d\d)[^0-9]*[\-/][^0-9]*\d\d?[^0-9]*[\-/][^0-9]*\d\d?([^0-9]|$)')">
             <xsl:analyze-string select="$date"
-               regex="([^0-9]|^)(\d\d\d\d)[^0-9]*[\-/][^0-9]*\d\d?[^0-9]*[\-/][^0-9]*\d\d?([^0-9]|$)">
+               regex="([^-0-9]|^)(-?\d\d\d\d)[^0-9]*[\-/][^0-9]*\d\d?[^0-9]*[\-/][^0-9]*\d\d?([^0-9]|$)">
                <xsl:matching-substring>
                   <xsl:copy-of select="number(regex-group(2))"/>
                </xsl:matching-substring>
@@ -1251,8 +1262,8 @@
          </xsl:when>
 
          <!-- Pattern: 1980 -->
-         <xsl:when test="matches($date, '([^-0-9]|^)(\d\d\d\d)([^0-9]|$)')">
-            <xsl:analyze-string select="$date" regex="([^-0-9]|^)(\d\d\d\d)([^0-9]|$)">
+         <xsl:when test="matches($date, '([^-0-9]|^)(-?\d\d\d\d)([^0-9]|$)')">
+            <xsl:analyze-string select="$date" regex="([^-0-9]|^)(-?\d\d\d\d)([^0-9]|$)">
                <xsl:matching-substring>
                   <xsl:copy-of select="regex-group(2)"/>
                </xsl:matching-substring>
