@@ -309,6 +309,8 @@
                                  <xsl:apply-templates select="facet[@field='facet-collection']"/>
                                  <xsl:apply-templates select="facet[@field='facet-subject']"/>
                                  <xsl:apply-templates select="facet[@field='facet-language']"/>
+                                 <xsl:apply-templates select="facet[@field='facet-place']"/>
+                                 <xsl:apply-templates select="facet[@field='facet-location']"/>
                                  <xsl:apply-templates select="facet[@field='facet-date']"/>
                               </td>
                            </xsl:if>
