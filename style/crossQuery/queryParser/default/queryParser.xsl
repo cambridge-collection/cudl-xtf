@@ -145,28 +145,28 @@
          -->
          <xsl:call-template name="facet">
             <xsl:with-param name="field" select="'facet-subject'"/>
-            <xsl:with-param name="topGroups" select="'*[1-30]'"/>
+            <xsl:with-param name="topGroups" select="'*[1-10]'"/>
             <xsl:with-param name="sort" select="'totalDocs'"/>
          </xsl:call-template>
 
          <!-- language facet -->
          <xsl:call-template name="facet">
             <xsl:with-param name="field" select="'facet-language'"/>
-            <xsl:with-param name="topGroups" select="'*'"/>
+            <xsl:with-param name="topGroups" select="'*[1-10]'"/>
             <xsl:with-param name="sort" select="'totalDocs'"/>
          </xsl:call-template>
 
          <!-- place facet -->
          <xsl:call-template name="facet">
             <xsl:with-param name="field" select="'facet-place'"/>
-            <xsl:with-param name="topGroups" select="'*'"/>
+            <xsl:with-param name="topGroups" select="'*[1-10]'"/>
             <xsl:with-param name="sort" select="'totalDocs'"/>
          </xsl:call-template>
 
          <!-- location facet -->
          <xsl:call-template name="facet">
             <xsl:with-param name="field" select="'facet-location'"/>
-            <xsl:with-param name="topGroups" select="'*'"/>
+            <xsl:with-param name="topGroups" select="'*[1-10]'"/>
             <xsl:with-param name="sort" select="'totalDocs'"/>
          </xsl:call-template>
          
