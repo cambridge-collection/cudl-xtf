@@ -2,8 +2,8 @@ FROM openjdk:8u242-jdk-buster
 
 ARG COMMIT_FULL_HASH
 
-ENV ANT_URL 'http://www.mirrorservice.org/sites/ftp.apache.org//ant/binaries/apache-ant-1.9.14-bin.tar.bz2'
-ENV ANT_URL_SHA512 '24451cde2b8b3d9ff61677c0a93b7a544c2e21636fcc8b03655ccbb4771a0fb082b1a46b1419912ce82d1460ed5e0c66b0632fbf51234973dec544de8fdc1dc2'
+ENV ANT_URL 'https://archive.apache.org/dist/ant/binaries/apache-ant-1.9.15-bin.tar.bz2'
+ENV ANT_URL_SHA512 '474617a61e6995ecdb4de974dd7f6303d980d5afe96852e8d09f0c22434274700f3f7900e2c737fe1f395e1f8b8e1d8baf003d15607efe9aec1f7d63b5785e29'
 
 # Ensure we have a commit hash set
 RUN [ "${COMMIT_FULL_HASH}" != "" ] || (echo 'Error: COMMIT_FULL_HASH build arg is not set'; exit 1)
