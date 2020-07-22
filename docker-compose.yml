@@ -11,15 +11,35 @@ services:
         XTF_PATH: ${XTF_PATH}
         SERVICES_PATH: ${SERVICES_PATH}
         SERVICES_KEY: ${SERVICES_KEY}
-    environment:
-      DOCKER_HOST: ${DOCKER_HOST:-unix:///var/run/docker.sock}
+    #environment:
+    #  DOCKER_HOST: ${DOCKER_HOST:-unix:///var/run/docker.sock}
     image: cudl/cudl-xtf:latest
     ports:
-      - 8080:8080
+      - 8082:8080
     volumes:
-      - ${DATA_PATH:-/tmp/xtf/data}:/srv/cudl/cudl-data/json
+      - cudl-data:/srv/cudl/cudl-data/json
+      - xtf-webapp:/opt/xtf/
+      - cudl-indices:/srv/cudl/xtf/
       # Provide access to our docker daemon to the build container so that it
       # can use it to build the image. Note: this is only for local runs, under
       # Bitbucket Pipelines DOCKER_HOST specifies a tcp:// URL for the docker
       # daemon.
-      - /var/run/docker.sock:/var/run/docker.sock
+      #- /var/run/docker.sock:/var/run/docker.sock
+
+  xtf-indexer-cron:
+    build:
+      context: docker/text-indexer-cron
+      dockerfile: Dockerfile
+    image: cudl/xtf-indexer-cron:latest
+    depends_on:
+      - cudl-xtf
+    volumes:
+      - cudl-data:/srv/cudl/cudl-data/json
+      - xtf-webapp:/opt/xtf/
+      - cudl-indices:/srv/cudl/xtf/
+
+volumes:
+  cudl-data:
+  xtf-webapp:
+  cudl-indices:
+
