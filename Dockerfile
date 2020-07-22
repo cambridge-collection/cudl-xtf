@@ -1,9 +1,13 @@
 FROM openjdk:8u242-jdk-buster
 
 ARG COMMIT_FULL_HASH
+ARG VIEWER_PATH
+ARG XTF_PATH
+ARG SERVICES_PATH
+ARG SERVICES_KEY
 
-ENV ANT_URL 'http://www.mirrorservice.org/sites/ftp.apache.org//ant/binaries/apache-ant-1.9.14-bin.tar.bz2'
-ENV ANT_URL_SHA512 '24451cde2b8b3d9ff61677c0a93b7a544c2e21636fcc8b03655ccbb4771a0fb082b1a46b1419912ce82d1460ed5e0c66b0632fbf51234973dec544de8fdc1dc2'
+ENV ANT_URL 'http://www.mirrorservice.org/sites/ftp.apache.org//ant/binaries/apache-ant-1.10.8-bin.tar.bz2'
+ENV ANT_URL_SHA512 'db4862e3bfe0c333fcb8d0977b2dc9512b86523a13a7fcf3f75ebaaf43dcd99654e34b016e6ce101de0da47cff18009d080e589f99f71f71b2dbab5b45f2fb63'
 
 # Ensure we have a commit hash set
 RUN [ "${COMMIT_FULL_HASH}" != "" ] || (echo 'Error: COMMIT_FULL_HASH build arg is not set'; exit 1)
@@ -14,6 +18,11 @@ RUN mkdir -p /opt/apache-ant && \
   tar -C /opt/apache-ant --strip-components 1 -xf /tmp/apache-ant.tar.bz2
 
 COPY . /var/src/xtf/
+
+RUN sed -i "s/\$VIEWER_PATH/${VIEWER_PATH}/g" /var/src/xtf/conf/local.conf
+RUN sed -i "s/\$XTF_PATH/${XTF_PATH}/g" /var/src/xtf/conf/local.conf
+RUN sed -i "s/\$SERVICES_PATH/${SERVICES_PATH}/g" /var/src/xtf/conf/local.conf
+RUN sed -i "s/\$SERVICES_KEY/${SERVICES_KEY}/g" /var/src/xtf/conf/local.conf
 
 RUN cd /var/src/xtf/WEB-INF && /opt/apache-ant/bin/ant dist && \
   mkdir /tmp/xtf && \

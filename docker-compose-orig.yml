@@ -1,25 +1,17 @@
-version: "3.8"
+version: "3"
 
 services:
-  cudl-xtf:
+  build:
     build:
       context: .
-      dockerfile: Dockerfile
-      args:
-        COMMIT_FULL_HASH: 90dc2468b4a963e7567c57d197c4c1b60ec27814
-        VIEWER_PATH: ${VIEWER_PATH}
-        XTF_PATH: ${XTF_PATH}
-        SERVICES_PATH: ${SERVICES_PATH}
-        SERVICES_KEY: ${SERVICES_KEY}
+      dockerfile: docker/build.Dockerfile
     environment:
       DOCKER_HOST: ${DOCKER_HOST:-unix:///var/run/docker.sock}
-    image: cudl/cudl-xtf:latest
-    ports:
-      - 8080:8080
     volumes:
-      - ${DATA_PATH:-/tmp/xtf/data}:/srv/cudl/cudl-data/json
       # Provide access to our docker daemon to the build container so that it
       # can use it to build the image. Note: this is only for local runs, under
       # Bitbucket Pipelines DOCKER_HOST specifies a tcp:// URL for the docker
       # daemon.
       - /var/run/docker.sock:/var/run/docker.sock
+      - .:/code
+    command: make docker-image
