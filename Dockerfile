@@ -6,8 +6,8 @@ ARG XTF_PATH
 ARG SERVICES_PATH
 ARG SERVICES_KEY
 
-ENV ANT_URL 'http://www.mirrorservice.org/sites/ftp.apache.org//ant/binaries/apache-ant-1.10.8-bin.tar.bz2'
-ENV ANT_URL_SHA512 'db4862e3bfe0c333fcb8d0977b2dc9512b86523a13a7fcf3f75ebaaf43dcd99654e34b016e6ce101de0da47cff18009d080e589f99f71f71b2dbab5b45f2fb63'
+ENV ANT_URL 'https://mirrors.estointernet.in/apache//ant/binaries/apache-ant-1.10.9-bin.tar.bz2'
+ENV ANT_URL_SHA512 'e74f490c64addfb5040ee80d38d4de3057b8fc7c58dd627dd77883964fd41edfc208230f45ee5500d70fc07a2f81a1d8d069a3b70ed6055c2975c49d753b73bc'
 
 # Ensure we have a commit hash set
 RUN [ "${COMMIT_FULL_HASH}" != "" ] || (echo 'Error: COMMIT_FULL_HASH build arg is not set'; exit 1)
