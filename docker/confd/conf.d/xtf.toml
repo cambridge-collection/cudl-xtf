@@ -1,0 +1,7 @@
+[template]
+src = "local.conf.tmpl"
+dest = "/opt/xtf/conf/local.conf"
+keys = [
+    "/xtf/services/url"
+]
+
