@@ -51,3 +51,4 @@ COPY ./docker/textIndexer.conf /opt/xtf/conf/textIndexer.conf
 ENV PATH /opt/xtf/bin:$PATH
 
 ENTRYPOINT ["/opt/xtf/docker-entrypoint.sh"]
+CMD ["bin/catalina.sh", "run"]
