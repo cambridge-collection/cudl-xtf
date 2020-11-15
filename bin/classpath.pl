@@ -31,6 +31,11 @@ foreach $jar (@jars) {
   $classpath = "$classpath$joiner$lib/$jar"; 
 }
 
+# Include entries from the XTF_CLASSPATH environment variable
+if ($ENV{XTF_CLASSPATH}) {
+  $classpath = "$classpath$joiner$ENV{XTF_CLASSPATH}"
+}
+
 # Also make a handy list of the arguments.
 $args = join(' ', @ARGV);
 
