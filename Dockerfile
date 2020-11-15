@@ -49,6 +49,11 @@ COPY ./docker/confd/ /etc/confd/
 COPY ./docker/textIndexer.conf /opt/xtf/conf/textIndexer.conf
 
 ENV PATH /opt/xtf/bin:$PATH
+# The XTF distribution doesn't include servlet classes, presumably as it expects
+# the hosting app server to provide them. However the standalone XTF programs
+# (e.g. textIndexer) also depend on app-server-provided classes, so we need to
+# tell XTF where they are.
+ENV XTF_CLASSPATH=/usr/local/tomcat/lib/*
 
 ENTRYPOINT ["/opt/xtf/docker-entrypoint.sh"]
 CMD ["bin/catalina.sh", "run"]
