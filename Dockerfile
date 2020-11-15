@@ -8,7 +8,7 @@ ENV CONFD_URL 'https://github.com/kelseyhightower/confd/releases/download/v0.16.
 ENV CONFD_URL_SHA512 '68c93fd6db55c7de94d49f596f2e3ce8b2a5de32940b455d40cb05ce832140ebcc79a266c1820da7c172969c72a6d7367b465f21bb16b53fa966892ee2b682f1'
 
 # Ensure we have a commit hash set
-RUN [ "${COMMIT_FULL_HASH}" != "" ] || (echo 'Error: COMMIT_FULL_HASH build arg is not set'; exit 1)
+RUN "[" "${COMMIT_FULL_HASH}" != "" "]" || (echo 'Error: COMMIT_FULL_HASH build arg is not set'; exit 1)
 
 RUN curl -fLS -o /tmp/apache-ant.tar.bz2 "$ANT_URL"
 RUN echo "$ANT_URL_SHA512 /tmp/apache-ant.tar.bz2" > /tmp/apache-ant.tar.bz2.sha512; sha512sum -c /tmp/apache-ant.tar.bz2.sha512
