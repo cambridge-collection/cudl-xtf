@@ -1,0 +1,6 @@
+[template]
+src = "required-dirs.txt.tmpl"
+dest = "/opt/xtf/conf/required-dirs.txt"
+keys = [
+    "/xtf/index"
+]

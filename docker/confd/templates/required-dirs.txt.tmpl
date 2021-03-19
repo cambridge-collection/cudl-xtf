@@ -1,0 +1,15 @@
+{{/*
+   * Generate a list of paths that need to be created at startup.
+   * Note: comments are used over newlines to avoid generating
+   * whitespace in the output.
+   *
+*/}}{{range gets "/xtf/index/*/name"}}{{/*
+  */}}{{$id := index (split .Key "/") 3}}{{/*
+  */}}{{$name := .Value}}{{/*
+  */}}{{$indexDirKey := printf "/xtf/index/%s/dir" $id}}{{/*
+  */}}{{if exists $indexDirKey}}{{/*
+    */}}{{printf "%s\n" (getv $indexDirKey)}}{{/*
+  */}}{{else}}{{/*
+    */}}{{printf "/var/lib/xtf/index/%s\n" $name}}{{/*
+  */}}{{end}}{{/*
+*/}}{{end}}

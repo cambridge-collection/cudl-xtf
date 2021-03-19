@@ -1,0 +1,6 @@
+[template]
+src = "textIndexer.conf.tmpl"
+dest = "/opt/xtf/conf/textIndexer.conf"
+keys = [
+    "/xtf/index"
+]
