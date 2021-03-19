@@ -36,6 +36,10 @@ LABEL org.opencontainers.image.source="https://bitbucket.org/CUDL/cudl-xtf"
 LABEL org.opencontainers.image.revision=$COMMIT_FULL_HASH
 LABEL maintainer="https://bitbucket.org/CUDL/"
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+ rsync \
+ && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /tmp/confd /usr/local/bin/confd
 RUN chmod 733 /usr/local/bin/confd
 
