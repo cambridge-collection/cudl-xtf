@@ -118,4 +118,11 @@
     <xsl:function name="util:config-get-services-url">
         <xsl:value-of select="util:config-get-services-url(util:get-config())"/>
     </xsl:function>
+
+    <xsl:function name="util:set-url-query" as="xs:string">
+        <xsl:param name="url" as="xs:string"/>
+        <xsl:param name="query" as="xs:string"/>
+
+        <xsl:value-of select="concat(replace($url, '[?].*$', ''), $query)"/>
+    </xsl:function>
 </xsl:stylesheet>

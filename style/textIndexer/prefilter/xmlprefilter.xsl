@@ -1,15 +1,15 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-                xmlns:xtf="http://cdlib.org/xtf"
+<xsl:stylesheet version="2.0"
                 xmlns:cudl="http://cudl.lib.cam.ac.uk/xtf/"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:parse="http://cdlib.org/xtf/parse"
-                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:util="http://cudl.lib.cam.ac.uk/xtf/ns/util"
                 xmlns:x="http://www.w3.org/1999/xhtml"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xtf="http://cdlib.org/xtf"
                 exclude-result-prefixes="#all">
 
     <!-- Import Common Templates and Functions                                  -->
 
 
+    <xsl:import href="../common/funcs.xsl"/>
     <xsl:import href="../common/preFilterCommon.xsl"/>
     <xsl:import href="./darwin-transcription.xsl"/>
 
@@ -1402,15 +1402,32 @@
 
                             <xsl:if test="transcriptionNormalisedURL|transcriptionDiplomaticURL">
                                 <!-- Fetch a transcription from services, preferring
-                                     the normalised version. -->
+                                     the normalised version.
+
+                                     cudl-services serves transcriptions and translations as HTML by
+                                     default, instead of XHTML.
+
+                                     XTF (or rather the old version of SAXON it uses) is not capable
+                                     of parsing HTML, only XHTML. And HTTP requests it sends via
+                                     document() do not include an accurate Accept header (it
+                                     includes text/html first).
+
+                                     We can't set request headers from XSLT, so an `Accept` query
+                                     param is used instead. cudl-services treats such a query param
+                                     like an Accept header, and gives us XHTML as a result.
+                                -->
                                 <transcriptionText>
-                                    <xsl:value-of select="normalize-space(document(resolve-uri((transcriptionNormalisedURL|transcriptionDiplomaticURL)[1], $servicesURI))/x:html/x:body)"/>
+                                    <xsl:value-of select="normalize-space(document(
+                                            util:set-url-query(resolve-uri((transcriptionNormalisedURL|transcriptionDiplomaticURL)[1], $servicesURI), '?Accept=application%2Fxhtml%2Bxml')
+                                        )/x:html/x:body)"/>
                                 </transcriptionText>
                             </xsl:if>
 
                             <xsl:if test="translationURL">
                                 <translation>
-                                    <xsl:value-of select="normalize-space(document(resolve-uri(translationURL, $servicesURI))/x:html/x:body)"/>
+                                    <xsl:value-of select="normalize-space(document(
+                                            util:set-url-query(resolve-uri(translationURL, $servicesURI), '?Accept=application%2Fxhtml%2Bxml')
+                                        )/x:html/x:body)"/>
                                 </translation>
                             </xsl:if>
                         </transcriptionPage>
