@@ -6,18 +6,18 @@
                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                 xmlns:x="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="#all">
-    
+
     <!-- Import Common Templates and Functions                                  -->
-    
-   
+
+
     <xsl:import href="../common/preFilterCommon.xsl"/>
     <xsl:import href="./darwin-transcription.xsl"/>
-   
+
     <!-- Output parameters                                                      -->
-    
-   
-    <xsl:output method="xml" 
-                indent="yes" 
+
+
+    <xsl:output method="xml"
+                indent="yes"
                 encoding="UTF-8"/>
 
     <!-- Map from descriptive metadata ID to logical structure node -->
@@ -32,46 +32,46 @@
     <!-- ====================================================================== -->
     <!-- Metadata Indexing                                                      -->
     <!-- ====================================================================== -->
-   
+
     <xsl:template name="get-meta">
-         
+
         <xsl:variable name="meta">
-            
+
             <xsl:call-template name="make-dmd-parts"/>
             <xsl:call-template name="numberOfPages"/>
             <xsl:call-template name="get-embeddable"/>
             <xsl:call-template name="make-pages"/>
-            
+
             <xsl:call-template name="make-logicalstructures"/>
             <xsl:call-template name="make-listitems"/>
-            <xsl:call-template name="make-transcription-pages" /> 
-            
+            <xsl:call-template name="make-transcription-pages" />
+
         </xsl:variable>
-      
-           
-        
+
+
+
         <xsl:call-template name="add-fields">
             <xsl:with-param name="display">
                 <xsl:value-of select="'dynaxml'"/>
             </xsl:with-param>
             <xsl:with-param name="meta" select="$meta"/>
-        </xsl:call-template>    
+        </xsl:call-template>
     </xsl:template>
-    
+
     <!--top level template for descriptive metadata-->
     <xsl:template name="make-dmd-parts">
         <descriptiveMetadata>
             <xsl:apply-templates select="/root/*" />
         </descriptiveMetadata>
     </xsl:template>
-  
-    
-     
-    <!--fills in descriptive metadata for a structure within the item-->    
+
+
+
+    <!--fills in descriptive metadata for a structure within the item-->
     <xsl:template match="descriptiveMetadata">
         <xsl:call-template name="make-dmd-part"/>
     </xsl:template>
-    
+
     <xsl:template name="make-dmd-part">
         <part>
             <xsl:apply-templates select="ID"/>
@@ -86,7 +86,7 @@
             <xsl:apply-templates select="alternativeTitles"/>
             <xsl:apply-templates select="excerpts"/>
             <xsl:apply-templates select="abstract"/>
-            
+
             <xsl:apply-templates select="physicalLocation"/>
             <xsl:apply-templates select="shelfLocator"/>
             <xsl:apply-templates select="reference"/>
@@ -95,7 +95,7 @@
             <xsl:apply-templates select="authors"/>
             <xsl:apply-templates select="donors"/>
             <xsl:apply-templates select="associated"/>
-            
+
             <xsl:apply-templates select="associatedCorps"/>
             <xsl:apply-templates select="places"/>
             <xsl:call-template   name="temporalCoverage"/>
@@ -129,9 +129,9 @@
             <xsl:apply-templates select="fundings"/>
             <xsl:call-template name="get-collection-memberships"/>
         </part>
-         
+
     </xsl:template>
-  
+
     <!--   ids for structural item-->
     <xsl:template match="ID">
         <xsl:variable name="sectionId" >
@@ -161,8 +161,8 @@
             <xsl:value-of select="$structureNode/startPagePosition"/>
         </startPage>
     </xsl:template>
-        
-       
+
+
     <!--   title-->
     <xsl:template match="title">
         <xsl:variable name="displayvalue" >
@@ -171,14 +171,14 @@
         <xsl:variable name="displayformvalue" >
             <xsl:value-of select = "displayForm"/>
         </xsl:variable>
-        
+
         <xsl:element name="title">
             <xsl:attribute name="display" select="$displayvalue"/>
             <xsl:attribute name="displayForm" select="$displayformvalue"/>
             <xsl:value-of select="$displayformvalue"/>
-        </xsl:element>   
+        </xsl:element>
     </xsl:template>
-    
+
     <!-- uniform title-->
     <xsl:template match="uniformTitle">
         <xsl:element name="uniformTitle">
@@ -186,7 +186,7 @@
             <xsl:attribute name="displayForm" select="displayForm"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- alternativeTitles -->
     <xsl:template match="alternativeTitles">
         <xsl:element name="alternativeTitles">
@@ -204,7 +204,7 @@
             </xsl:element>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- scribes -->
     <xsl:template match="scribes">
         <xsl:element name="scribes">
@@ -241,21 +241,21 @@
                 </xsl:element>
             </xsl:element>
         </xsl:element>
-    </xsl:template>    
+    </xsl:template>
     <!-- type-->
     <xsl:template match="type">
         <xsl:element name="type">
             <xsl:value-of select="current()"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- manuscript-->
     <xsl:template match="manuscript">
         <xsl:element name="manuscript">
             <xsl:value-of select="current()"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- recipient -->
     <xsl:template match="recipients">
         <xsl:element name="recipients">
@@ -293,7 +293,7 @@
             </xsl:element>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- language codes -->
     <xsl:template match="languageCodes">
         <xsl:element name="languageCodes">
@@ -312,7 +312,7 @@
             </xsl:element>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- language strings -->
     <xsl:template match="languageStrings">
         <xsl:element name="languageStrings">
@@ -333,7 +333,7 @@
             </xsl:element>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- excerpts -->
     <xsl:template match="excerpts">
         <xsl:element name="excerpts">
@@ -346,10 +346,10 @@
             <xsl:value-of select="normalize-space(replace(displayForm, '&lt;[^&gt;]+&gt;', ''))"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!--    abstract-->
     <xsl:template match="abstract">
-        
+
         <xsl:variable name="displayvalue" >
             <xsl:value-of select="display"/>
         </xsl:variable>
@@ -361,14 +361,14 @@
             <xsl:attribute name="displayForm" select="$displayformvalue"/>
             <xsl:value-of select="normalize-space(replace($displayformvalue, '&lt;[^&gt;]+&gt;', ''))"/>
         </xsl:element>
-           
+
     </xsl:template>
-    
-    
-    
+
+
+
     <!--   physical locationshelf locator-->
     <xsl:template match="physicalLocation">
-        
+
         <xsl:variable name="displayvalue" select="display"/>
         <xsl:variable name="displayformvalue" select="displayForm"/>
         <xsl:element name="physicalLocation">
@@ -377,7 +377,7 @@
             <xsl:value-of select="$displayformvalue"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- shelf locator-->
     <xsl:template match="shelfLocator">
         <xsl:variable name="displayvalue" select="display"/>
@@ -387,10 +387,10 @@
             <xsl:attribute name="displayForm" select="$displayformvalue"/>
             <xsl:value-of select="$displayformvalue"/>
         </xsl:element>
-    </xsl:template>   
-    
+    </xsl:template>
+
     <!-- get reference-->
-    <xsl:template match="reference">     
+    <xsl:template match="reference">
         <xsl:variable name="displayvalue" select="display"/>
         <xsl:variable name="displayformvalue" select="displayForm"/>
         <xsl:element name="reference">
@@ -399,7 +399,7 @@
             <xsl:value-of select="$displayformvalue"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!--    get level-->
     <xsl:template match="level">
         <xsl:variable name="displayvalue" select="display"/>
@@ -410,13 +410,13 @@
             <xsl:value-of select="$displayformvalue"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get creators -->
     <xsl:template match="creators">
         <xsl:variable name="displayvalue" select="display"/>
         <xsl:element name="creators">
             <xsl:attribute name="display" select="$displayvalue"/>
-            
+
             <xsl:for-each select="value">
                 <xsl:element name="name">
                     <xsl:attribute name="display">
@@ -425,7 +425,7 @@
                     <xsl:attribute name="displayForm">
                         <xsl:value-of select="displayForm"/>
                     </xsl:attribute>
-                
+
                     <xsl:if test="fullForm">
                         <xsl:element name="fullForm">
                             <xsl:value-of select="fullForm"/>
@@ -444,12 +444,12 @@
                             <xsl:value-of select="valueURI"/>
                         </xsl:element>
                     </xsl:if>
-                    
+
                 </xsl:element>
             </xsl:for-each>
         </xsl:element>
-    </xsl:template>    
-    
+    </xsl:template>
+
     <!--get authors-->
     <xsl:template match="authors">
         <xsl:element name="authors">
@@ -500,10 +500,10 @@
                         </xsl:element>
                     </xsl:if>
                 </xsl:element>
-            </xsl:for-each> 
+            </xsl:for-each>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get material-->
     <xsl:template match="material">
         <xsl:variable name="displayvalue" select="display"/>
@@ -514,7 +514,7 @@
             <xsl:value-of select="$displayformvalue"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get donors-->
     <xsl:template match="donors">
         <xsl:element name="donors">
@@ -541,14 +541,14 @@
                     <xsl:value-of select="value/role"/>
                 </xsl:element>
             </xsl:element>
-            
+
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get associated -->
     <xsl:template match="associated">
         <xsl:variable name="displayvalue" select="display"/>
-       
+
         <xsl:element name="associated">
             <xsl:attribute name="display" select="$displayvalue"/>
             <xsl:for-each select="value">
@@ -557,18 +557,18 @@
                     <xsl:attribute name="display" >
                         <xsl:value-of select="display"/>
                     </xsl:attribute>
-                    
+
                     <xsl:attribute name="displayForm" >
                         <xsl:value-of select="displayForm"/>
                     </xsl:attribute>
-                    
+
                     <!--full form -->
                     <xsl:if test="fullForm">
                         <xsl:element name="fullForm">
                             <xsl:value-of select="fullForm"/>
                         </xsl:element>
                     </xsl:if>
-                    
+
                     <!--short form -->
                     <xsl:if test="shortForm">
                         <xsl:element name="shortForm">
@@ -604,11 +604,11 @@
                         </xsl:element>
                     </xsl:if>
                 </xsl:element>
-              
+
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get  associatedCorps -->
     <xsl:template match="associatedCorps">
         <xsl:variable name="displayvalue" select="display"/>
@@ -635,7 +635,7 @@
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get places -->
     <xsl:template match="places">
         <xsl:element name="places">
@@ -679,7 +679,7 @@
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- temporal Coverage -->
     <xsl:template name="temporalCoverage">
         <xsl:if test="temporalCoverage">
@@ -702,7 +702,7 @@
             </xsl:element>
         </xsl:if>
     </xsl:template>
-    
+
     <!-- item  References -->
     <xsl:template name="itemReferences">
         <xsl:if test="itemReferences">
@@ -717,7 +717,7 @@
             </xsl:element>
         </xsl:if>
     </xsl:template>
-    
+
     <!--destinations-->
     <xsl:template match="destinations">
         <xsl:element name="destinations">
@@ -751,13 +751,13 @@
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
-    
+
     <!--  get subjects -->
     <xsl:template match="subjects">
         <xsl:variable name="displayvalue" select="display"/>
         <xsl:element name="subjects">
             <xsl:attribute name="display" select="$displayvalue"/>
-            <xsl:for-each select="value">                  
+            <xsl:for-each select="value">
                 <!-- get the child nodes of subjects-->
                 <xsl:element name="subject">
                     <xsl:attribute name="display" >
@@ -802,10 +802,10 @@
                         </xsl:element>
                     </xsl:if>
                 </xsl:element>
-            </xsl:for-each> 
+            </xsl:for-each>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get creations/events -->
     <xsl:template match="creations">
         <xsl:variable name="displayvalue" select="display"/>
@@ -835,7 +835,7 @@
                     <xsl:if test="places">
                         <xsl:element name="places">
                             <xsl:variable name="displayvalue" select="places/display"/>
-                        
+
                             <xsl:attribute name="display" select="$displayvalue"/>
                             <xsl:element name="place">
                                 <xsl:variable name="displayvalue" select="places/value/display"/>
@@ -861,7 +861,7 @@
                                 <xsl:element name="valueURI">
                                     <xsl:value-of select="places/value/valueURI"/>
                                 </xsl:element>
-                            
+
                             </xsl:element>
                         </xsl:element>
                     </xsl:if>
@@ -869,7 +869,7 @@
             </xsl:for-each>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get publications -->
     <xsl:template match="publications">
         <xsl:element name="publications">
@@ -911,36 +911,36 @@
                             </xsl:if>
                         </xsl:element>
                     </xsl:for-each>
-                    
+
                 </xsl:element>
                 <xsl:element name="dateStart">
                     <xsl:value-of select="value/dateStart"/>
                 </xsl:element>
-                
+
                 <xsl:element name="dateEnd">
                     <xsl:value-of select="value/dateEnd"/>
                 </xsl:element>
-                
+
                 <xsl:element name="dateDisplay">
                     <xsl:attribute name="display" select="value/dateDisplay/display"/>
                     <xsl:attribute name="displayForm" select="value/dateDisplay/displayForm"/>
                     <xsl:value-of select="value/dateDisplay/displayForm"/>
                 </xsl:element>
-                
+
                 <xsl:element name="publishers">
                     <xsl:attribute name="display" select="value/publishers/display"/>
                     <xsl:element name="publisher">
                         <xsl:attribute name="display" select="value/publishers/value/display"/>
                         <xsl:attribute name="displayForm" select="value/publishers/value/displayForm"/>
                         <xsl:value-of select="value/publishers/value/displayForm"/>
-                    </xsl:element>    
-                </xsl:element>    
+                    </xsl:element>
+                </xsl:element>
             </xsl:element>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get acquisitions -->
-    
+
     <xsl:template match="acquisitions">
         <xsl:element name="acquisitions">
             <xsl:attribute name="display">
@@ -968,7 +968,7 @@
             </xsl:element>
         </xsl:element>
     </xsl:template>
-    
+
     <!--    get extent-->
     <xsl:template match="extent">
         <xsl:variable name="displayvalue" select="display"/>
@@ -979,7 +979,7 @@
             <xsl:value-of select="$displayformvalue"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get notes -->
     <xsl:template match="notes">
         <xsl:element name="notes">
@@ -991,7 +991,7 @@
             </xsl:element>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get layout-->
     <xsl:template match="layouts">
         <xsl:element name="layouts">
@@ -1005,12 +1005,12 @@
                 <xsl:attribute name="displayForm">
                     <xsl:value-of select="value/displayForm"/>
                 </xsl:attribute>
-                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>   
-            </xsl:element> 
-            
+                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>
+            </xsl:element>
+
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get decorations-->
     <xsl:template match="decorations">
         <xsl:element name="decorations">
@@ -1024,12 +1024,12 @@
                 <xsl:attribute name="displayForm">
                     <xsl:value-of select="value/displayForm"/>
                 </xsl:attribute>
-                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>   
-            </xsl:element> 
-            
+                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>
+            </xsl:element>
+
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get additions-->
     <xsl:template match="additions">
         <xsl:element name="additions">
@@ -1043,12 +1043,12 @@
                 <xsl:attribute name="displayForm">
                     <xsl:value-of select="value/displayForm"/>
                 </xsl:attribute>
-                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>   
-            </xsl:element> 
-            
+                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>
+            </xsl:element>
+
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get bindings-->
     <xsl:template match="bindings">
         <xsl:element name="bindings">
@@ -1062,12 +1062,12 @@
                 <xsl:attribute name="displayForm">
                     <xsl:value-of select="value/displayForm"/>
                 </xsl:attribute>
-                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>   
-            </xsl:element> 
-            
+                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>
+            </xsl:element>
+
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get provenances-->
     <xsl:template match="provenances">
         <xsl:element name="provenances">
@@ -1084,12 +1084,12 @@
                 <xsl:attribute name="displayForm">
                     <xsl:value-of select="$displayForm"/>
                 </xsl:attribute>
-                <xsl:value-of select="normalize-space(replace($displayForm, '&lt;[^&gt;]+&gt;', ''))"/>   
-            </xsl:element> 
-            
+                <xsl:value-of select="normalize-space(replace($displayForm, '&lt;[^&gt;]+&gt;', ''))"/>
+            </xsl:element>
+
         </xsl:element>
     </xsl:template>
-    
+
     <!-- bibliographies -->
     <xsl:template match="bibliographies">
         <xsl:element name="bibliographies">
@@ -1103,12 +1103,12 @@
                 <xsl:attribute name="displayForm">
                     <xsl:value-of select="value/displayForm"/>
                 </xsl:attribute>
-                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>   
-            </xsl:element> 
-            
+                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>
+            </xsl:element>
+
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get calendarnum -->
     <xsl:template match="calendarnum">
         <xsl:element name="calendarnum">
@@ -1117,7 +1117,7 @@
             <xsl:value-of select="displayForm"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get dataSources-->
     <xsl:template match="dataSources">
         <xsl:element name="dataSources">
@@ -1131,54 +1131,54 @@
                 <xsl:attribute name="displayForm">
                     <xsl:value-of select="value/displayForm"/>
                 </xsl:attribute>
-                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>   
-            </xsl:element> 
-            
+                <xsl:value-of select="normalize-space(replace(value/displayForm, '&lt;[^&gt;]+&gt;', ''))"/>
+            </xsl:element>
+
         </xsl:element>
     </xsl:template>
-    
+
     <!--   get thumbnail-->
     <xsl:template match="thumbnailUrl">
         <xsl:element name="thumbnailUrl">
             <xsl:value-of select="current()"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get thumbnailOrientation-->
     <xsl:template match="thumbnailOrientation">
         <xsl:element name="thumbnailOrientation">
             <xsl:value-of select="current()"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get image rights-->
     <xsl:template match="displayImageRights">
         <xsl:element name="displayImageRights">
             <xsl:value-of select="current()"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get download image rights-->
     <xsl:template match="downloadImageRights">
         <xsl:element name="downloadImageRights">
             <xsl:value-of select="current()"/>
         </xsl:element>
-    </xsl:template> 
-    
+    </xsl:template>
+
     <!-- get imageReproPageURL-->
     <xsl:template match="imageReproPageURL">
         <xsl:element name="imageReproPageURL">
             <xsl:value-of select="current()"/>
         </xsl:element>
-    </xsl:template> 
-    
+    </xsl:template>
+
     <!-- get metadataRights-->
     <xsl:template match="metadataRights">
         <xsl:element name="metadataRights">
             <xsl:value-of select="current()"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- data revisions -->
     <xsl:template match="dataRevisions">
         <xsl:variable name="displayvalue" select="display"/>
@@ -1193,9 +1193,9 @@
             <xsl:value-of select="normalize-space(replace($displayformvalue, '&lt;[^&gt;]+&gt;', ''))"/>
         </xsl:element>
     </xsl:template>
-    
-     
-    
+
+
+
     <!-- fundings -->
     <xsl:template match="fundings">
         <xsl:variable name="displayvalue" select="display"/>
@@ -1212,8 +1212,8 @@
                 </xsl:attribute>
                 <xsl:value-of select="value/displayForm"/>
             </xsl:element>
-            
-        </xsl:element> 
+
+        </xsl:element>
     </xsl:template>
 
     <!-- get-numberOfPages-->
@@ -1222,14 +1222,14 @@
             <xsl:value-of select="/root/numberOfPages"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!--get embeddable -->
     <xsl:template name="get-embeddable">
         <xsl:element name="embeddable">
             <xsl:value-of select="/root/embeddable"/>
         </xsl:element>
     </xsl:template>
-    
+
     <!-- get the pages-->
     <xsl:template name="make-pages">
         <xsl:element name="pages">
@@ -1280,7 +1280,7 @@
                             <xsl:value-of select="pageType"/>
                         </xsl:element>
                     </xsl:if>
-                   
+
                     <xsl:if test="/root/pages[text()[normalize-space(.)]!='']">
                         <xsl:element name="content">
                             <xsl:for-each select="text()">
@@ -1293,21 +1293,21 @@
         </xsl:element>
 
     </xsl:template>
-    
+
     <!-- content -->
     <xsl:template name="content">
         <xsl:for-each select="/root/pages">
             <xsl:if test="/root/pages[text()[normalize-space(.)]!='']">
                 <xsl:element name="content">
                     <xsl:for-each select="text()">
-                                                 
+
                         <xsl:value-of select="normalize-space(replace(., '&lt;[^&gt;]+&gt;', ''))"/>
-                                             
+
                     </xsl:for-each>
                 </xsl:element>
             </xsl:if>
         </xsl:for-each>
-    </xsl:template>    
+    </xsl:template>
 
     <!-- get the logicalStructures-->
     <xsl:template name="make-logicalstructures">
@@ -1348,7 +1348,7 @@
     </xsl:template>
 
     <!-- make-transcription-->
-    <xsl:template name="make-transcription-pages"> 
+    <xsl:template name="make-transcription-pages">
         <xsl:choose>
             <!-- for dcp files  -->
             <xsl:when test="/root/allTranscriptionDiplomaticURL">
@@ -1423,14 +1423,14 @@
     <!--collection membership-->
     <xsl:template name="get-collection-memberships">
         <!-- Lookup collections of which this item is a member (from Postgres database) -->
-      
+
         <xsl:element name="collections">
             <xsl:for-each select="cudl:get-memberships($fileID)">
                 <xsl:element name="collection">
                     <xsl:value-of select="title"/>
                 </xsl:element>
-            </xsl:for-each>         
+            </xsl:for-each>
         </xsl:element>
-      
+
     </xsl:template>
 </xsl:stylesheet>
