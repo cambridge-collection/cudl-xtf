@@ -82,7 +82,7 @@
    <xsl:param name="indexPath"/>
 
    <!-- The name of the index in textIndexer.conf to search. -->
-   <xsl:param name="indexName" select="'index-cudl'"/>
+   <xsl:param name="indexName" select="'index-cudl-tagging'"/>
 
    <!-- ====================================================================== -->
    <!-- Root Template                                                          -->
