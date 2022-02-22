@@ -11,6 +11,6 @@
   <!--<crossQuery minHits="0">http://localhost:8080/cudl-search/search?keyword=newton;indexPath=/usr/local/indices/index-rekha</crossQuery> -->
   
   <!--live setting-->
-  <crossQuery minHits="0">http://cudl.lib.cam.ac.uk/xtf/search?keyword=newton;indexPath=/usr/local/indices/index-cudl</crossQuery> 
+  <crossQuery minHits="0">http://localhost:8080/xtf/search?keyword=newton</crossQuery>
   
 </index-validation>
